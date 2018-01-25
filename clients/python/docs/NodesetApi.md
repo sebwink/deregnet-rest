@@ -1,6 +1,6 @@
 # swagger_client.NodesetApi
 
-All URIs are relative to *https://virtserver.swaggerhub.com/sebwink/deregnet/1.0.0*
+All URIs are relative to *https://localhost/deregnet*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
@@ -27,7 +27,7 @@ from pprint import pprint
 
 # create an instance of the API class
 api_instance = swagger_client.NodesetApi()
-nodeset_id = 'nodeset_id_example' # str | ID of the order that needs to be deleted
+nodeset_id = 'nodeset_id_example' # str | ID of the node set to be deleted
 
 try:
     # Delete a previously uploaded node set
@@ -40,7 +40,7 @@ except ApiException as e:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **nodeset_id** | **str**| ID of the order that needs to be deleted | 
+ **nodeset_id** | **str**| ID of the node set to be deleted | 
 
 ### Return type
 
@@ -53,7 +53,7 @@ No authorization required
 ### HTTP request headers
 
  - **Content-Type**: Not defined
- - **Accept**: application/json
+ - **Accept**: Not defined
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
@@ -156,7 +156,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **post_nodeset**
-> post_nodeset(body)
+> NodeSetInfo post_nodeset(body)
 
 Upload a node set for use with DeRegNet algorithms
 
@@ -174,7 +174,8 @@ body = swagger_client.NodeSet() # NodeSet | Node set to be uploaded for later us
 
 try:
     # Upload a node set for use with DeRegNet algorithms
-    api_instance.post_nodeset(body)
+    api_response = api_instance.post_nodeset(body)
+    pprint(api_response)
 except ApiException as e:
     print("Exception when calling NodesetApi->post_nodeset: %s\n" % e)
 ```
@@ -187,7 +188,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-void (empty response body)
+[**NodeSetInfo**](NodeSetInfo.md)
 
 ### Authorization
 

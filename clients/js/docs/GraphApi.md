@@ -1,6 +1,6 @@
 # DeRegNetRestApi.GraphApi
 
-All URIs are relative to *https://virtserver.swaggerhub.com/sebwink/deregnet/1.0.0*
+All URIs are relative to *https://localhost/deregnet*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
@@ -151,7 +151,7 @@ No authorization required
 
 <a name="postGraph"></a>
 # **postGraph**
-> postGraph(opts)
+> GraphInfo postGraph(opts)
 
 Allows to initiate GraphML upload
 
@@ -171,7 +171,7 @@ apiInstance.postGraph(opts, (error, data, response) => {
   if (error) {
     console.error(error);
   } else {
-    console.log('API called successfully.');
+    console.log('API called successfully. Returned data: ' + data);
   }
 });
 ```
@@ -184,7 +184,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-null (empty response body)
+[**GraphInfo**](GraphInfo.md)
 
 ### Authorization
 
@@ -193,7 +193,7 @@ No authorization required
 ### HTTP request headers
 
  - **Content-Type**: application/json
- - **Accept**: Not defined
+ - **Accept**: application/json
 
 <a name="postGraphml"></a>
 # **postGraphml**
@@ -241,5 +241,5 @@ No authorization required
 ### HTTP request headers
 
  - **Content-Type**: multipart/form-data
- - **Accept**: application/json
+ - **Accept**: Not defined
 

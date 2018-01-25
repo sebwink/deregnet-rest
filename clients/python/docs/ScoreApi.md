@@ -1,6 +1,6 @@
 # swagger_client.ScoreApi
 
-All URIs are relative to *https://virtserver.swaggerhub.com/sebwink/deregnet/1.0.0*
+All URIs are relative to *https://localhost/deregnet*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
@@ -156,7 +156,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **post_score**
-> post_score(body)
+> ScoreInfo post_score(body)
 
 Upload a node score for use with DeRegNet algorithms
 
@@ -174,7 +174,8 @@ body = swagger_client.Score() # Score | Node scores to be uploaded for later use
 
 try:
     # Upload a node score for use with DeRegNet algorithms
-    api_instance.post_score(body)
+    api_response = api_instance.post_score(body)
+    pprint(api_response)
 except ApiException as e:
     print("Exception when calling ScoreApi->post_score: %s\n" % e)
 ```
@@ -187,7 +188,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-void (empty response body)
+[**ScoreInfo**](ScoreInfo.md)
 
 ### Authorization
 

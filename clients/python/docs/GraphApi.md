@@ -1,6 +1,6 @@
 # swagger_client.GraphApi
 
-All URIs are relative to *https://virtserver.swaggerhub.com/sebwink/deregnet/1.0.0*
+All URIs are relative to *https://localhost/deregnet*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
@@ -157,7 +157,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **post_graph**
-> post_graph(inital_graph_info=inital_graph_info)
+> GraphInfo post_graph(inital_graph_info=inital_graph_info)
 
 Allows to initiate GraphML upload
 
@@ -177,7 +177,8 @@ inital_graph_info = swagger_client.InitalGraphInfo() # InitalGraphInfo | The int
 
 try:
     # Allows to initiate GraphML upload
-    api_instance.post_graph(inital_graph_info=inital_graph_info)
+    api_response = api_instance.post_graph(inital_graph_info=inital_graph_info)
+    pprint(api_response)
 except ApiException as e:
     print("Exception when calling GraphApi->post_graph: %s\n" % e)
 ```
@@ -190,7 +191,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-void (empty response body)
+[**GraphInfo**](GraphInfo.md)
 
 ### Authorization
 
@@ -199,7 +200,7 @@ No authorization required
 ### HTTP request headers
 
  - **Content-Type**: application/json
- - **Accept**: Not defined
+ - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
@@ -248,7 +249,7 @@ No authorization required
 ### HTTP request headers
 
  - **Content-Type**: multipart/form-data
- - **Accept**: application/json
+ - **Accept**: Not defined
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 

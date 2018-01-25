@@ -1,0 +1,2290 @@
+<!doctype html>
+<html>
+  <head>
+    <title>DeRegNet REST API</title>
+    <style type="text/css">
+      body {
+	font-family: Trebuchet MS, sans-serif;
+	font-size: 15px;
+	color: #444;
+	margin-right: 24px;
+}
+
+h1	{
+	font-size: 25px;
+}
+h2	{
+	font-size: 20px;
+}
+h3	{
+	font-size: 16px;
+	font-weight: bold;
+}
+hr	{
+	height: 1px;
+	border: 0;
+	color: #ddd;
+	background-color: #ddd;
+}
+
+.app-desc {
+  clear: both;
+  margin-left: 20px;
+}
+.param-name {
+  width: 100%;
+}
+.license-info {
+  margin-left: 20px;
+}
+
+.license-url {
+  margin-left: 20px;
+}
+
+.model {
+  margin: 0 0 0px 20px;
+}
+
+.method {
+  margin-left: 20px;
+}
+
+.method-notes	{
+	margin: 10px 0 20px 0;
+	font-size: 90%;
+	color: #555;
+}
+
+pre {
+  padding: 10px;
+  margin-bottom: 2px;
+}
+
+.http-method {
+ text-transform: uppercase;
+}
+
+pre.get {
+  background-color: #0f6ab4;
+}
+
+pre.post {
+  background-color: #10a54a;
+}
+
+pre.put {
+  background-color: #c5862b;
+}
+
+pre.delete {
+  background-color: #a41e22;
+}
+
+.huge	{
+	color: #fff;
+}
+
+pre.example {
+  background-color: #f3f3f3;
+  padding: 10px;
+  border: 1px solid #ddd;
+}
+
+code {
+  white-space: pre;
+}
+
+.nickname {
+  font-weight: bold;
+}
+
+.method-path {
+  font-size: 1.5em;
+  background-color: #0f6ab4;
+}
+
+.up {
+  float:right;
+}
+
+.parameter {
+  width: 500px;
+}
+
+.param {
+  width: 500px;
+  padding: 10px 0 0 20px;
+  font-weight: bold;
+}
+
+.param-desc {
+  width: 700px;
+  padding: 0 0 0 20px;
+  color: #777;
+}
+
+.param-type {
+  font-style: italic;
+}
+
+.param-enum-header {
+width: 700px;
+padding: 0 0 0 60px;
+color: #777;
+font-weight: bold;
+}
+
+.param-enum {
+width: 700px;
+padding: 0 0 0 80px;
+color: #777;
+font-style: italic;
+}
+
+.field-label {
+  padding: 0;
+  margin: 0;
+  clear: both;
+}
+
+.field-items	{
+	padding: 0 0 15px 0;
+	margin-bottom: 15px;
+}
+
+.return-type {
+  clear: both;
+  padding-bottom: 10px;
+}
+
+.param-header {
+  font-weight: bold;
+}
+
+.method-tags {
+  text-align: right;
+}
+
+.method-tag {
+  background: none repeat scroll 0% 0% #24A600;
+  border-radius: 3px;
+  padding: 2px 10px;
+  margin: 2px;
+  color: #FFF;
+  display: inline-block;
+  text-decoration: none;
+}
+
+    </style>
+  </head>
+  <body>
+  <h1>DeRegNet REST API</h1>
+    <div class="app-desc">DeRegNet REST API</div>
+    <div class="app-desc">More information: <a href=""></a></div>
+    <div class="app-desc">Contact Info: <a href="deregnet@informatik.uni-tuebingen.de">deregnet@informatik.uni-tuebingen.de</a></div>
+    <div class="app-desc">Version: 0.0.1</div>
+    <div class="app-desc">BasePath:/deregnet</div>
+    <div class="license-info">BSD 3-clause</div>
+    <div class="license-url">https://opensource.org/licenses/BSD-3-Clause</div>
+  <h2>Access</h2>
+
+  <h2><a name="__Methods">Methods</a></h2>
+  [ Jump to <a href="#__Models">Models</a> ]
+
+  <h3>Table of Contents </h3>
+  <div class="method-summary"></div>
+  <h4><a href="#Graph">Graph</a></h4>
+  <ul>
+  <li><a href="#deleteGraph"><code><span class="http-method">delete</span> /graph/{graph_id}</code></a></li>
+  <li><a href="#getGraph"><code><span class="http-method">get</span> /graph/{graph_id}</code></a></li>
+  <li><a href="#getGraphs"><code><span class="http-method">get</span> /graphs</code></a></li>
+  <li><a href="#postGraph"><code><span class="http-method">post</span> /graph</code></a></li>
+  <li><a href="#postGraphml"><code><span class="http-method">post</span> /graph/{graph_id}</code></a></li>
+  </ul>
+  <h4><a href="#Info">Info</a></h4>
+  <ul>
+  <li><a href="#graphDocs"><code><span class="http-method">get</span> /info/graph</code></a></li>
+  <li><a href="#help"><code><span class="http-method">get</span> /info</code></a></li>
+  <li><a href="#index"><code><span class="http-method">get</span> /</code></a></li>
+  <li><a href="#infoDocs"><code><span class="http-method">get</span> /info/info</code></a></li>
+  <li><a href="#nodesetDocs"><code><span class="http-method">get</span> /info/nodeset</code></a></li>
+  <li><a href="#parameterSetDocs"><code><span class="http-method">get</span> /info/parameter_set</code></a></li>
+  <li><a href="#runDocs"><code><span class="http-method">get</span> /info/run</code></a></li>
+  <li><a href="#scoreDocs"><code><span class="http-method">get</span> /info/score</code></a></li>
+  <li><a href="#subgraphDocs"><code><span class="http-method">get</span> /info/subgraph</code></a></li>
+  </ul>
+  <h4><a href="#Nodeset">Nodeset</a></h4>
+  <ul>
+  <li><a href="#deleteNodeset"><code><span class="http-method">delete</span> /nodeset/{nodeset_id}</code></a></li>
+  <li><a href="#getNodeset"><code><span class="http-method">get</span> /nodeset/{nodeset_id}</code></a></li>
+  <li><a href="#getNodesets"><code><span class="http-method">get</span> /nodesets</code></a></li>
+  <li><a href="#postNodeset"><code><span class="http-method">post</span> /nodeset</code></a></li>
+  </ul>
+  <h4><a href="#ParameterSet">ParameterSet</a></h4>
+  <ul>
+  <li><a href="#deleteParameterSet"><code><span class="http-method">delete</span> /parameter_set/{parameter_set_id}</code></a></li>
+  <li><a href="#getParameterSet"><code><span class="http-method">get</span> /parameter_set/{parameter_set_id}</code></a></li>
+  <li><a href="#getParameterSetData"><code><span class="http-method">get</span> /parameter_set/{parameter_set_id}/data</code></a></li>
+  <li><a href="#getParameterSetDefault"><code><span class="http-method">get</span> /parameter_set/default</code></a></li>
+  <li><a href="#getParameterSetDefaultData"><code><span class="http-method">get</span> /parameter_set/default/data</code></a></li>
+  <li><a href="#getParameterSets"><code><span class="http-method">get</span> /parameter_sets</code></a></li>
+  <li><a href="#postParameterSet"><code><span class="http-method">post</span> /parameter_set</code></a></li>
+  </ul>
+  <h4><a href="#Run">Run</a></h4>
+  <ul>
+  <li><a href="#deleteRun"><code><span class="http-method">delete</span> /run/{run_id}</code></a></li>
+  <li><a href="#getRun"><code><span class="http-method">get</span> /run/{run_id}</code></a></li>
+  <li><a href="#getRuns"><code><span class="http-method">get</span> /runs</code></a></li>
+  <li><a href="#postRun"><code><span class="http-method">post</span> /run</code></a></li>
+  </ul>
+  <h4><a href="#Score">Score</a></h4>
+  <ul>
+  <li><a href="#deleteScore"><code><span class="http-method">delete</span> /score/{score_id}</code></a></li>
+  <li><a href="#getScore"><code><span class="http-method">get</span> /score/{score_id}</code></a></li>
+  <li><a href="#getScores"><code><span class="http-method">get</span> /scores</code></a></li>
+  <li><a href="#postScore"><code><span class="http-method">post</span> /score</code></a></li>
+  </ul>
+  <h4><a href="#Subgraph">Subgraph</a></h4>
+  <ul>
+  <li><a href="#deleteSubgraph"><code><span class="http-method">delete</span> /subgraph/{subgraph_id}</code></a></li>
+  <li><a href="#downloadSubgraphAs"><code><span class="http-method">get</span> /subgraph/{subgraph_id}/{filetype}</code></a></li>
+  <li><a href="#getSubgraph"><code><span class="http-method">get</span> /subgraph/{subgraph_id}</code></a></li>
+  <li><a href="#getSubgraphs"><code><span class="http-method">get</span> /subgraphs</code></a></li>
+  </ul>
+
+  <h1><a name="Graph">Graph</a></h1>
+  <div class="method"><a name="deleteGraph"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="delete"><code class="huge"><span class="http-method">delete</span> /graph/{graph_id}</code></pre></div>
+    <div class="method-summary">Delete a previously uploaded network (<span class="nickname">deleteGraph</span>)</div>
+    <div class="method-notes">Delete a previously uplaoded network</div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">graph_id (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; ID of the graph to be deleted </div>
+    </div>  <!-- field-items -->
+
+
+
+
+
+
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="heaader">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">400</h4>
+    Invalid ID supplied
+        <a href="#"></a>
+    <h4 class="field-label">404</h4>
+    Graph not found
+        <a href="#"></a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="getGraph"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /graph/{graph_id}</code></pre></div>
+    <div class="method-summary">Retrieve information on a previously uploaded graph (<span class="nickname">getGraph</span>)</div>
+    <div class="method-notes"></div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">graph_id (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; ID of graph to return </div>
+    </div>  <!-- field-items -->
+
+
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#GraphInfo">GraphInfo</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "time_of_upload" : "time_of_upload",
+  "name" : "name",
+  "description" : "description",
+  "id" : "id",
+  "num_nodes" : 0,
+  "num_edges" : 6
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="heaader">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    successful operation
+        <a href="#GraphInfo">GraphInfo</a>
+    <h4 class="field-label">400</h4>
+    Invalid ID supplied
+        <a href="#"></a>
+    <h4 class="field-label">404</h4>
+    Graph not found
+        <a href="#"></a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="getGraphs"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /graphs</code></pre></div>
+    <div class="method-summary">List available previously uploaded graphs (<span class="nickname">getGraphs</span>)</div>
+    <div class="method-notes">Returns a list of all available graphs</div>
+
+
+
+
+
+    <h3 class="field-label">Query parameters</h3>
+    <div class="field-items">
+      <div class="param">searchString (optional)</div>
+
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; pass an optional search string for narrowing the list </div><div class="param">skip (optional)</div>
+
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; number of records to skip for pagination format: int32</div><div class="param">limit (optional)</div>
+
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; maximum number of records to return format: int32</div>
+    </div>  <!-- field-items -->
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      array[<a href="#GraphInfo">GraphInfo</a>]
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>[ {
+  "time_of_upload" : "time_of_upload",
+  "name" : "name",
+  "description" : "description",
+  "id" : "id",
+  "num_nodes" : 0,
+  "num_edges" : 6
+}, {
+  "time_of_upload" : "time_of_upload",
+  "name" : "name",
+  "description" : "description",
+  "id" : "id",
+  "num_nodes" : 0,
+  "num_edges" : 6
+} ]</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="heaader">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    successful operation
+        
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="postGraph"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="post"><code class="huge"><span class="http-method">post</span> /graph</code></pre></div>
+    <div class="method-summary">Allows to initiate GraphML upload (<span class="nickname">postGraph</span>)</div>
+    <div class="method-notes">This Endpoint creates a Metadata-Object for a Graph.
+It returns the endpoint that is to be called with the
+file containing the graph as payload/body in the header-attribute &quot;location&quot;</div>
+
+
+    <h3 class="field-label">Consumes</h3>
+    This API call consumes the following media types via the <span class="heaader">Content-Type</span> request header:
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Request body</h3>
+    <div class="field-items">
+      <div class="param">initalGraphInfo <a href="#InitalGraphInfo">InitalGraphInfo</a> (optional)</div>
+
+      <div class="param-desc"><span class="param-type">Body Parameter</span> &mdash; The intial Information required for creating a new graph </div>
+
+    </div>  <!-- field-items -->
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#GraphInfo">GraphInfo</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "time_of_upload" : "time_of_upload",
+  "name" : "name",
+  "description" : "description",
+  "id" : "id",
+  "num_nodes" : 0,
+  "num_edges" : 6
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="heaader">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    Graph entity created
+        <a href="#GraphInfo">GraphInfo</a>
+    <h4 class="field-label">400</h4>
+    invalid input, object invalid
+        <a href="#"></a>
+    <h4 class="field-label">409</h4>
+    an existing item already exists
+        <a href="#"></a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="postGraphml"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="post"><code class="huge"><span class="http-method">post</span> /graph/{graph_id}</code></pre></div>
+    <div class="method-summary">Uploads a GraphML file (<span class="nickname">postGraphml</span>)</div>
+    <div class="method-notes">Adds a Graph to the system. The Graph Object with name:graphname must already be created by issuing a POST Request to /graph with repsective payload</div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">graph_id (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The Name of the graph </div>
+    </div>  <!-- field-items -->
+
+    <h3 class="field-label">Consumes</h3>
+    This API call consumes the following media types via the <span class="heaader">Content-Type</span> request header:
+    <ul>
+      <li><code>multipart/form-data</code></li>
+    </ul>
+
+
+
+
+    <h3 class="field-label">Form parameters</h3>
+    <div class="field-items">
+      <div class="param">file_to_upload (required)</div>
+
+      <div class="param-desc"><span class="param-type">Form Parameter</span> &mdash; The file containing the graph </div>
+    </div>  <!-- field-items -->
+
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">201</h4>
+    item created
+        <a href="#"></a>
+    <h4 class="field-label">400</h4>
+    invalid input, object invalid
+        <a href="#"></a>
+    <h4 class="field-label">409</h4>
+    an item with that name already exists
+        <a href="#"></a>
+  </div> <!-- method -->
+  <hr/>
+  <h1><a name="Info">Info</a></h1>
+  <div class="method"><a name="graphDocs"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /info/graph</code></pre></div>
+    <div class="method-summary">Help page on graph endpoint (<span class="nickname">graphDocs</span>)</div>
+    <div class="method-notes">Graph help page</div>
+
+
+
+
+
+
+
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="heaader">Content-Type</span> response header.
+    <ul>
+      <li><code>text/html</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    successful operation
+        <a href="#"></a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="help"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /info</code></pre></div>
+    <div class="method-summary">General help page (<span class="nickname">help</span>)</div>
+    <div class="method-notes">Help page</div>
+
+
+
+
+
+
+
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="heaader">Content-Type</span> response header.
+    <ul>
+      <li><code>text/html</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    successful operation
+        <a href="#"></a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="index"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /</code></pre></div>
+    <div class="method-summary">Index, redirects to /info (<span class="nickname">index</span>)</div>
+    <div class="method-notes">Index</div>
+
+
+
+
+
+
+
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="heaader">Content-Type</span> response header.
+    <ul>
+      <li><code>text/html</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    successful operation
+        <a href="#"></a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="infoDocs"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /info/info</code></pre></div>
+    <div class="method-summary">Help page on info endpoint (<span class="nickname">infoDocs</span>)</div>
+    <div class="method-notes">Info help page</div>
+
+
+
+
+
+
+
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="heaader">Content-Type</span> response header.
+    <ul>
+      <li><code>text/html</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    successful operation
+        <a href="#"></a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="nodesetDocs"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /info/nodeset</code></pre></div>
+    <div class="method-summary">Help page on nodeset endpoint (<span class="nickname">nodesetDocs</span>)</div>
+    <div class="method-notes">Node set help page</div>
+
+
+
+
+
+
+
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="heaader">Content-Type</span> response header.
+    <ul>
+      <li><code>text/html</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    successful operation
+        <a href="#"></a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="parameterSetDocs"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /info/parameter_set</code></pre></div>
+    <div class="method-summary">Help page on subgraph endpoint (<span class="nickname">parameterSetDocs</span>)</div>
+    <div class="method-notes">Parameter set help page</div>
+
+
+
+
+
+
+
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="heaader">Content-Type</span> response header.
+    <ul>
+      <li><code>text/html</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    successful operation
+        <a href="#"></a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="runDocs"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /info/run</code></pre></div>
+    <div class="method-summary">Help page on run endpoint (<span class="nickname">runDocs</span>)</div>
+    <div class="method-notes">Run help page</div>
+
+
+
+
+
+
+
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="heaader">Content-Type</span> response header.
+    <ul>
+      <li><code>text/html</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    successful operation
+        <a href="#"></a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="scoreDocs"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /info/score</code></pre></div>
+    <div class="method-summary">Help page on score endpoint (<span class="nickname">scoreDocs</span>)</div>
+    <div class="method-notes">Score help page</div>
+
+
+
+
+
+
+
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="heaader">Content-Type</span> response header.
+    <ul>
+      <li><code>text/html</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    successful operation
+        <a href="#"></a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="subgraphDocs"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /info/subgraph</code></pre></div>
+    <div class="method-summary">Help page on subgraph endpoint (<span class="nickname">subgraphDocs</span>)</div>
+    <div class="method-notes">Subgraph help page</div>
+
+
+
+
+
+
+
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="heaader">Content-Type</span> response header.
+    <ul>
+      <li><code>text/html</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    successful operation
+        <a href="#"></a>
+  </div> <!-- method -->
+  <hr/>
+  <h1><a name="Nodeset">Nodeset</a></h1>
+  <div class="method"><a name="deleteNodeset"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="delete"><code class="huge"><span class="http-method">delete</span> /nodeset/{nodeset_id}</code></pre></div>
+    <div class="method-summary">Delete a previously uploaded node set (<span class="nickname">deleteNodeset</span>)</div>
+    <div class="method-notes">Deletes a node set</div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">nodeset_id (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; ID of the node set to be deleted </div>
+    </div>  <!-- field-items -->
+
+
+
+
+
+
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    Node set successfully deleted
+        <a href="#"></a>
+    <h4 class="field-label">400</h4>
+    Invalid ID supplied
+        <a href="#"></a>
+    <h4 class="field-label">404</h4>
+    Node set not found
+        <a href="#"></a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="getNodeset"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /nodeset/{nodeset_id}</code></pre></div>
+    <div class="method-summary">Retrieve information on a previously uploaded node set (<span class="nickname">getNodeset</span>)</div>
+    <div class="method-notes"></div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">nodeset_id (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; ID of node set to return </div>
+    </div>  <!-- field-items -->
+
+
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#NodeSetInfo">NodeSetInfo</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "size" : 0,
+  "time_of_upload" : "time_of_upload",
+  "description" : "description",
+  "id" : "id"
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="heaader">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    successful operation
+        <a href="#NodeSetInfo">NodeSetInfo</a>
+    <h4 class="field-label">400</h4>
+    Invalid ID supplied
+        <a href="#"></a>
+    <h4 class="field-label">404</h4>
+    Node set not found
+        <a href="#"></a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="getNodesets"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /nodesets</code></pre></div>
+    <div class="method-summary">List available previously uploaded node sets (<span class="nickname">getNodesets</span>)</div>
+    <div class="method-notes">Returns a list with information of all available node sets</div>
+
+
+
+
+
+    <h3 class="field-label">Query parameters</h3>
+    <div class="field-items">
+      <div class="param">searchString (optional)</div>
+
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; pass an optional search string for narrowing the list </div><div class="param">skip (optional)</div>
+
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; number of records to skip for pagination format: int32</div><div class="param">limit (optional)</div>
+
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; maximum number of records to return format: int32</div>
+    </div>  <!-- field-items -->
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      array[<a href="#NodeSetInfo">NodeSetInfo</a>]
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>[ {
+  "size" : 0,
+  "time_of_upload" : "time_of_upload",
+  "description" : "description",
+  "id" : "id"
+}, {
+  "size" : 0,
+  "time_of_upload" : "time_of_upload",
+  "description" : "description",
+  "id" : "id"
+} ]</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="heaader">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    successful operation
+        
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="postNodeset"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="post"><code class="huge"><span class="http-method">post</span> /nodeset</code></pre></div>
+    <div class="method-summary">Upload a node set for use with DeRegNet algorithms (<span class="nickname">postNodeset</span>)</div>
+    <div class="method-notes"></div>
+
+
+    <h3 class="field-label">Consumes</h3>
+    This API call consumes the following media types via the <span class="heaader">Content-Type</span> request header:
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Request body</h3>
+    <div class="field-items">
+      <div class="param">body <a href="#NodeSet">NodeSet</a> (required)</div>
+
+      <div class="param-desc"><span class="param-type">Body Parameter</span> &mdash; Node set to be uploaded for later use with a DeRegNet algorithm </div>
+
+    </div>  <!-- field-items -->
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#NodeSetInfo">NodeSetInfo</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "size" : 0,
+  "time_of_upload" : "time_of_upload",
+  "description" : "description",
+  "id" : "id"
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="heaader">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    Node set upload successful
+        <a href="#NodeSetInfo">NodeSetInfo</a>
+    <h4 class="field-label">405</h4>
+    Invalid input
+        <a href="#"></a>
+  </div> <!-- method -->
+  <hr/>
+  <h1><a name="ParameterSet">ParameterSet</a></h1>
+  <div class="method"><a name="deleteParameterSet"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="delete"><code class="huge"><span class="http-method">delete</span> /parameter_set/{parameter_set_id}</code></pre></div>
+    <div class="method-summary">Delete a previously uploaded parameter collection (<span class="nickname">deleteParameterSet</span>)</div>
+    <div class="method-notes">Deletes a parameter collection</div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">parameter_set_id (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; ID of the parameter collection to be deleted </div>
+    </div>  <!-- field-items -->
+
+
+
+
+
+
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="heaader">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    Parameter set successfully deleted
+        <a href="#"></a>
+    <h4 class="field-label">400</h4>
+    Invalid ID supplied
+        <a href="#"></a>
+    <h4 class="field-label">404</h4>
+    Parameter collection not found
+        <a href="#"></a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="getParameterSet"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /parameter_set/{parameter_set_id}</code></pre></div>
+    <div class="method-summary">Retrieve information on a previously uploaded score (<span class="nickname">getParameterSet</span>)</div>
+    <div class="method-notes"></div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">parameter_set_id (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; ID of parameter collection to retrieve information about </div>
+    </div>  <!-- field-items -->
+
+
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#ParameterSetInfo">ParameterSetInfo</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "description" : "description",
+  "id" : "id",
+  "set_parameters" : [ "set_parameters", "set_parameters" ]
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="heaader">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    successful operation
+        <a href="#ParameterSetInfo">ParameterSetInfo</a>
+    <h4 class="field-label">400</h4>
+    Invalid ID supplied
+        <a href="#"></a>
+    <h4 class="field-label">404</h4>
+    Parameter collection not found
+        <a href="#"></a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="getParameterSetData"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /parameter_set/{parameter_set_id}/data</code></pre></div>
+    <div class="method-summary">Retrieve a parameter collection (<span class="nickname">getParameterSetData</span>)</div>
+    <div class="method-notes">Returns a parameter collection</div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">parameter_set_id (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; ID of the parameter collection to return </div>
+    </div>  <!-- field-items -->
+
+
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#ParameterSet">ParameterSet</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "model_sense" : "max",
+  "default_score" : 0.80082819046101150206595775671303272247314453125,
+  "time_limit" : 0,
+  "num_suboptimal" : 0,
+  "flip_orientation" : true,
+  "max_overlap" : 14.6581298050294517310021547018550336360931396484375,
+  "gap_cut" : 0.59621339166831821554382031536079011857509613037109375,
+  "min_size" : 0,
+  "abs_values" : true,
+  "max_size" : 0,
+  "algorithm" : "dta"
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="heaader">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    successful operation
+        <a href="#ParameterSet">ParameterSet</a>
+    <h4 class="field-label">400</h4>
+    Invalid ID supplied
+        <a href="#"></a>
+    <h4 class="field-label">404</h4>
+    Parameter collection not found
+        <a href="#"></a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="getParameterSetDefault"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /parameter_set/default</code></pre></div>
+    <div class="method-summary">Retrieve the defaul parameter collection (<span class="nickname">getParameterSetDefault</span>)</div>
+    <div class="method-notes">Returns the default parameter collection</div>
+
+
+
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#ParameterSetInfo">ParameterSetInfo</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "description" : "description",
+  "id" : "id",
+  "set_parameters" : [ "set_parameters", "set_parameters" ]
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="heaader">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    successful operation
+        <a href="#ParameterSetInfo">ParameterSetInfo</a>
+    <h4 class="field-label">400</h4>
+    Invalid ID supplied
+        <a href="#"></a>
+    <h4 class="field-label">404</h4>
+    Parameter collection not found
+        <a href="#"></a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="getParameterSetDefaultData"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /parameter_set/default/data</code></pre></div>
+    <div class="method-summary">Retrieve information on a previously uploaded score (<span class="nickname">getParameterSetDefaultData</span>)</div>
+    <div class="method-notes"></div>
+
+
+
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#ParameterSet">ParameterSet</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "model_sense" : "max",
+  "default_score" : 0.80082819046101150206595775671303272247314453125,
+  "time_limit" : 0,
+  "num_suboptimal" : 0,
+  "flip_orientation" : true,
+  "max_overlap" : 14.6581298050294517310021547018550336360931396484375,
+  "gap_cut" : 0.59621339166831821554382031536079011857509613037109375,
+  "min_size" : 0,
+  "abs_values" : true,
+  "max_size" : 0,
+  "algorithm" : "dta"
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="heaader">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    successful operation
+        <a href="#ParameterSet">ParameterSet</a>
+    <h4 class="field-label">400</h4>
+    Invalid ID supplied
+        <a href="#"></a>
+    <h4 class="field-label">404</h4>
+    Parameter collection not found
+        <a href="#"></a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="getParameterSets"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /parameter_sets</code></pre></div>
+    <div class="method-summary">List available previously uploaded parameter collections (<span class="nickname">getParameterSets</span>)</div>
+    <div class="method-notes">Returns a list with information about availabel parameter collections</div>
+
+
+
+
+
+    <h3 class="field-label">Query parameters</h3>
+    <div class="field-items">
+      <div class="param">searchString (optional)</div>
+
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; pass an optional search string for narrowing the list </div><div class="param">skip (optional)</div>
+
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; number of records to skip for pagination format: int32</div><div class="param">limit (optional)</div>
+
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; maximum number of records to return format: int32</div>
+    </div>  <!-- field-items -->
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      array[<a href="#ParameterSetInfo">ParameterSetInfo</a>]
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>[ {
+  "description" : "description",
+  "id" : "id",
+  "set_parameters" : [ "set_parameters", "set_parameters" ]
+}, {
+  "description" : "description",
+  "id" : "id",
+  "set_parameters" : [ "set_parameters", "set_parameters" ]
+} ]</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="heaader">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    successful operation
+        
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="postParameterSet"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="post"><code class="huge"><span class="http-method">post</span> /parameter_set</code></pre></div>
+    <div class="method-summary">Upload a parameters collection for use with DeRegNet algorithms (<span class="nickname">postParameterSet</span>)</div>
+    <div class="method-notes"></div>
+
+
+    <h3 class="field-label">Consumes</h3>
+    This API call consumes the following media types via the <span class="heaader">Content-Type</span> request header:
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Request body</h3>
+    <div class="field-items">
+      <div class="param">body <a href="#ParameterSet">ParameterSet</a> (required)</div>
+
+      <div class="param-desc"><span class="param-type">Body Parameter</span> &mdash; Parameters to be uploaded for later use with a DeRegNet algorithm </div>
+
+    </div>  <!-- field-items -->
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#ParameterSetInfo">ParameterSetInfo</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "description" : "description",
+  "id" : "id",
+  "set_parameters" : [ "set_parameters", "set_parameters" ]
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="heaader">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    Parameter set successfully uploaded
+        <a href="#ParameterSetInfo">ParameterSetInfo</a>
+    <h4 class="field-label">405</h4>
+    Invalid input
+        <a href="#"></a>
+  </div> <!-- method -->
+  <hr/>
+  <h1><a name="Run">Run</a></h1>
+  <div class="method"><a name="deleteRun"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="delete"><code class="huge"><span class="http-method">delete</span> /run/{run_id}</code></pre></div>
+    <div class="method-summary">Cancel an active run, you cannot delete finished runs (<span class="nickname">deleteRun</span>)</div>
+    <div class="method-notes">Cancel a run</div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">run_id (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; ID of the run to be deleted </div>
+    </div>  <!-- field-items -->
+
+
+
+
+
+
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="heaader">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">201</h4>
+    Run successfully canceled
+        <a href="#"></a>
+    <h4 class="field-label">400</h4>
+    Invalid ID supplied
+        <a href="#"></a>
+    <h4 class="field-label">404</h4>
+    Run not found
+        <a href="#"></a>
+    <h4 class="field-label">405</h4>
+    Run already finished
+        <a href="#"></a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="getRun"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /run/{run_id}</code></pre></div>
+    <div class="method-summary">Retrieve the status of a previously submitted run (<span class="nickname">getRun</span>)</div>
+    <div class="method-notes">Returns a single pet</div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">run_id (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; ID of pet to return </div>
+    </div>  <!-- field-items -->
+
+
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#RunInfo">RunInfo</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "subgraph_ids" : [ "subgraph_ids", "subgraph_ids" ],
+  "description" : "description",
+  "started" : true,
+  "id" : "id",
+  "done" : true,
+  "post_time" : "post_time",
+  "run_input" : {
+    "include_id" : "include_id",
+    "terminals_id" : "terminals_id",
+    "parameter_set_id" : "parameter_set_id",
+    "score_id" : "score_id",
+    "root" : "root",
+    "description" : "description",
+    "receptors_id" : "receptors_id",
+    "exclude_id" : "exclude_id",
+    "parameter_set" : {
+      "model_sense" : "max",
+      "default_score" : 0.80082819046101150206595775671303272247314453125,
+      "time_limit" : 0,
+      "num_suboptimal" : 0,
+      "flip_orientation" : true,
+      "max_overlap" : 14.6581298050294517310021547018550336360931396484375,
+      "gap_cut" : 0.59621339166831821554382031536079011857509613037109375,
+      "min_size" : 0,
+      "abs_values" : true,
+      "max_size" : 0,
+      "algorithm" : "dta"
+    },
+    "graph_id" : "graph_id"
+  }
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="heaader">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    successful operation
+        <a href="#RunInfo">RunInfo</a>
+    <h4 class="field-label">400</h4>
+    Invalid ID supplied
+        <a href="#"></a>
+    <h4 class="field-label">404</h4>
+    Run not found
+        <a href="#"></a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="getRuns"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /runs</code></pre></div>
+    <div class="method-summary">List current and past runs (<span class="nickname">getRuns</span>)</div>
+    <div class="method-notes">Returns a single pet</div>
+
+
+
+
+
+    <h3 class="field-label">Query parameters</h3>
+    <div class="field-items">
+      <div class="param">searchString (optional)</div>
+
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; pass an optional search string for narrowing the list </div><div class="param">skip (optional)</div>
+
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; number of records to skip for pagination format: int32</div><div class="param">limit (optional)</div>
+
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; maximum number of records to return format: int32</div>
+    </div>  <!-- field-items -->
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      array[<a href="#RunInfo">RunInfo</a>]
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>[ {
+  "subgraph_ids" : [ "subgraph_ids", "subgraph_ids" ],
+  "description" : "description",
+  "started" : true,
+  "id" : "id",
+  "done" : true,
+  "post_time" : "post_time",
+  "run_input" : {
+    "include_id" : "include_id",
+    "terminals_id" : "terminals_id",
+    "parameter_set_id" : "parameter_set_id",
+    "score_id" : "score_id",
+    "root" : "root",
+    "description" : "description",
+    "receptors_id" : "receptors_id",
+    "exclude_id" : "exclude_id",
+    "parameter_set" : {
+      "model_sense" : "max",
+      "default_score" : 0.80082819046101150206595775671303272247314453125,
+      "time_limit" : 0,
+      "num_suboptimal" : 0,
+      "flip_orientation" : true,
+      "max_overlap" : 14.6581298050294517310021547018550336360931396484375,
+      "gap_cut" : 0.59621339166831821554382031536079011857509613037109375,
+      "min_size" : 0,
+      "abs_values" : true,
+      "max_size" : 0,
+      "algorithm" : "dta"
+    },
+    "graph_id" : "graph_id"
+  }
+}, {
+  "subgraph_ids" : [ "subgraph_ids", "subgraph_ids" ],
+  "description" : "description",
+  "started" : true,
+  "id" : "id",
+  "done" : true,
+  "post_time" : "post_time",
+  "run_input" : {
+    "include_id" : "include_id",
+    "terminals_id" : "terminals_id",
+    "parameter_set_id" : "parameter_set_id",
+    "score_id" : "score_id",
+    "root" : "root",
+    "description" : "description",
+    "receptors_id" : "receptors_id",
+    "exclude_id" : "exclude_id",
+    "parameter_set" : {
+      "model_sense" : "max",
+      "default_score" : 0.80082819046101150206595775671303272247314453125,
+      "time_limit" : 0,
+      "num_suboptimal" : 0,
+      "flip_orientation" : true,
+      "max_overlap" : 14.6581298050294517310021547018550336360931396484375,
+      "gap_cut" : 0.59621339166831821554382031536079011857509613037109375,
+      "min_size" : 0,
+      "abs_values" : true,
+      "max_size" : 0,
+      "algorithm" : "dta"
+    },
+    "graph_id" : "graph_id"
+  }
+} ]</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="heaader">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    successful operation
+        
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="postRun"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="post"><code class="huge"><span class="http-method">post</span> /run</code></pre></div>
+    <div class="method-summary">Run average score DeRegNet algorithm (<span class="nickname">postRun</span>)</div>
+    <div class="method-notes"></div>
+
+
+    <h3 class="field-label">Consumes</h3>
+    This API call consumes the following media types via the <span class="heaader">Content-Type</span> request header:
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Request body</h3>
+    <div class="field-items">
+      <div class="param">body <a href="#RunInput">RunInput</a> (required)</div>
+
+      <div class="param-desc"><span class="param-type">Body Parameter</span> &mdash; All data needed to run the algorithm </div>
+
+    </div>  <!-- field-items -->
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#RunInfo">RunInfo</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "subgraph_ids" : [ "subgraph_ids", "subgraph_ids" ],
+  "description" : "description",
+  "started" : true,
+  "id" : "id",
+  "done" : true,
+  "post_time" : "post_time",
+  "run_input" : {
+    "include_id" : "include_id",
+    "terminals_id" : "terminals_id",
+    "parameter_set_id" : "parameter_set_id",
+    "score_id" : "score_id",
+    "root" : "root",
+    "description" : "description",
+    "receptors_id" : "receptors_id",
+    "exclude_id" : "exclude_id",
+    "parameter_set" : {
+      "model_sense" : "max",
+      "default_score" : 0.80082819046101150206595775671303272247314453125,
+      "time_limit" : 0,
+      "num_suboptimal" : 0,
+      "flip_orientation" : true,
+      "max_overlap" : 14.6581298050294517310021547018550336360931396484375,
+      "gap_cut" : 0.59621339166831821554382031536079011857509613037109375,
+      "min_size" : 0,
+      "abs_values" : true,
+      "max_size" : 0,
+      "algorithm" : "dta"
+    },
+    "graph_id" : "graph_id"
+  }
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="heaader">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    Run posted successfully
+        <a href="#RunInfo">RunInfo</a>
+    <h4 class="field-label">405</h4>
+    Invalid input
+        <a href="#"></a>
+  </div> <!-- method -->
+  <hr/>
+  <h1><a name="Score">Score</a></h1>
+  <div class="method"><a name="deleteScore"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="delete"><code class="huge"><span class="http-method">delete</span> /score/{score_id}</code></pre></div>
+    <div class="method-summary">Delete a previously uploaded node score (<span class="nickname">deleteScore</span>)</div>
+    <div class="method-notes">Delete a previously uploaded node score</div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">score_id (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; ID of the node score to be deleted </div>
+    </div>  <!-- field-items -->
+
+
+
+
+
+
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="heaader">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">201</h4>
+    Score successfully deleted
+        <a href="#"></a>
+    <h4 class="field-label">400</h4>
+    Invalid ID supplied
+        <a href="#"></a>
+    <h4 class="field-label">404</h4>
+    Node score not found
+        <a href="#"></a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="getScore"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /score/{score_id}</code></pre></div>
+    <div class="method-summary">Retrieve information on a previously uploaded score (<span class="nickname">getScore</span>)</div>
+    <div class="method-notes"></div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">score_id (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; ID of node score to return </div>
+    </div>  <!-- field-items -->
+
+
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#ScoreInfo">ScoreInfo</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "size" : 0,
+  "time_of_upload" : "time_of_upload",
+  "description" : "description",
+  "id" : "id"
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="heaader">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    successful operation
+        <a href="#ScoreInfo">ScoreInfo</a>
+    <h4 class="field-label">400</h4>
+    Invalid ID supplied
+        <a href="#"></a>
+    <h4 class="field-label">404</h4>
+    Node score not found
+        <a href="#"></a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="getScores"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /scores</code></pre></div>
+    <div class="method-summary">List available previously uploaded node scores (<span class="nickname">getScores</span>)</div>
+    <div class="method-notes">Returns a list with all available node scores</div>
+
+
+
+
+
+    <h3 class="field-label">Query parameters</h3>
+    <div class="field-items">
+      <div class="param">searchString (optional)</div>
+
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; pass an optional search string for narrowing the list </div><div class="param">skip (optional)</div>
+
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; number of records to skip for pagination format: int32</div><div class="param">limit (optional)</div>
+
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; maximum number of records to return format: int32</div>
+    </div>  <!-- field-items -->
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      array[<a href="#ScoreInfo">ScoreInfo</a>]
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>[ {
+  "size" : 0,
+  "time_of_upload" : "time_of_upload",
+  "description" : "description",
+  "id" : "id"
+}, {
+  "size" : 0,
+  "time_of_upload" : "time_of_upload",
+  "description" : "description",
+  "id" : "id"
+} ]</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="heaader">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    successful operation
+        
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="postScore"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="post"><code class="huge"><span class="http-method">post</span> /score</code></pre></div>
+    <div class="method-summary">Upload a node score for use with DeRegNet algorithms (<span class="nickname">postScore</span>)</div>
+    <div class="method-notes"></div>
+
+
+    <h3 class="field-label">Consumes</h3>
+    This API call consumes the following media types via the <span class="heaader">Content-Type</span> request header:
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Request body</h3>
+    <div class="field-items">
+      <div class="param">body <a href="#Score">Score</a> (required)</div>
+
+      <div class="param-desc"><span class="param-type">Body Parameter</span> &mdash; Node scores to be uploaded for later use with a DeRegNet algorithm </div>
+
+    </div>  <!-- field-items -->
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#ScoreInfo">ScoreInfo</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "size" : 0,
+  "time_of_upload" : "time_of_upload",
+  "description" : "description",
+  "id" : "id"
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="heaader">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    Score upload successful
+        <a href="#ScoreInfo">ScoreInfo</a>
+    <h4 class="field-label">405</h4>
+    Invalid input
+        <a href="#"></a>
+  </div> <!-- method -->
+  <hr/>
+  <h1><a name="Subgraph">Subgraph</a></h1>
+  <div class="method"><a name="deleteSubgraph"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="delete"><code class="huge"><span class="http-method">delete</span> /subgraph/{subgraph_id}</code></pre></div>
+    <div class="method-summary">Delete a previously found subgraph (<span class="nickname">deleteSubgraph</span>)</div>
+    <div class="method-notes">Deletes a subgraph</div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">subgraph_id (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; ID of the order that needs to be deleted </div>
+    </div>  <!-- field-items -->
+
+
+
+
+
+
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="heaader">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">201</h4>
+    Subgraph successfully deleted
+        <a href="#"></a>
+    <h4 class="field-label">400</h4>
+    Invalid ID supplied
+        <a href="#"></a>
+    <h4 class="field-label">404</h4>
+    Subgraph not found
+        <a href="#"></a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="downloadSubgraphAs"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /subgraph/{subgraph_id}/{filetype}</code></pre></div>
+    <div class="method-summary">Download a subgraph (<span class="nickname">downloadSubgraphAs</span>)</div>
+    <div class="method-notes">With this GET Request you will retrieve a subgraph</div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">subgraph_id (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The Name of the graph </div><div class="param">filetype (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; File type of file to be downloaded </div>
+    </div>  <!-- field-items -->
+
+
+
+
+
+
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="heaader">Content-Type</span> response header.
+    <ul>
+      <li><code>application/octet-stream</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">201</h4>
+    file download ok
+        <a href="#"></a>
+    <h4 class="field-label">400</h4>
+    invalid input, object invalid
+        <a href="#"></a>
+    <h4 class="field-label">409</h4>
+    an existing item already exists
+        <a href="#"></a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="getSubgraph"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /subgraph/{subgraph_id}</code></pre></div>
+    <div class="method-summary">Retrieve the information about a subgraph (<span class="nickname">getSubgraph</span>)</div>
+    <div class="method-notes">Returns a single pet</div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">subgraph_id (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; ID of subgraph about which to retrieve information </div>
+    </div>  <!-- field-items -->
+
+
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#SubgraphInfo">SubgraphInfo</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "score" : 1.46581298050294517310021547018550336360931396484375,
+  "run_id" : "run_id",
+  "optimal" : true,
+  "root" : "root",
+  "id" : "id",
+  "num_nodes" : 0,
+  "num_edges" : 6,
+  "optimality_type" : "optimality_type"
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="heaader">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    successful operation
+        <a href="#SubgraphInfo">SubgraphInfo</a>
+    <h4 class="field-label">400</h4>
+    Invalid ID supplied
+        <a href="#"></a>
+    <h4 class="field-label">404</h4>
+    Subgraph not found
+        <a href="#"></a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="getSubgraphs"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /subgraphs</code></pre></div>
+    <div class="method-summary">List available found subgraphs (<span class="nickname">getSubgraphs</span>)</div>
+    <div class="method-notes">Returns a single pet</div>
+
+
+
+
+
+    <h3 class="field-label">Query parameters</h3>
+    <div class="field-items">
+      <div class="param">searchString (optional)</div>
+
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; pass an optional search string for narrowing the list </div><div class="param">skip (optional)</div>
+
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; number of records to skip for pagination format: int32</div><div class="param">limit (optional)</div>
+
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; maximum number of records to return format: int32</div>
+    </div>  <!-- field-items -->
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      array[<a href="#SubgraphInfo">SubgraphInfo</a>]
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>[ {
+  "score" : 1.46581298050294517310021547018550336360931396484375,
+  "run_id" : "run_id",
+  "optimal" : true,
+  "root" : "root",
+  "id" : "id",
+  "num_nodes" : 0,
+  "num_edges" : 6,
+  "optimality_type" : "optimality_type"
+}, {
+  "score" : 1.46581298050294517310021547018550336360931396484375,
+  "run_id" : "run_id",
+  "optimal" : true,
+  "root" : "root",
+  "id" : "id",
+  "num_nodes" : 0,
+  "num_edges" : 6,
+  "optimality_type" : "optimality_type"
+} ]</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="heaader">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    successful operation
+        
+  </div> <!-- method -->
+  <hr/>
+
+  <h2><a name="__Models">Models</a></h2>
+  [ Jump to <a href="#__Methods">Methods</a> ]
+
+  <h3>Table of Contents</h3>
+  <ol>
+    <li><a href="#GraphInfo"><code>GraphInfo</code> - </a></li>
+    <li><a href="#InitalGraphInfo"><code>InitalGraphInfo</code> - </a></li>
+    <li><a href="#NodeSet"><code>NodeSet</code> - </a></li>
+    <li><a href="#NodeSetInfo"><code>NodeSetInfo</code> - </a></li>
+    <li><a href="#ParameterSet"><code>ParameterSet</code> - </a></li>
+    <li><a href="#ParameterSetInfo"><code>ParameterSetInfo</code> - </a></li>
+    <li><a href="#RunInfo"><code>RunInfo</code> - </a></li>
+    <li><a href="#RunInput"><code>RunInput</code> - </a></li>
+    <li><a href="#Score"><code>Score</code> - </a></li>
+    <li><a href="#ScoreInfo"><code>ScoreInfo</code> - </a></li>
+    <li><a href="#SubgraphInfo"><code>SubgraphInfo</code> - </a></li>
+  </ol>
+
+  <div class="model">
+    <h3><a name="GraphInfo"><code>GraphInfo</code> - </a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">name (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> Name of the graph </div>
+<div class="param">description (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> Description of the graph </div>
+<div class="param">num_nodes </div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span> Number of nodes in the graph </div>
+<div class="param">num_edges </div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span> Number of edges in the graph </div>
+<div class="param">id </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> Id of the graph </div>
+<div class="param">time_of_upload </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> Time of upload </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="InitalGraphInfo"><code>InitalGraphInfo</code> - </a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">description (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> Description of the graph </div>
+<div class="param">name (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> Name of the graph </div>
+<div class="param">node_id_attr (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> Node attribute containing node ids </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="NodeSet"><code>NodeSet</code> - </a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">description (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> Description of the node set </div>
+<div class="param">nodes </div><div class="param-desc"><span class="param-type"><a href="#string">array[String]</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="NodeSetInfo"><code>NodeSetInfo</code> - </a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">description (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> Description of the score </div>
+<div class="param">size </div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span> Number of scored nodes </div>
+<div class="param">id </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> Id of the score object </div>
+<div class="param">time_of_upload </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> Time of upload </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="ParameterSet"><code>ParameterSet</code> - </a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">default_score (optional)</div><div class="param-desc"><span class="param-type"><a href="#number">BigDecimal</a></span> Score of graph node when not defined in node score </div>
+<div class="param">flip_orientation (optional)</div><div class="param-desc"><span class="param-type"><a href="#boolean">Boolean</a></span> Find a deregulated subgraph upstream of a terminal (root) </div>
+<div class="param">num_suboptimal (optional)</div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span> Number of suboptimal subgraphs to find </div>
+<div class="param">max_overlap (optional)</div><div class="param-desc"><span class="param-type"><a href="#number">BigDecimal</a></span> Maximal overlap (node percentage) of two subgraphs </div>
+<div class="param">gap_cut (optional)</div><div class="param-desc"><span class="param-type"><a href="#number">BigDecimal</a></span> Gap cut to stop optimization prematurely when the best solution found so far is within <Gap cut> * 100 percent of the best possible solution.
+Best found solutions are accessible as subgraphs. </div>
+<div class="param">min_size (optional)</div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span> Minimal size of a subgraph (number of nodes) </div>
+<div class="param">max_size (optional)</div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span> Maximal size of a subgraph (number of nodes) </div>
+<div class="param">abs_values (optional)</div><div class="param-desc"><span class="param-type"><a href="#boolean">Boolean</a></span> Whether to take the absolute values of the provided scores
+as actual scores in the computation </div>
+<div class="param">model_sense (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> 'max' means maximization, 'min' means minimization.
+Suitability depends on the semantics of the node scores </div>
+        <div class="param-enum-header">Enum:</div>
+        <div class="param-enum">max</div><div class="param-enum">min</div>
+<div class="param">algorithm (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> Which algorithm to use:
+gcc: Generalized Charnes-Cooper transform (recommended)
+dta: Dinkelbach-type algorithm
+ovt: Objective-Variable transform </div>
+        <div class="param-enum-header">Enum:</div>
+        <div class="param-enum">dta</div><div class="param-enum">gcc</div><div class="param-enum">ovt</div>
+<div class="param">time_limit (optional)</div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span> Time limit in second. A run is aborted if the limit is reached, in case there were feasible solutions found you can access those as subgraphs though </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="ParameterSetInfo"><code>ParameterSetInfo</code> - </a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">description (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> Description of the run </div>
+<div class="param">id </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> Id of the score object </div>
+<div class="param">set_parameters </div><div class="param-desc"><span class="param-type"><a href="#string">array[String]</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="RunInfo"><code>RunInfo</code> - </a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">description (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> Description of the run </div>
+<div class="param">id </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> Id of the score object </div>
+<div class="param">post_time </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> Time of initial run post </div>
+<div class="param">started </div><div class="param-desc"><span class="param-type"><a href="#boolean">Boolean</a></span> Whether the run has already started </div>
+<div class="param">done </div><div class="param-desc"><span class="param-type"><a href="#boolean">Boolean</a></span> Whether the run is completed </div>
+<div class="param">subgraph_ids (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">array[String]</a></span>  </div>
+<div class="param">run_input </div><div class="param-desc"><span class="param-type"><a href="#RunInput">RunInput</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="RunInput"><code>RunInput</code> - </a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'>All data and parameters the algorithm needs / can accept to run</div>
+    <div class="field-items">
+      <div class="param">description (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> Description of run </div>
+<div class="param">parameter_set_id (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> Id of a parameter set to run the algorithm with </div>
+<div class="param">parameter_set (optional)</div><div class="param-desc"><span class="param-type"><a href="#ParameterSet">ParameterSet</a></span>  </div>
+<div class="param">graph_id </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> Id of graph underlying the run </div>
+<div class="param">score_id (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> Id of node score used in the run </div>
+<div class="param">receptors_id (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> Id of a node set acting as receptors in the run </div>
+<div class="param">terminals_id (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> Id of a node set acting as terminals in the run </div>
+<div class="param">exclude_id (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> Id of a node set of nodes to be excluded from the subgraphs </div>
+<div class="param">include_id (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> Id of a node set of nodes to be included in the subgraphs </div>
+<div class="param">root (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> Node id of a fixed root node </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="Score"><code>Score</code> - </a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">description (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> Description of the score </div>
+<div class="param">node_ids </div><div class="param-desc"><span class="param-type"><a href="#string">array[String]</a></span>  </div>
+<div class="param">score_values </div><div class="param-desc"><span class="param-type"><a href="#number">array[BigDecimal]</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="ScoreInfo"><code>ScoreInfo</code> - </a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">description (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> Description of the score </div>
+<div class="param">size </div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span> Number of scored nodes </div>
+<div class="param">id </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> Id of the score object </div>
+<div class="param">time_of_upload </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> Time of upload </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="SubgraphInfo"><code>SubgraphInfo</code> - </a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">id </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> Subgraph Id </div>
+<div class="param">run_id </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> Id of run the subgraph is a result of </div>
+<div class="param">num_nodes </div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span> Number of nodes in subgraph </div>
+<div class="param">num_edges </div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span> Number of edges in subgraph </div>
+<div class="param">optimal </div><div class="param-desc"><span class="param-type"><a href="#boolean">Boolean</a></span> Whether the subgraph is optimal, ie not prematurely
+stopped by a 'gap_cut' or 'time_limit'. This field is
+independent from the 'optimality_type' field. </div>
+<div class="param">optimality_type </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> 'optimal': optimal subgraph
+'suboptimal:1': first suboptimal subgraph
+'suboptimal:2': second suboptimal subgraph, etc. ... </div>
+<div class="param">root </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> Id of root node, either predefined or found by algorithm </div>
+<div class="param">score </div><div class="param-desc"><span class="param-type"><a href="#number">BigDecimal</a></span> Score of the subgraph </div>
+    </div>  <!-- field-items -->
+  </div>
+  </body>
+</html>

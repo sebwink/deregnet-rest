@@ -10,9 +10,3 @@ from swagger_client.api.parameter_set_api import ParameterSetApi
 from swagger_client.api.run_api import RunApi
 from swagger_client.api.score_api import ScoreApi
 from swagger_client.api.subgraph_api import SubgraphApi
-
-import os
-
-__tmpdir__ = os.path.expanduser('~/.deregnet/temporary')
-if not os.path.isdir(__tmpdir__):
-    os.makedirs(__tmpdir__)

@@ -9,5 +9,6 @@ Name | Type | Description | Notes
 **started** | **Boolean** | Whether the run has already started | 
 **done** | **Boolean** | Whether the run is completed | 
 **subgraphIds** | **[String]** |  | [optional] 
+**runInput** | [**RunInput**](RunInput.md) |  | 
 
 

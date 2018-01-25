@@ -1,10 +1,10 @@
 # DeRegNetRestApi.RunApi
 
-All URIs are relative to *https://virtserver.swaggerhub.com/sebwink/deregnet/1.0.0*
+All URIs are relative to *https://localhost/deregnet*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**deleteRun**](RunApi.md#deleteRun) | **DELETE** /run/{run_id} | Cancel an active run
+[**deleteRun**](RunApi.md#deleteRun) | **DELETE** /run/{run_id} | Cancel an active run, you cannot delete finished runs
 [**getRun**](RunApi.md#getRun) | **GET** /run/{run_id} | Retrieve the status of a previously submitted run
 [**getRuns**](RunApi.md#getRuns) | **GET** /runs | List current and past runs
 [**postRun**](RunApi.md#postRun) | **POST** /run | Run average score DeRegNet algorithm
@@ -14,9 +14,9 @@ Method | HTTP request | Description
 # **deleteRun**
 > deleteRun(runId)
 
-Cancel an active run
+Cancel an active run, you cannot delete finished runs
 
-For valid response try integer IDs with positive integer value.\\ \\ Negative or non-integer values will generate API errors
+Cancel a run
 
 ### Example
 ```javascript
@@ -24,7 +24,7 @@ import DeRegNetRestApi from 'de_reg_net_rest_api';
 
 let apiInstance = new DeRegNetRestApi.RunApi();
 
-let runId = "runId_example"; // String | ID of the order that needs to be deleted
+let runId = "runId_example"; // String | ID of the run to be deleted
 
 
 apiInstance.deleteRun(runId, (error, data, response) => {
@@ -40,7 +40,7 @@ apiInstance.deleteRun(runId, (error, data, response) => {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **runId** | **String**| ID of the order that needs to be deleted | 
+ **runId** | **String**| ID of the run to be deleted | 
 
 ### Return type
 
@@ -152,7 +152,7 @@ No authorization required
 
 <a name="postRun"></a>
 # **postRun**
-> postRun(body)
+> RunInfo postRun(body)
 
 Run average score DeRegNet algorithm
 
@@ -169,7 +169,7 @@ apiInstance.postRun(body, (error, data, response) => {
   if (error) {
     console.error(error);
   } else {
-    console.log('API called successfully.');
+    console.log('API called successfully. Returned data: ' + data);
   }
 });
 ```
@@ -182,7 +182,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-null (empty response body)
+[**RunInfo**](RunInfo.md)
 
 ### Authorization
 

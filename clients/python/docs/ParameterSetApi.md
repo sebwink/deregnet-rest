@@ -1,6 +1,6 @@
 # swagger_client.ParameterSetApi
 
-All URIs are relative to *https://virtserver.swaggerhub.com/sebwink/deregnet/1.0.0*
+All URIs are relative to *https://localhost/deregnet*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
@@ -293,7 +293,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **post_parameter_set**
-> post_parameter_set(body)
+> ParameterSetInfo post_parameter_set(body)
 
 Upload a parameters collection for use with DeRegNet algorithms
 
@@ -311,7 +311,8 @@ body = swagger_client.ParameterSet() # ParameterSet | Parameters to be uploaded 
 
 try:
     # Upload a parameters collection for use with DeRegNet algorithms
-    api_instance.post_parameter_set(body)
+    api_response = api_instance.post_parameter_set(body)
+    pprint(api_response)
 except ApiException as e:
     print("Exception when calling ParameterSetApi->post_parameter_set: %s\n" % e)
 ```
@@ -324,7 +325,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-void (empty response body)
+[**ParameterSetInfo**](ParameterSetInfo.md)
 
 ### Authorization
 

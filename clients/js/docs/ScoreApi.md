@@ -1,6 +1,6 @@
 # DeRegNetRestApi.ScoreApi
 
-All URIs are relative to *https://virtserver.swaggerhub.com/sebwink/deregnet/1.0.0*
+All URIs are relative to *https://localhost/deregnet*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
@@ -150,7 +150,7 @@ No authorization required
 
 <a name="postScore"></a>
 # **postScore**
-> postScore(body)
+> ScoreInfo postScore(body)
 
 Upload a node score for use with DeRegNet algorithms
 
@@ -167,7 +167,7 @@ apiInstance.postScore(body, (error, data, response) => {
   if (error) {
     console.error(error);
   } else {
-    console.log('API called successfully.');
+    console.log('API called successfully. Returned data: ' + data);
   }
 });
 ```
@@ -180,7 +180,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-null (empty response body)
+[**ScoreInfo**](ScoreInfo.md)
 
 ### Authorization
 

@@ -1,6 +1,6 @@
 # DeRegNetRestApi.NodesetApi
 
-All URIs are relative to *https://virtserver.swaggerhub.com/sebwink/deregnet/1.0.0*
+All URIs are relative to *https://localhost/deregnet*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
@@ -24,7 +24,7 @@ import DeRegNetRestApi from 'de_reg_net_rest_api';
 
 let apiInstance = new DeRegNetRestApi.NodesetApi();
 
-let nodesetId = "nodesetId_example"; // String | ID of the order that needs to be deleted
+let nodesetId = "nodesetId_example"; // String | ID of the node set to be deleted
 
 
 apiInstance.deleteNodeset(nodesetId, (error, data, response) => {
@@ -40,7 +40,7 @@ apiInstance.deleteNodeset(nodesetId, (error, data, response) => {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **nodesetId** | **String**| ID of the order that needs to be deleted | 
+ **nodesetId** | **String**| ID of the node set to be deleted | 
 
 ### Return type
 
@@ -53,7 +53,7 @@ No authorization required
 ### HTTP request headers
 
  - **Content-Type**: Not defined
- - **Accept**: application/json
+ - **Accept**: Not defined
 
 <a name="getNodeset"></a>
 # **getNodeset**
@@ -150,7 +150,7 @@ No authorization required
 
 <a name="postNodeset"></a>
 # **postNodeset**
-> postNodeset(body)
+> NodeSetInfo postNodeset(body)
 
 Upload a node set for use with DeRegNet algorithms
 
@@ -167,7 +167,7 @@ apiInstance.postNodeset(body, (error, data, response) => {
   if (error) {
     console.error(error);
   } else {
-    console.log('API called successfully.');
+    console.log('API called successfully. Returned data: ' + data);
   }
 });
 ```
@@ -180,7 +180,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-null (empty response body)
+[**NodeSetInfo**](NodeSetInfo.md)
 
 ### Authorization
 

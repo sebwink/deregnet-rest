@@ -1,6 +1,6 @@
 # DeRegNetRestApi.ParameterSetApi
 
-All URIs are relative to *https://virtserver.swaggerhub.com/sebwink/deregnet/1.0.0*
+All URIs are relative to *https://localhost/deregnet*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
@@ -274,7 +274,7 @@ No authorization required
 
 <a name="postParameterSet"></a>
 # **postParameterSet**
-> postParameterSet(body)
+> ParameterSetInfo postParameterSet(body)
 
 Upload a parameters collection for use with DeRegNet algorithms
 
@@ -291,7 +291,7 @@ apiInstance.postParameterSet(body, (error, data, response) => {
   if (error) {
     console.error(error);
   } else {
-    console.log('API called successfully.');
+    console.log('API called successfully. Returned data: ' + data);
   }
 });
 ```
@@ -304,7 +304,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-null (empty response body)
+[**ParameterSetInfo**](ParameterSetInfo.md)
 
 ### Authorization
 

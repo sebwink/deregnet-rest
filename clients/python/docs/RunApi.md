@@ -1,10 +1,10 @@
 # swagger_client.RunApi
 
-All URIs are relative to *https://virtserver.swaggerhub.com/sebwink/deregnet/1.0.0*
+All URIs are relative to *https://localhost/deregnet*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**delete_run**](RunApi.md#delete_run) | **DELETE** /run/{run_id} | Cancel an active run
+[**delete_run**](RunApi.md#delete_run) | **DELETE** /run/{run_id} | Cancel an active run, you cannot delete finished runs
 [**get_run**](RunApi.md#get_run) | **GET** /run/{run_id} | Retrieve the status of a previously submitted run
 [**get_runs**](RunApi.md#get_runs) | **GET** /runs | List current and past runs
 [**post_run**](RunApi.md#post_run) | **POST** /run | Run average score DeRegNet algorithm
@@ -13,9 +13,9 @@ Method | HTTP request | Description
 # **delete_run**
 > delete_run(run_id)
 
-Cancel an active run
+Cancel an active run, you cannot delete finished runs
 
-For valid response try integer IDs with positive integer value.\\ \\ Negative or non-integer values will generate API errors
+Cancel a run
 
 ### Example
 ```python
@@ -27,10 +27,10 @@ from pprint import pprint
 
 # create an instance of the API class
 api_instance = swagger_client.RunApi()
-run_id = 'run_id_example' # str | ID of the order that needs to be deleted
+run_id = 'run_id_example' # str | ID of the run to be deleted
 
 try:
-    # Cancel an active run
+    # Cancel an active run, you cannot delete finished runs
     api_instance.delete_run(run_id)
 except ApiException as e:
     print("Exception when calling RunApi->delete_run: %s\n" % e)
@@ -40,7 +40,7 @@ except ApiException as e:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **run_id** | **str**| ID of the order that needs to be deleted | 
+ **run_id** | **str**| ID of the run to be deleted | 
 
 ### Return type
 
@@ -158,7 +158,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **post_run**
-> post_run(body)
+> RunInfo post_run(body)
 
 Run average score DeRegNet algorithm
 
@@ -176,7 +176,8 @@ body = swagger_client.RunInput() # RunInput | All data needed to run the algorit
 
 try:
     # Run average score DeRegNet algorithm
-    api_instance.post_run(body)
+    api_response = api_instance.post_run(body)
+    pprint(api_response)
 except ApiException as e:
     print("Exception when calling RunApi->post_run: %s\n" % e)
 ```
@@ -189,7 +190,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-void (empty response body)
+[**RunInfo**](RunInfo.md)
 
 ### Authorization
 

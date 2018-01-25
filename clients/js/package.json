@@ -1,8 +1,8 @@
 {
   "name": "de_reg_net_rest_api",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "DeRegNet_REST_API",
-  "license": "Apache 2.0",
+  "license": "BSD 3-clause",
   "main": "src/index.js",
   "scripts": {
     "test": "mocha --compilers js:babel-core/register --recursive"

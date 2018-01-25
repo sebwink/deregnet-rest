@@ -1,6 +1,6 @@
 # DeRegNetRestApi.InfoApi
 
-All URIs are relative to *https://virtserver.swaggerhub.com/sebwink/deregnet/1.0.0*
+All URIs are relative to *https://localhost/deregnet*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
@@ -21,7 +21,7 @@ Method | HTTP request | Description
 
 Help page on graph endpoint
 
-Returns a single pet
+Graph help page
 
 ### Example
 ```javascript
@@ -60,7 +60,7 @@ No authorization required
 
 General help page
 
-Returns a single pet
+Help page
 
 ### Example
 ```javascript
@@ -99,7 +99,7 @@ No authorization required
 
 Index, redirects to /info
 
-Returns a single pet
+Index
 
 ### Example
 ```javascript
@@ -138,7 +138,7 @@ No authorization required
 
 Help page on info endpoint
 
-Returns a single pet
+Info help page
 
 ### Example
 ```javascript
@@ -177,7 +177,7 @@ No authorization required
 
 Help page on nodeset endpoint
 
-Returns a single pet
+Node set help page
 
 ### Example
 ```javascript
@@ -216,7 +216,7 @@ No authorization required
 
 Help page on subgraph endpoint
 
-Returns a single pet
+Parameter set help page
 
 ### Example
 ```javascript
@@ -255,7 +255,7 @@ No authorization required
 
 Help page on run endpoint
 
-Returns a single pet
+Run help page
 
 ### Example
 ```javascript
@@ -294,7 +294,7 @@ No authorization required
 
 Help page on score endpoint
 
-Returns a single pet
+Score help page
 
 ### Example
 ```javascript
@@ -333,7 +333,7 @@ No authorization required
 
 Help page on subgraph endpoint
 
-Returns a single pet
+Subgraph help page
 
 ### Example
 ```javascript
