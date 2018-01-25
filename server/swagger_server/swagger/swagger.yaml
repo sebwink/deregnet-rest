@@ -27,6 +27,7 @@ tags:
 - name: "info"
   description: "Help and Documentation"
 schemes:
+- "http"
 - "https"
 paths:
   /graph:
