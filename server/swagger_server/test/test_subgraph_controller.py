@@ -18,7 +18,7 @@ class TestSubgraphController(BaseTestCase):
         Delete a previously found subgraph
         """
         response = self.client.open(
-            '/sebwink/deregnet/1.0.0/subgraph/{subgraph_id}'.format(subgraph_id='subgraph_id_example'),
+            '/deregnet/subgraph/{subgraph_id}'.format(subgraph_id='subgraph_id_example'),
             method='DELETE')
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -29,7 +29,7 @@ class TestSubgraphController(BaseTestCase):
         Download a subgraph
         """
         response = self.client.open(
-            '/sebwink/deregnet/1.0.0/subgraph/{subgraph_id}/{filetype}'.format(subgraph_id='subgraph_id_example', filetype='filetype_example'),
+            '/deregnet/subgraph/{subgraph_id}/{filetype}'.format(subgraph_id='subgraph_id_example', filetype='filetype_example'),
             method='GET')
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -40,7 +40,7 @@ class TestSubgraphController(BaseTestCase):
         Retrieve the information about a subgraph
         """
         response = self.client.open(
-            '/sebwink/deregnet/1.0.0/subgraph/{subgraph_id}'.format(subgraph_id='subgraph_id_example'),
+            '/deregnet/subgraph/{subgraph_id}'.format(subgraph_id='subgraph_id_example'),
             method='GET')
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -54,7 +54,7 @@ class TestSubgraphController(BaseTestCase):
                         ('skip', 1),
                         ('limit', 50)]
         response = self.client.open(
-            '/sebwink/deregnet/1.0.0/subgraphs',
+            '/deregnet/subgraphs',
             method='GET',
             query_string=query_string)
         self.assert200(response,

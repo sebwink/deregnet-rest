@@ -19,7 +19,7 @@ class TestParameterSetController(BaseTestCase):
         Delete a previously uploaded parameter collection
         """
         response = self.client.open(
-            '/sebwink/deregnet/1.0.0/parameter_set/{parameter_set_id}'.format(parameter_set_id='parameter_set_id_example'),
+            '/deregnet/parameter_set/{parameter_set_id}'.format(parameter_set_id='parameter_set_id_example'),
             method='DELETE')
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -30,7 +30,7 @@ class TestParameterSetController(BaseTestCase):
         Retrieve information on a previously uploaded score
         """
         response = self.client.open(
-            '/sebwink/deregnet/1.0.0/parameter_set/{parameter_set_id}'.format(parameter_set_id='parameter_set_id_example'),
+            '/deregnet/parameter_set/{parameter_set_id}'.format(parameter_set_id='parameter_set_id_example'),
             method='GET')
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -41,7 +41,7 @@ class TestParameterSetController(BaseTestCase):
         Retrieve a parameter collection
         """
         response = self.client.open(
-            '/sebwink/deregnet/1.0.0/parameter_set/{parameter_set_id}/data'.format(parameter_set_id='parameter_set_id_example'),
+            '/deregnet/parameter_set/{parameter_set_id}/data'.format(parameter_set_id='parameter_set_id_example'),
             method='GET')
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -52,7 +52,7 @@ class TestParameterSetController(BaseTestCase):
         Retrieve the defaul parameter collection
         """
         response = self.client.open(
-            '/sebwink/deregnet/1.0.0/parameter_set/default',
+            '/deregnet/parameter_set/default',
             method='GET')
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -63,7 +63,7 @@ class TestParameterSetController(BaseTestCase):
         Retrieve information on a previously uploaded score
         """
         response = self.client.open(
-            '/sebwink/deregnet/1.0.0/parameter_set/default/data',
+            '/deregnet/parameter_set/default/data',
             method='GET')
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -77,7 +77,7 @@ class TestParameterSetController(BaseTestCase):
                         ('skip', 1),
                         ('limit', 50)]
         response = self.client.open(
-            '/sebwink/deregnet/1.0.0/parameter_sets',
+            '/deregnet/parameter_sets',
             method='GET',
             query_string=query_string)
         self.assert200(response,
@@ -90,7 +90,7 @@ class TestParameterSetController(BaseTestCase):
         """
         body = ParameterSet()
         response = self.client.open(
-            '/sebwink/deregnet/1.0.0/parameter_set',
+            '/deregnet/parameter_set',
             method='POST',
             data=json.dumps(body),
             content_type='application/json')

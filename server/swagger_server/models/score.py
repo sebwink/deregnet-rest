@@ -93,6 +93,8 @@ class Score(Model):
         :param node_ids: The node_ids of this Score.
         :type node_ids: List[str]
         """
+        if node_ids is None:
+            raise ValueError("Invalid value for `node_ids`, must not be `None`")  # noqa: E501
 
         self._node_ids = node_ids
 
@@ -114,5 +116,7 @@ class Score(Model):
         :param score_values: The score_values of this Score.
         :type score_values: List[float]
         """
+        if score_values is None:
+            raise ValueError("Invalid value for `score_values`, must not be `None`")  # noqa: E501
 
         self._score_values = score_values

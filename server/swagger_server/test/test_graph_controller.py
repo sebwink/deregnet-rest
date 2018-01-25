@@ -19,7 +19,7 @@ class TestGraphController(BaseTestCase):
         Delete a previously uploaded network
         """
         response = self.client.open(
-            '/sebwink/deregnet/1.0.0/graph/{graph_id}'.format(graph_id='graph_id_example'),
+            '/deregnet/graph/{graph_id}'.format(graph_id='graph_id_example'),
             method='DELETE')
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -30,7 +30,7 @@ class TestGraphController(BaseTestCase):
         Retrieve information on a previously uploaded graph 
         """
         response = self.client.open(
-            '/sebwink/deregnet/1.0.0/graph/{graph_id}'.format(graph_id='graph_id_example'),
+            '/deregnet/graph/{graph_id}'.format(graph_id='graph_id_example'),
             method='GET')
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -44,7 +44,7 @@ class TestGraphController(BaseTestCase):
                         ('skip', 1),
                         ('limit', 50)]
         response = self.client.open(
-            '/sebwink/deregnet/1.0.0/graphs',
+            '/deregnet/graphs',
             method='GET',
             query_string=query_string)
         self.assert200(response,
@@ -57,7 +57,7 @@ class TestGraphController(BaseTestCase):
         """
         initalGraphInfo = InitalGraphInfo()
         response = self.client.open(
-            '/sebwink/deregnet/1.0.0/graph',
+            '/deregnet/graph',
             method='POST',
             data=json.dumps(initalGraphInfo),
             content_type='application/json')
@@ -71,7 +71,7 @@ class TestGraphController(BaseTestCase):
         """
         data = dict(file_to_upload=(BytesIO(b'some file data'), 'file.txt'))
         response = self.client.open(
-            '/sebwink/deregnet/1.0.0/graph/{graph_id}'.format(graph_id='graph_id_example'),
+            '/deregnet/graph/{graph_id}'.format(graph_id='graph_id_example'),
             method='POST',
             data=data,
             content_type='multipart/form-data')

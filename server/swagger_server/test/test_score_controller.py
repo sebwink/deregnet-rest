@@ -19,7 +19,7 @@ class TestScoreController(BaseTestCase):
         Delete a previously uploaded node score
         """
         response = self.client.open(
-            '/sebwink/deregnet/1.0.0/score/{score_id}'.format(score_id='score_id_example'),
+            '/deregnet/score/{score_id}'.format(score_id='score_id_example'),
             method='DELETE')
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -30,7 +30,7 @@ class TestScoreController(BaseTestCase):
         Retrieve information on a previously uploaded score
         """
         response = self.client.open(
-            '/sebwink/deregnet/1.0.0/score/{score_id}'.format(score_id='score_id_example'),
+            '/deregnet/score/{score_id}'.format(score_id='score_id_example'),
             method='GET')
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -44,7 +44,7 @@ class TestScoreController(BaseTestCase):
                         ('skip', 1),
                         ('limit', 50)]
         response = self.client.open(
-            '/sebwink/deregnet/1.0.0/scores',
+            '/deregnet/scores',
             method='GET',
             query_string=query_string)
         self.assert200(response,
@@ -57,7 +57,7 @@ class TestScoreController(BaseTestCase):
         """
         body = Score()
         response = self.client.open(
-            '/sebwink/deregnet/1.0.0/score',
+            '/deregnet/score',
             method='POST',
             data=json.dumps(body),
             content_type='application/json')

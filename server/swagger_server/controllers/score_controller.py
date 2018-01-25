@@ -57,7 +57,7 @@ def post_score(body):  # noqa: E501
     :param body: Node scores to be uploaded for later use with a DeRegNet algorithm
     :type body: dict | bytes
 
-    :rtype: None
+    :rtype: ScoreInfo
     """
     if connexion.request.is_json:
         body = Score.from_dict(connexion.request.get_json())  # noqa: E501

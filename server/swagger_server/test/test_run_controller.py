@@ -16,10 +16,10 @@ class TestRunController(BaseTestCase):
     def test_delete_run(self):
         """Test case for delete_run
 
-        Cancel an active run
+        Cancel an active run, you cannot delete finished runs
         """
         response = self.client.open(
-            '/sebwink/deregnet/1.0.0/run/{run_id}'.format(run_id='run_id_example'),
+            '/deregnet/run/{run_id}'.format(run_id='run_id_example'),
             method='DELETE')
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -30,7 +30,7 @@ class TestRunController(BaseTestCase):
         Retrieve the status of a previously submitted run
         """
         response = self.client.open(
-            '/sebwink/deregnet/1.0.0/run/{run_id}'.format(run_id='run_id_example'),
+            '/deregnet/run/{run_id}'.format(run_id='run_id_example'),
             method='GET')
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -44,7 +44,7 @@ class TestRunController(BaseTestCase):
                         ('skip', 1),
                         ('limit', 50)]
         response = self.client.open(
-            '/sebwink/deregnet/1.0.0/runs',
+            '/deregnet/runs',
             method='GET',
             query_string=query_string)
         self.assert200(response,
@@ -57,7 +57,7 @@ class TestRunController(BaseTestCase):
         """
         body = RunInput()
         response = self.client.open(
-            '/sebwink/deregnet/1.0.0/run',
+            '/deregnet/run',
             method='POST',
             data=json.dumps(body),
             content_type='application/json')

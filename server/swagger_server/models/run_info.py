@@ -6,6 +6,7 @@ from datetime import date, datetime  # noqa: F401
 from typing import List, Dict  # noqa: F401
 
 from swagger_server.models.base_model_ import Model
+from swagger_server.models.run_input import RunInput  # noqa: F401,E501
 from swagger_server import util
 
 
@@ -15,7 +16,7 @@ class RunInfo(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, description: str=None, id: str=None, post_time: str=None, started: bool=None, done: bool=None, subgraph_ids: List[str]=None):  # noqa: E501
+    def __init__(self, description: str=None, id: str=None, post_time: str=None, started: bool=None, done: bool=None, subgraph_ids: List[str]=None, run_input: RunInput=None):  # noqa: E501
         """RunInfo - a model defined in Swagger
 
         :param description: The description of this RunInfo.  # noqa: E501
@@ -30,6 +31,8 @@ class RunInfo(Model):
         :type done: bool
         :param subgraph_ids: The subgraph_ids of this RunInfo.  # noqa: E501
         :type subgraph_ids: List[str]
+        :param run_input: The run_input of this RunInfo.  # noqa: E501
+        :type run_input: RunInput
         """
         self.swagger_types = {
             'description': str,
@@ -37,7 +40,8 @@ class RunInfo(Model):
             'post_time': str,
             'started': bool,
             'done': bool,
-            'subgraph_ids': List[str]
+            'subgraph_ids': List[str],
+            'run_input': RunInput
         }
 
         self.attribute_map = {
@@ -46,7 +50,8 @@ class RunInfo(Model):
             'post_time': 'post_time',
             'started': 'started',
             'done': 'done',
-            'subgraph_ids': 'subgraph_ids'
+            'subgraph_ids': 'subgraph_ids',
+            'run_input': 'run_input'
         }
 
         self._description = description
@@ -55,6 +60,7 @@ class RunInfo(Model):
         self._started = started
         self._done = done
         self._subgraph_ids = subgraph_ids
+        self._run_input = run_input
 
     @classmethod
     def from_dict(cls, dikt) -> 'RunInfo':
@@ -210,3 +216,26 @@ class RunInfo(Model):
         """
 
         self._subgraph_ids = subgraph_ids
+
+    @property
+    def run_input(self) -> RunInput:
+        """Gets the run_input of this RunInfo.
+
+
+        :return: The run_input of this RunInfo.
+        :rtype: RunInput
+        """
+        return self._run_input
+
+    @run_input.setter
+    def run_input(self, run_input: RunInput):
+        """Sets the run_input of this RunInfo.
+
+
+        :param run_input: The run_input of this RunInfo.
+        :type run_input: RunInput
+        """
+        if run_input is None:
+            raise ValueError("Invalid value for `run_input`, must not be `None`")  # noqa: E501
+
+        self._run_input = run_input

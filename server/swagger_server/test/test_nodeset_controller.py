@@ -19,7 +19,7 @@ class TestNodesetController(BaseTestCase):
         Delete a previously uploaded node set
         """
         response = self.client.open(
-            '/sebwink/deregnet/1.0.0/nodeset/{nodeset_id}'.format(nodeset_id='nodeset_id_example'),
+            '/deregnet/nodeset/{nodeset_id}'.format(nodeset_id='nodeset_id_example'),
             method='DELETE')
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -30,7 +30,7 @@ class TestNodesetController(BaseTestCase):
         Retrieve information on a previously uploaded node set
         """
         response = self.client.open(
-            '/sebwink/deregnet/1.0.0/nodeset/{nodeset_id}'.format(nodeset_id='nodeset_id_example'),
+            '/deregnet/nodeset/{nodeset_id}'.format(nodeset_id='nodeset_id_example'),
             method='GET')
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -44,7 +44,7 @@ class TestNodesetController(BaseTestCase):
                         ('skip', 1),
                         ('limit', 50)]
         response = self.client.open(
-            '/sebwink/deregnet/1.0.0/nodesets',
+            '/deregnet/nodesets',
             method='GET',
             query_string=query_string)
         self.assert200(response,
@@ -57,7 +57,7 @@ class TestNodesetController(BaseTestCase):
         """
         body = NodeSet()
         response = self.client.open(
-            '/sebwink/deregnet/1.0.0/nodeset',
+            '/deregnet/nodeset',
             method='POST',
             data=json.dumps(body),
             content_type='application/json')

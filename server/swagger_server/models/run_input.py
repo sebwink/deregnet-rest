@@ -16,7 +16,7 @@ class RunInput(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, description: str=None, parameter_set_id: str=None, parameter_set: ParameterSet=None, graph_id: str=None, score_id: str=None, receptors_id: str=None, terminals_id: str=None, root: str=None):  # noqa: E501
+    def __init__(self, description: str=None, parameter_set_id: str=None, parameter_set: ParameterSet=None, graph_id: str=None, score_id: str=None, receptors_id: str=None, terminals_id: str=None, exclude_id: str=None, include_id: str=None, root: str=None):  # noqa: E501
         """RunInput - a model defined in Swagger
 
         :param description: The description of this RunInput.  # noqa: E501
@@ -33,6 +33,10 @@ class RunInput(Model):
         :type receptors_id: str
         :param terminals_id: The terminals_id of this RunInput.  # noqa: E501
         :type terminals_id: str
+        :param exclude_id: The exclude_id of this RunInput.  # noqa: E501
+        :type exclude_id: str
+        :param include_id: The include_id of this RunInput.  # noqa: E501
+        :type include_id: str
         :param root: The root of this RunInput.  # noqa: E501
         :type root: str
         """
@@ -44,6 +48,8 @@ class RunInput(Model):
             'score_id': str,
             'receptors_id': str,
             'terminals_id': str,
+            'exclude_id': str,
+            'include_id': str,
             'root': str
         }
 
@@ -55,6 +61,8 @@ class RunInput(Model):
             'score_id': 'score_id',
             'receptors_id': 'receptors_id',
             'terminals_id': 'terminals_id',
+            'exclude_id': 'exclude_id',
+            'include_id': 'include_id',
             'root': 'root'
         }
 
@@ -65,6 +73,8 @@ class RunInput(Model):
         self._score_id = score_id
         self._receptors_id = receptors_id
         self._terminals_id = terminals_id
+        self._exclude_id = exclude_id
+        self._include_id = include_id
         self._root = root
 
     @classmethod
@@ -190,8 +200,6 @@ class RunInput(Model):
         :param score_id: The score_id of this RunInput.
         :type score_id: str
         """
-        if score_id is None:
-            raise ValueError("Invalid value for `score_id`, must not be `None`")  # noqa: E501
 
         self._score_id = score_id
 
@@ -240,6 +248,52 @@ class RunInput(Model):
         """
 
         self._terminals_id = terminals_id
+
+    @property
+    def exclude_id(self) -> str:
+        """Gets the exclude_id of this RunInput.
+
+        Id of a node set of nodes to be excluded from the subgraphs   # noqa: E501
+
+        :return: The exclude_id of this RunInput.
+        :rtype: str
+        """
+        return self._exclude_id
+
+    @exclude_id.setter
+    def exclude_id(self, exclude_id: str):
+        """Sets the exclude_id of this RunInput.
+
+        Id of a node set of nodes to be excluded from the subgraphs   # noqa: E501
+
+        :param exclude_id: The exclude_id of this RunInput.
+        :type exclude_id: str
+        """
+
+        self._exclude_id = exclude_id
+
+    @property
+    def include_id(self) -> str:
+        """Gets the include_id of this RunInput.
+
+        Id of a node set of nodes to be included in the subgraphs   # noqa: E501
+
+        :return: The include_id of this RunInput.
+        :rtype: str
+        """
+        return self._include_id
+
+    @include_id.setter
+    def include_id(self, include_id: str):
+        """Sets the include_id of this RunInput.
+
+        Id of a node set of nodes to be included in the subgraphs   # noqa: E501
+
+        :param include_id: The include_id of this RunInput.
+        :type include_id: str
+        """
+
+        self._include_id = include_id
 
     @property
     def root(self) -> str:

@@ -15,36 +15,31 @@ class ParameterSetInfo(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, description: str=None, id: str=None, start_time: str=None, done: bool=None):  # noqa: E501
+    def __init__(self, description: str=None, id: str=None, set_parameters: List[str]=None):  # noqa: E501
         """ParameterSetInfo - a model defined in Swagger
 
         :param description: The description of this ParameterSetInfo.  # noqa: E501
         :type description: str
         :param id: The id of this ParameterSetInfo.  # noqa: E501
         :type id: str
-        :param start_time: The start_time of this ParameterSetInfo.  # noqa: E501
-        :type start_time: str
-        :param done: The done of this ParameterSetInfo.  # noqa: E501
-        :type done: bool
+        :param set_parameters: The set_parameters of this ParameterSetInfo.  # noqa: E501
+        :type set_parameters: List[str]
         """
         self.swagger_types = {
             'description': str,
             'id': str,
-            'start_time': str,
-            'done': bool
+            'set_parameters': List[str]
         }
 
         self.attribute_map = {
             'description': 'description',
             'id': 'id',
-            'start_time': 'start_time',
-            'done': 'done'
+            'set_parameters': 'set_parameters'
         }
 
         self._description = description
         self._id = id
-        self._start_time = start_time
-        self._done = done
+        self._set_parameters = set_parameters
 
     @classmethod
     def from_dict(cls, dikt) -> 'ParameterSetInfo':
@@ -100,51 +95,30 @@ class ParameterSetInfo(Model):
         :param id: The id of this ParameterSetInfo.
         :type id: str
         """
+        if id is None:
+            raise ValueError("Invalid value for `id`, must not be `None`")  # noqa: E501
 
         self._id = id
 
     @property
-    def start_time(self) -> str:
-        """Gets the start_time of this ParameterSetInfo.
+    def set_parameters(self) -> List[str]:
+        """Gets the set_parameters of this ParameterSetInfo.
 
-        Time of upload  # noqa: E501
 
-        :return: The start_time of this ParameterSetInfo.
-        :rtype: str
+        :return: The set_parameters of this ParameterSetInfo.
+        :rtype: List[str]
         """
-        return self._start_time
+        return self._set_parameters
 
-    @start_time.setter
-    def start_time(self, start_time: str):
-        """Sets the start_time of this ParameterSetInfo.
+    @set_parameters.setter
+    def set_parameters(self, set_parameters: List[str]):
+        """Sets the set_parameters of this ParameterSetInfo.
 
-        Time of upload  # noqa: E501
 
-        :param start_time: The start_time of this ParameterSetInfo.
-        :type start_time: str
+        :param set_parameters: The set_parameters of this ParameterSetInfo.
+        :type set_parameters: List[str]
         """
+        if set_parameters is None:
+            raise ValueError("Invalid value for `set_parameters`, must not be `None`")  # noqa: E501
 
-        self._start_time = start_time
-
-    @property
-    def done(self) -> bool:
-        """Gets the done of this ParameterSetInfo.
-
-        Whether the run is completed  # noqa: E501
-
-        :return: The done of this ParameterSetInfo.
-        :rtype: bool
-        """
-        return self._done
-
-    @done.setter
-    def done(self, done: bool):
-        """Sets the done of this ParameterSetInfo.
-
-        Whether the run is completed  # noqa: E501
-
-        :param done: The done of this ParameterSetInfo.
-        :type done: bool
-        """
-
-        self._done = done
+        self._set_parameters = set_parameters

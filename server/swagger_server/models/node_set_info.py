@@ -15,7 +15,7 @@ class NodeSetInfo(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, description: str=None, size: int=None, id: str=None, uploaded: str=None):  # noqa: E501
+    def __init__(self, description: str=None, size: int=None, id: str=None, time_of_upload: str=None):  # noqa: E501
         """NodeSetInfo - a model defined in Swagger
 
         :param description: The description of this NodeSetInfo.  # noqa: E501
@@ -24,27 +24,27 @@ class NodeSetInfo(Model):
         :type size: int
         :param id: The id of this NodeSetInfo.  # noqa: E501
         :type id: str
-        :param uploaded: The uploaded of this NodeSetInfo.  # noqa: E501
-        :type uploaded: str
+        :param time_of_upload: The time_of_upload of this NodeSetInfo.  # noqa: E501
+        :type time_of_upload: str
         """
         self.swagger_types = {
             'description': str,
             'size': int,
             'id': str,
-            'uploaded': str
+            'time_of_upload': str
         }
 
         self.attribute_map = {
             'description': 'description',
             'size': 'size',
             'id': 'id',
-            'uploaded': 'uploaded'
+            'time_of_upload': 'time_of_upload'
         }
 
         self._description = description
         self._size = size
         self._id = id
-        self._uploaded = uploaded
+        self._time_of_upload = time_of_upload
 
     @classmethod
     def from_dict(cls, dikt) -> 'NodeSetInfo':
@@ -100,6 +100,8 @@ class NodeSetInfo(Model):
         :param size: The size of this NodeSetInfo.
         :type size: int
         """
+        if size is None:
+            raise ValueError("Invalid value for `size`, must not be `None`")  # noqa: E501
 
         self._size = size
 
@@ -123,28 +125,32 @@ class NodeSetInfo(Model):
         :param id: The id of this NodeSetInfo.
         :type id: str
         """
+        if id is None:
+            raise ValueError("Invalid value for `id`, must not be `None`")  # noqa: E501
 
         self._id = id
 
     @property
-    def uploaded(self) -> str:
-        """Gets the uploaded of this NodeSetInfo.
+    def time_of_upload(self) -> str:
+        """Gets the time_of_upload of this NodeSetInfo.
 
         Time of upload  # noqa: E501
 
-        :return: The uploaded of this NodeSetInfo.
+        :return: The time_of_upload of this NodeSetInfo.
         :rtype: str
         """
-        return self._uploaded
+        return self._time_of_upload
 
-    @uploaded.setter
-    def uploaded(self, uploaded: str):
-        """Sets the uploaded of this NodeSetInfo.
+    @time_of_upload.setter
+    def time_of_upload(self, time_of_upload: str):
+        """Sets the time_of_upload of this NodeSetInfo.
 
         Time of upload  # noqa: E501
 
-        :param uploaded: The uploaded of this NodeSetInfo.
-        :type uploaded: str
+        :param time_of_upload: The time_of_upload of this NodeSetInfo.
+        :type time_of_upload: str
         """
+        if time_of_upload is None:
+            raise ValueError("Invalid value for `time_of_upload`, must not be `None`")  # noqa: E501
 
-        self._uploaded = uploaded
+        self._time_of_upload = time_of_upload

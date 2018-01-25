@@ -11,7 +11,7 @@ def delete_nodeset(nodeset_id):  # noqa: E501
 
     Deletes a node set # noqa: E501
 
-    :param nodeset_id: ID of the order that needs to be deleted
+    :param nodeset_id: ID of the node set to be deleted
     :type nodeset_id: str
 
     :rtype: None
@@ -57,7 +57,7 @@ def post_nodeset(body):  # noqa: E501
     :param body: Node set to be uploaded for later use with a DeRegNet algorithm
     :type body: dict | bytes
 
-    :rtype: None
+    :rtype: NodeSetInfo
     """
     if connexion.request.is_json:
         body = NodeSet.from_dict(connexion.request.get_json())  # noqa: E501

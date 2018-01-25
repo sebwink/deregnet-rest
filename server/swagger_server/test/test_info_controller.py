@@ -17,7 +17,7 @@ class TestInfoController(BaseTestCase):
         Help page on graph endpoint
         """
         response = self.client.open(
-            '/sebwink/deregnet/1.0.0/info/graph',
+            '/deregnet/info/graph',
             method='GET')
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -28,7 +28,7 @@ class TestInfoController(BaseTestCase):
         General help page
         """
         response = self.client.open(
-            '/sebwink/deregnet/1.0.0/info',
+            '/deregnet/info',
             method='GET')
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -39,7 +39,7 @@ class TestInfoController(BaseTestCase):
         Index, redirects to /info
         """
         response = self.client.open(
-            '/sebwink/deregnet/1.0.0/',
+            '/deregnet/',
             method='GET')
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -50,7 +50,7 @@ class TestInfoController(BaseTestCase):
         Help page on info endpoint
         """
         response = self.client.open(
-            '/sebwink/deregnet/1.0.0/info/info',
+            '/deregnet/info/info',
             method='GET')
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -61,7 +61,7 @@ class TestInfoController(BaseTestCase):
         Help page on nodeset endpoint
         """
         response = self.client.open(
-            '/sebwink/deregnet/1.0.0/info/nodeset',
+            '/deregnet/info/nodeset',
             method='GET')
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -72,7 +72,7 @@ class TestInfoController(BaseTestCase):
         Help page on subgraph endpoint
         """
         response = self.client.open(
-            '/sebwink/deregnet/1.0.0/info/parameter_set',
+            '/deregnet/info/parameter_set',
             method='GET')
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -83,7 +83,7 @@ class TestInfoController(BaseTestCase):
         Help page on run endpoint
         """
         response = self.client.open(
-            '/sebwink/deregnet/1.0.0/info/run',
+            '/deregnet/info/run',
             method='GET')
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -94,7 +94,7 @@ class TestInfoController(BaseTestCase):
         Help page on score endpoint
         """
         response = self.client.open(
-            '/sebwink/deregnet/1.0.0/info/score',
+            '/deregnet/info/score',
             method='GET')
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -105,7 +105,7 @@ class TestInfoController(BaseTestCase):
         Help page on subgraph endpoint
         """
         response = self.client.open(
-            '/sebwink/deregnet/1.0.0/info/subgraph',
+            '/deregnet/info/subgraph',
             method='GET')
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))

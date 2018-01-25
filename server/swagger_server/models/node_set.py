@@ -88,5 +88,7 @@ class NodeSet(Model):
         :param nodes: The nodes of this NodeSet.
         :type nodes: List[str]
         """
+        if nodes is None:
+            raise ValueError("Invalid value for `nodes`, must not be `None`")  # noqa: E501
 
         self._nodes = nodes

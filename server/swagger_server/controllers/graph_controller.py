@@ -57,7 +57,7 @@ def post_graph(initalGraphInfo=None):  # noqa: E501
     :param initalGraphInfo: The intial Information required for creating a new graph
     :type initalGraphInfo: dict | bytes
 
-    :rtype: None
+    :rtype: GraphInfo
     """
     if connexion.request.is_json:
         initalGraphInfo = InitalGraphInfo.from_dict(connexion.request.get_json())  # noqa: E501

@@ -7,11 +7,11 @@ from swagger_server import util
 
 
 def delete_run(run_id):  # noqa: E501
-    """Cancel an active run
+    """Cancel an active run, you cannot delete finished runs
 
-    For valid response try integer IDs with positive integer value.\\ \\ Negative or non-integer values will generate API errors # noqa: E501
+    Cancel a run # noqa: E501
 
-    :param run_id: ID of the order that needs to be deleted
+    :param run_id: ID of the run to be deleted
     :type run_id: str
 
     :rtype: None
@@ -57,7 +57,7 @@ def post_run(body):  # noqa: E501
     :param body: All data needed to run the algorithm
     :type body: dict | bytes
 
-    :rtype: None
+    :rtype: RunInfo
     """
     if connexion.request.is_json:
         body = RunInput.from_dict(connexion.request.get_json())  # noqa: E501

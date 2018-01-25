@@ -2,14 +2,13 @@
 swagger: "2.0"
 info:
   description: "DeRegNet REST API\n"
-  version: "1.0.0"
+  version: "0.0.1"
   title: "DeRegNet REST API"
-  termsOfService: "http://swagger.io/terms/"
   contact:
     email: "deregnet@informatik.uni-tuebingen.de"
   license:
-    name: "Apache 2.0"
-    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+    name: "BSD 3-clause"
+    url: "https://opensource.org/licenses/BSD-3-Clause"
 host: "localhost"
 basePath: "/deregnet"
 tags:
@@ -29,7 +28,6 @@ tags:
   description: "Help and Documentation"
 schemes:
 - "https"
-- "http"
 paths:
   /graph:
     post:
@@ -42,6 +40,8 @@ paths:
       operationId: "post_graph"
       consumes:
       - "application/json"
+      produces:
+      - "application/json"
       parameters:
       - in: "body"
         name: "initalGraphInfo"
@@ -50,8 +50,10 @@ paths:
         schema:
           $ref: "#/definitions/InitalGraphInfo"
       responses:
-        201:
-          description: "item created"
+        200:
+          description: "Graph entity created"
+          schema:
+            $ref: "#/definitions/GraphInfo"
         400:
           description: "invalid input, object invalid"
         409:
@@ -91,8 +93,6 @@ paths:
       operationId: "post_graphml"
       consumes:
       - "multipart/form-data"
-      produces:
-      - "application/json"
       parameters:
       - name: "graph_id"
         in: "path"
@@ -188,6 +188,10 @@ paths:
         schema:
           $ref: "#/definitions/Score"
       responses:
+        200:
+          description: "Score upload successful"
+          schema:
+            $ref: "#/definitions/ScoreInfo"
         405:
           description: "Invalid input"
       x-swagger-router-controller: "swagger_server.controllers.score_controller"
@@ -268,6 +272,8 @@ paths:
         required: true
         type: "string"
       responses:
+        201:
+          description: "Score successfully deleted"
         400:
           description: "Invalid ID supplied"
         404:
@@ -291,6 +297,10 @@ paths:
         schema:
           $ref: "#/definitions/NodeSet"
       responses:
+        200:
+          description: "Node set upload successful"
+          schema:
+            $ref: "#/definitions/NodeSetInfo"
         405:
           description: "Invalid input"
       x-swagger-router-controller: "swagger_server.controllers.nodeset_controller"
@@ -362,15 +372,15 @@ paths:
       summary: "Delete a previously uploaded node set"
       description: "Deletes a node set"
       operationId: "delete_nodeset"
-      produces:
-      - "application/json"
       parameters:
       - name: "nodeset_id"
         in: "path"
-        description: "ID of the order that needs to be deleted"
+        description: "ID of the node set to be deleted"
         required: true
         type: "string"
       responses:
+        200:
+          description: "Node set successfully deleted"
         400:
           description: "Invalid ID supplied"
         404:
@@ -394,6 +404,10 @@ paths:
         schema:
           $ref: "#/definitions/ParameterSet"
       responses:
+        200:
+          description: "Parameter set successfully uploaded"
+          schema:
+            $ref: "#/definitions/ParameterSetInfo"
         405:
           description: "Invalid input"
       x-swagger-router-controller: "swagger_server.controllers.parameter_set_controller"
@@ -474,6 +488,8 @@ paths:
         required: true
         type: "string"
       responses:
+        200:
+          description: "Parameter set successfully deleted"
         400:
           description: "Invalid ID supplied"
         404:
@@ -561,6 +577,10 @@ paths:
         schema:
           $ref: "#/definitions/RunInput"
       responses:
+        200:
+          description: "Run posted successfully"
+          schema:
+            $ref: "#/definitions/RunInfo"
         405:
           description: "Invalid input"
       x-swagger-router-controller: "swagger_server.controllers.run_controller"
@@ -630,23 +650,26 @@ paths:
     delete:
       tags:
       - "run"
-      summary: "Cancel an active run"
-      description: "For valid response try integer IDs with positive integer value.\\\
-        \ \\ Negative or non-integer values will generate API errors"
+      summary: "Cancel an active run, you cannot delete finished runs"
+      description: "Cancel a run"
       operationId: "delete_run"
       produces:
       - "application/json"
       parameters:
       - name: "run_id"
         in: "path"
-        description: "ID of the order that needs to be deleted"
+        description: "ID of the run to be deleted"
         required: true
         type: "string"
       responses:
+        201:
+          description: "Run successfully canceled"
         400:
           description: "Invalid ID supplied"
         404:
-          description: "Order not found"
+          description: "Run not found"
+        405:
+          description: "Run already finished"
       x-swagger-router-controller: "swagger_server.controllers.run_controller"
   /subgraphs:
     get:
@@ -726,6 +749,8 @@ paths:
         required: true
         type: "string"
       responses:
+        201:
+          description: "Subgraph successfully deleted"
         400:
           description: "Invalid ID supplied"
         404:
@@ -769,7 +794,7 @@ paths:
       tags:
       - "info"
       summary: "Index, redirects to /info"
-      description: "Returns a single pet"
+      description: "Index"
       operationId: "index"
       produces:
       - "text/html"
@@ -783,7 +808,7 @@ paths:
       tags:
       - "info"
       summary: "General help page"
-      description: "Returns a single pet"
+      description: "Help page"
       operationId: "help"
       produces:
       - "text/html"
@@ -797,7 +822,7 @@ paths:
       tags:
       - "info"
       summary: "Help page on info endpoint"
-      description: "Returns a single pet"
+      description: "Info help page"
       operationId: "info_docs"
       produces:
       - "text/html"
@@ -811,7 +836,7 @@ paths:
       tags:
       - "info"
       summary: "Help page on graph endpoint"
-      description: "Returns a single pet"
+      description: "Graph help page"
       operationId: "graph_docs"
       produces:
       - "text/html"
@@ -825,7 +850,7 @@ paths:
       tags:
       - "info"
       summary: "Help page on score endpoint"
-      description: "Returns a single pet"
+      description: "Score help page"
       operationId: "score_docs"
       produces:
       - "text/html"
@@ -839,7 +864,7 @@ paths:
       tags:
       - "info"
       summary: "Help page on nodeset endpoint"
-      description: "Returns a single pet"
+      description: "Node set help page"
       operationId: "nodeset_docs"
       produces:
       - "text/html"
@@ -853,7 +878,7 @@ paths:
       tags:
       - "info"
       summary: "Help page on subgraph endpoint"
-      description: "Returns a single pet"
+      description: "Parameter set help page"
       operationId: "parameter_set_docs"
       produces:
       - "text/html"
@@ -867,7 +892,7 @@ paths:
       tags:
       - "info"
       summary: "Help page on run endpoint"
-      description: "Returns a single pet"
+      description: "Run help page"
       operationId: "run_docs"
       produces:
       - "text/html"
@@ -881,7 +906,7 @@ paths:
       tags:
       - "info"
       summary: "Help page on subgraph endpoint"
-      description: "Returns a single pet"
+      description: "Subgraph help page"
       operationId: "subgraph_docs"
       produces:
       - "text/html"
@@ -942,22 +967,19 @@ definitions:
       description: "description"
   Score:
     type: "object"
+    required:
+    - "node_ids"
+    - "score_values"
     properties:
       description:
         type: "string"
         description: "Description of the score"
       node_ids:
         type: "array"
-        xml:
-          name: "node_id"
-          wrapped: true
         items:
           type: "string"
       score_values:
         type: "array"
-        xml:
-          name: "score_value"
-          wrapped: true
         items:
           type: "number"
     example:
@@ -970,6 +992,10 @@ definitions:
       - "node_ids"
   ScoreInfo:
     type: "object"
+    required:
+    - "id"
+    - "size"
+    - "time_of_upload"
     properties:
       description:
         type: "string"
@@ -980,18 +1006,18 @@ definitions:
       id:
         type: "string"
         description: "Id of the score object"
-      uploaded:
+      time_of_upload:
         type: "string"
         description: "Time of upload"
     example:
       size: 0
-      uploaded: "uploaded"
+      time_of_upload: "time_of_upload"
       description: "description"
       id: "id"
-    xml:
-      name: "score_info"
   NodeSet:
     type: "object"
+    required:
+    - "nodes"
     properties:
       description:
         type: "string"
@@ -1005,10 +1031,12 @@ definitions:
       - "nodes"
       - "nodes"
       description: "description"
-    xml:
-      name: "nodeset"
   NodeSetInfo:
     type: "object"
+    required:
+    - "id"
+    - "size"
+    - "time_of_upload"
     properties:
       description:
         type: "string"
@@ -1019,21 +1047,18 @@ definitions:
       id:
         type: "string"
         description: "Id of the score object"
-      uploaded:
+      time_of_upload:
         type: "string"
         description: "Time of upload"
     example:
       size: 0
-      uploaded: "uploaded"
+      time_of_upload: "time_of_upload"
       description: "description"
       id: "id"
-    xml:
-      name: "nodeset_info"
   RunInput:
     type: "object"
     required:
     - "graph_id"
-    - "score_id"
     properties:
       description:
         type: "string"
@@ -1055,16 +1080,25 @@ definitions:
       terminals_id:
         type: "string"
         description: "Id of a node set acting as terminals in the run"
+      exclude_id:
+        type: "string"
+        description: "Id of a node set of nodes to be excluded from the subgraphs\n"
+      include_id:
+        type: "string"
+        description: "Id of a node set of nodes to be included in the subgraphs\n"
       root:
         type: "string"
         description: "Node id of a fixed root node"
+    description: "All data and parameters the algorithm needs / can accept to run"
     example:
+      include_id: "include_id"
       terminals_id: "terminals_id"
       parameter_set_id: "parameter_set_id"
       score_id: "score_id"
       root: "root"
       description: "description"
       receptors_id: "receptors_id"
+      exclude_id: "exclude_id"
       parameter_set:
         model_sense: "max"
         default_score: 0.80082819046101150206595775671303272247314453125
@@ -1084,6 +1118,7 @@ definitions:
     - "done"
     - "id"
     - "post_time"
+    - "run_input"
     - "started"
     properties:
       description:
@@ -1105,6 +1140,8 @@ definitions:
         type: "array"
         items:
           type: "string"
+      run_input:
+        $ref: "#/definitions/RunInput"
     example:
       subgraph_ids:
       - "subgraph_ids"
@@ -1114,6 +1151,28 @@ definitions:
       id: "id"
       done: true
       post_time: "post_time"
+      run_input:
+        include_id: "include_id"
+        terminals_id: "terminals_id"
+        parameter_set_id: "parameter_set_id"
+        score_id: "score_id"
+        root: "root"
+        description: "description"
+        receptors_id: "receptors_id"
+        exclude_id: "exclude_id"
+        parameter_set:
+          model_sense: "max"
+          default_score: 0.80082819046101150206595775671303272247314453125
+          time_limit: 0
+          num_suboptimal: 0
+          flip_orientation: true
+          max_overlap: 14.6581298050294517310021547018550336360931396484375
+          gap_cut: 0.59621339166831821554382031536079011857509613037109375
+          min_size: 0
+          abs_values: true
+          max_size: 0
+          algorithm: "dta"
+        graph_id: "graph_id"
   ParameterSet:
     type: "object"
     properties:
@@ -1187,6 +1246,9 @@ definitions:
       algorithm: "dta"
   ParameterSetInfo:
     type: "object"
+    required:
+    - "id"
+    - "set_parameters"
     properties:
       description:
         type: "string"
@@ -1194,33 +1256,64 @@ definitions:
       id:
         type: "string"
         description: "Id of the score object"
-      start_time:
-        type: "string"
-        description: "Time of upload"
-      done:
-        type: "boolean"
-        description: "Whether the run is completed"
+      set_parameters:
+        type: "array"
+        items:
+          type: "string"
     example:
-      start_time: "start_time"
       description: "description"
       id: "id"
-      done: true
+      set_parameters:
+      - "set_parameters"
+      - "set_parameters"
   SubgraphInfo:
     type: "object"
+    required:
+    - "id"
+    - "num_edges"
+    - "num_nodes"
+    - "optimal"
+    - "optimality_type"
+    - "root"
+    - "run_id"
+    - "score"
     properties:
       id:
         type: "string"
         description: "Subgraph Id"
+      run_id:
+        type: "string"
+        description: "Id of run the subgraph is a result of"
       num_nodes:
         type: "integer"
         description: "Number of nodes in subgraph"
       num_edges:
         type: "integer"
         description: "Number of edges in subgraph"
+      optimal:
+        type: "boolean"
+        description: "Whether the subgraph is optimal, ie not prematurely\nstopped\
+          \ by a 'gap_cut' or 'time_limit'. This field is\nindependent from the 'optimality_type'\
+          \ field.\n"
+      optimality_type:
+        type: "string"
+        description: "'optimal': optimal subgraph\n'suboptimal:1': first suboptimal\
+          \ subgraph\n'suboptimal:2': second suboptimal subgraph, etc. ...\n"
+      root:
+        type: "string"
+        description: "Id of root node, either predefined or found by algorithm\n"
+      score:
+        type: "number"
+        description: "Score of the subgraph"
     example:
+      score: 1.46581298050294517310021547018550336360931396484375
+      run_id: "run_id"
+      optimal: true
+      root: "root"
       id: "id"
       num_nodes: 0
       num_edges: 6
+      optimality_type: "optimality_type"
 externalDocs:
   description: "Find out more about DeRegNet"
   url: "https://sebwink.github.io/deregnet/"

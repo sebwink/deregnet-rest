@@ -92,7 +92,7 @@ def post_parameter_set(body):  # noqa: E501
     :param body: Parameters to be uploaded for later use with a DeRegNet algorithm
     :type body: dict | bytes
 
-    :rtype: None
+    :rtype: ParameterSetInfo
     """
     if connexion.request.is_json:
         body = ParameterSet.from_dict(connexion.request.get_json())  # noqa: E501

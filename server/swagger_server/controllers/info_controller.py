@@ -7,7 +7,7 @@ from swagger_server import util
 def graph_docs():  # noqa: E501
     """Help page on graph endpoint
 
-    Returns a single pet # noqa: E501
+    Graph help page # noqa: E501
 
 
     :rtype: None
@@ -18,7 +18,7 @@ def graph_docs():  # noqa: E501
 def help():  # noqa: E501
     """General help page
 
-    Returns a single pet # noqa: E501
+    Help page # noqa: E501
 
 
     :rtype: None
@@ -29,7 +29,7 @@ def help():  # noqa: E501
 def index():  # noqa: E501
     """Index, redirects to /info
 
-    Returns a single pet # noqa: E501
+    Index # noqa: E501
 
 
     :rtype: None
@@ -40,7 +40,7 @@ def index():  # noqa: E501
 def info_docs():  # noqa: E501
     """Help page on info endpoint
 
-    Returns a single pet # noqa: E501
+    Info help page # noqa: E501
 
 
     :rtype: None
@@ -51,7 +51,7 @@ def info_docs():  # noqa: E501
 def nodeset_docs():  # noqa: E501
     """Help page on nodeset endpoint
 
-    Returns a single pet # noqa: E501
+    Node set help page # noqa: E501
 
 
     :rtype: None
@@ -62,7 +62,7 @@ def nodeset_docs():  # noqa: E501
 def parameter_set_docs():  # noqa: E501
     """Help page on subgraph endpoint
 
-    Returns a single pet # noqa: E501
+    Parameter set help page # noqa: E501
 
 
     :rtype: None
@@ -73,7 +73,7 @@ def parameter_set_docs():  # noqa: E501
 def run_docs():  # noqa: E501
     """Help page on run endpoint
 
-    Returns a single pet # noqa: E501
+    Run help page # noqa: E501
 
 
     :rtype: None
@@ -84,7 +84,7 @@ def run_docs():  # noqa: E501
 def score_docs():  # noqa: E501
     """Help page on score endpoint
 
-    Returns a single pet # noqa: E501
+    Score help page # noqa: E501
 
 
     :rtype: None
@@ -95,7 +95,7 @@ def score_docs():  # noqa: E501
 def subgraph_docs():  # noqa: E501
     """Help page on subgraph endpoint
 
-    Returns a single pet # noqa: E501
+    Subgraph help page # noqa: E501
 
 
     :rtype: None
