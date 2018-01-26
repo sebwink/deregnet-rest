@@ -1,0 +1,11 @@
+default_score: 0.0
+flip_orientation: null
+num_suboptimal: 0
+max_overlap: 50.0      
+gap_cut: null
+min_size: 10
+max_size: 30
+abs_values: false
+model_sense: "max"
+algorithm: "gcc"
+time_limit: null       

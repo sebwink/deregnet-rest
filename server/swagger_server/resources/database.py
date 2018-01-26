@@ -13,7 +13,7 @@ from swagger_server.controllers.runs import Runs
 from swagger_server.controllers.subgraphs import Subgraphs
 
 
-__SERVER_ROOT__ = '/server'
+__SERVER_ROOT__ = 'server'
 
 
 class MongoD:

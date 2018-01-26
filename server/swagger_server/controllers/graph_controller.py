@@ -1,10 +1,8 @@
 import connexion
-import six
 
-from swagger_server.models.graph_info import GraphInfo  # noqa: E501
 from swagger_server.models.inital_graph_info import InitalGraphInfo  # noqa: E501
-from swagger_server import util
 
+from swagger_server import db
 
 def delete_graph(graph_id):  # noqa: E501
     """Delete a previously uploaded network
@@ -16,11 +14,11 @@ def delete_graph(graph_id):  # noqa: E501
 
     :rtype: None
     """
-    return 'do some magic!'
+    return db.graphs.delete_graph(graph_id)
 
 
 def get_graph(graph_id):  # noqa: E501
-    """Retrieve information on a previously uploaded graph 
+    """Retrieve information on a previously uploaded graph
 
      # noqa: E501
 
@@ -29,7 +27,7 @@ def get_graph(graph_id):  # noqa: E501
 
     :rtype: GraphInfo
     """
-    return 'do some magic!'
+    return db.graphs.get_graph(graph_id)
 
 
 def get_graphs(searchString=None, skip=None, limit=None):  # noqa: E501
@@ -46,13 +44,14 @@ def get_graphs(searchString=None, skip=None, limit=None):  # noqa: E501
 
     :rtype: List[GraphInfo]
     """
-    return 'do some magic!'
+    return db.graphs.get_graphs(searchString, skip, limit)
 
 
 def post_graph(initalGraphInfo=None):  # noqa: E501
     """Allows to initiate GraphML upload
 
-    This Endpoint creates a Metadata-Object for a Graph. It returns the endpoint that is to be called with the  file containing the graph as payload/body in the header-attribute \&quot;location\&quot;  # noqa: E501
+    This Endpoint creates a Metadata-Object for a Graph. It returns the endpoint that is to be called with the
+    file containing the graph as payload/body in the header-attribute \&quot;location\&quot;  # noqa: E501
 
     :param initalGraphInfo: The intial Information required for creating a new graph
     :type initalGraphInfo: dict | bytes
@@ -61,13 +60,14 @@ def post_graph(initalGraphInfo=None):  # noqa: E501
     """
     if connexion.request.is_json:
         initalGraphInfo = InitalGraphInfo.from_dict(connexion.request.get_json())  # noqa: E501
-    return 'do some magic!'
+    return db.graphs.post_graph(initalGraphInfo)
 
 
 def post_graphml(graph_id, file_to_upload):  # noqa: E501
     """Uploads a GraphML file
 
-    Adds a Graph to the system. The Graph Object with name:graphname must already be created by issuing a POST Request to /graph with repsective payload  # noqa: E501
+    Adds a Graph to the system. The Graph Object with name:graphname must
+    already be created by issuing a POST Request to /graph with repsective payload  # noqa: E501
 
     :param graph_id: The Name of the graph
     :type graph_id: str
@@ -76,4 +76,4 @@ def post_graphml(graph_id, file_to_upload):  # noqa: E501
 
     :rtype: None
     """
-    return 'do some magic!'
+    return db.graphs.post_graphml(graph_id, file_to_upload)

@@ -27,6 +27,7 @@ class NodeSets(pymongo.collection.Collection, Controller):
         '''
         super().__init__(db, name='nodesets')
 
+    @Controller.api_call
     def delete_nodeset(self, nodeset_id):
         '''
 
@@ -36,6 +37,7 @@ class NodeSets(pymongo.collection.Collection, Controller):
             return 'Invalid score ID', 400
         return 'Node set successfully deleted', 201
 
+    @Controller.api_call
     def get_nodeset(self, nodeset_id):
         '''
 
@@ -46,6 +48,7 @@ class NodeSets(pymongo.collection.Collection, Controller):
             return 'Invalid node set Id', 400
         return util.deserialize_model(nodeset_info, NodeSetInfo)
 
+    @Controller.api_call
     def get_nodesets(self, searchString, skip, limit):
         '''
 
@@ -54,6 +57,7 @@ class NodeSets(pymongo.collection.Collection, Controller):
         return [ util.deserialize_model(nodeset_info, NodeSetInfo)
                  for nodeset_info in nodeset_infos ]
 
+    @Controller.api_call
     def post_nodeset(self, body):
         '''
 

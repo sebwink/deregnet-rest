@@ -29,6 +29,7 @@ class Scores(pymongo.collection.Collection, Controller):
         '''
         super().__init__(db, name='scores')
 
+    @Controller.api_call
     def delete_score(self, score_id):
         '''
 
@@ -38,6 +39,7 @@ class Scores(pymongo.collection.Collection, Controller):
             return 'Invalid score ID', 400
         return 'Score successfully deleted', 201
 
+    @Controller.api_call
     def get_score(self, score_id):
         '''
 
@@ -48,6 +50,7 @@ class Scores(pymongo.collection.Collection, Controller):
             return 'Invalid ID', 400
         return util.deserialize_model(score_info, ScoreInfo)
 
+    @Controller.api_call
     def get_scores(self, searchString=None,
                          skip=None,
                          limit=None):
@@ -58,6 +61,7 @@ class Scores(pymongo.collection.Collection, Controller):
         return [ util.deserialize_model(score_info, ScoreInfo)
                  for score_info in score_infos ]
 
+    @Controller.api_call
     def post_score(self, body):
         '''
 
@@ -75,12 +79,8 @@ class Scores(pymongo.collection.Collection, Controller):
                        'node_ids': body.node_ids,
                        'score_values': body.score_values
                      }
-        document = {
-                        **score_info,
-                        **score_data
-                   }
         # insert into database and return ScoreInfo
-        self.insert_one(document)
+        self.insert_one({ **score_info, **score_data })
         return util.deserialize_model(score_info, ScoreInfo)
 
     # ------------------------------------------------------------------------- #

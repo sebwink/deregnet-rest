@@ -1,10 +1,8 @@
 import connexion
-import six
 
 from swagger_server.models.parameter_set import ParameterSet  # noqa: E501
-from swagger_server.models.parameter_set_info import ParameterSetInfo  # noqa: E501
-from swagger_server import util
 
+from swagger_server import db
 
 def delete_parameter_set(parameter_set_id):  # noqa: E501
     """Delete a previously uploaded parameter collection
@@ -16,7 +14,7 @@ def delete_parameter_set(parameter_set_id):  # noqa: E501
 
     :rtype: None
     """
-    return 'do some magic!'
+    return db.parameter_sets.delete_parameter_set(parameter_set_id)
 
 
 def get_parameter_set(parameter_set_id):  # noqa: E501
@@ -29,7 +27,7 @@ def get_parameter_set(parameter_set_id):  # noqa: E501
 
     :rtype: ParameterSetInfo
     """
-    return 'do some magic!'
+    return db.parameter_sets.get_parameter_set(parameter_set_id)
 
 
 def get_parameter_set_data(parameter_set_id):  # noqa: E501
@@ -42,7 +40,7 @@ def get_parameter_set_data(parameter_set_id):  # noqa: E501
 
     :rtype: ParameterSet
     """
-    return 'do some magic!'
+    return db.parameter_sets.get_parameter_set_data(parameter_set_id)
 
 
 def get_parameter_set_default():  # noqa: E501
@@ -53,7 +51,7 @@ def get_parameter_set_default():  # noqa: E501
 
     :rtype: ParameterSetInfo
     """
-    return 'do some magic!'
+    return db.parameter_sets.get_parameter_set_default()
 
 
 def get_parameter_set_default_data():  # noqa: E501
@@ -64,7 +62,7 @@ def get_parameter_set_default_data():  # noqa: E501
 
     :rtype: ParameterSet
     """
-    return 'do some magic!'
+    return db.parameter_sets.get_parameter_set_default_data()
 
 
 def get_parameter_sets(searchString=None, skip=None, limit=None):  # noqa: E501
@@ -81,7 +79,7 @@ def get_parameter_sets(searchString=None, skip=None, limit=None):  # noqa: E501
 
     :rtype: List[ParameterSetInfo]
     """
-    return 'do some magic!'
+    return db.parameter_sets.get_parameter_sets(searchString, skip, limit)
 
 
 def post_parameter_set(body):  # noqa: E501
@@ -96,4 +94,4 @@ def post_parameter_set(body):  # noqa: E501
     """
     if connexion.request.is_json:
         body = ParameterSet.from_dict(connexion.request.get_json())  # noqa: E501
-    return 'do some magic!'
+    return db.parameter_sets.post_parameter_set(body)
