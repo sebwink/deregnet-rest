@@ -1,4 +1,6 @@
-import pymongo
+from pymongo.collection import Collection
+
+from deregnet.core import AverageDeregnetArguments
 
 from deregnet_rest.models.parameter_set import ParameterSet
 from deregnet_rest.models.parameter_set_info import ParameterSetInfo
@@ -6,7 +8,7 @@ from deregnet_rest import util
 
 from deregnet_rest.controllers.controller import Controller
 
-class ParameterSets(pymongo.collection.Collection, Controller):
+class ParameterSets(Collection, Controller):
     '''
 
     '''
@@ -79,6 +81,10 @@ class ParameterSets(pymongo.collection.Collection, Controller):
         '''
         parameter_set_data = { key: val for key, val in body.to_dict().items()
                                     if val and key != 'description'}
+        try:
+            AverageDeregnetArguments(**parameter_set_data)
+        except:
+            return 'Invalid input data', 409
         parameter_set_info = {
                                'id': self.generate_id(),
                              # 'description': body.description,
