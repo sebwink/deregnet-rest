@@ -27,8 +27,8 @@ class ParameterSets(Collection, Controller):
                            'set_parameters': False
                          }
 
-    def __init__(self, db, default='data/defaults/parameter_set.yaml'):
-        super().__init__(db, name='parameter_sets')
+    def __init__(self, client, default='data/defaults/parameter_set.yaml'):
+        super().__init__(client.deregnet_rest, name='parameter_sets')
         self._default_params = default
 
     @Controller.api_call

@@ -25,11 +25,11 @@ class Graphs(pymongo.collection.Collection, Controller):
                         'node_id_attr': False
                       }
 
-    def __init__(self, db, graph_storage='data/graphs'):
+    def __init__(self, client, graph_storage='data/graphs'):
         '''
 
         '''
-        super().__init__(db, name='graphs')
+        super().__init__(client.deregnet_rest, name='graphs')
         self._graphs = graph_storage
 
     @Controller.api_call

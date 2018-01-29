@@ -21,11 +21,11 @@ class NodeSets(pymongo.collection.Collection, Controller):
                           'nodes': True
                         }
 
-    def __init__(self, db):
+    def __init__(self, client):
         '''
 
         '''
-        super().__init__(db, name='nodesets')
+        super().__init__(client.deregnet_rest, name='nodesets')
 
     @Controller.api_call
     def delete_nodeset(self, nodeset_id):

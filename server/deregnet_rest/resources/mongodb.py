@@ -39,7 +39,7 @@ class MongoD:
 
     @property
     def port(self):
-        return int(self._config.get('port', '27017'))
+        return int(self._config['net'].get('port', '27017'))
 
     def kill(self):
         self._mongod.kill()
@@ -67,8 +67,6 @@ class Database(MongoClient):
         self._subgraphs = Subgraphs(self)
 
         self._mongod = mongod
-        self._user = user
-        self._passwd = passwd
 
     @property
     def mongod(self):
