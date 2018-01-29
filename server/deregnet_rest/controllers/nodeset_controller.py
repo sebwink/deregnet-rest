@@ -2,7 +2,7 @@ import connexion
 
 from deregnet_rest.models.node_set import NodeSet  # noqa: E501
 
-from deregnet_rest import db
+from deregnet_rest import server
 
 def delete_nodeset(nodeset_id):  # noqa: E501
     """Delete a previously uploaded node set
@@ -14,7 +14,7 @@ def delete_nodeset(nodeset_id):  # noqa: E501
 
     :rtype: None
     """
-    return db.nodesets.delete_nodeset(nodeset_id)
+    return server.nodesets.delete_nodeset(nodeset_id)
 
 
 def get_nodeset(nodeset_id):  # noqa: E501
@@ -27,7 +27,7 @@ def get_nodeset(nodeset_id):  # noqa: E501
 
     :rtype: NodeSetInfo
     """
-    return db.nodesets.get_nodeset(nodeset_id)
+    return server.nodesets.get_nodeset(nodeset_id)
 
 
 def get_nodesets(searchString=None, skip=None, limit=None):  # noqa: E501
@@ -44,7 +44,7 @@ def get_nodesets(searchString=None, skip=None, limit=None):  # noqa: E501
 
     :rtype: List[NodeSetInfo]
     """
-    return db.nodesets.get_nodesets(searchString, skip, limit)
+    return server.nodesets.get_nodesets(searchString, skip, limit)
 
 
 def post_nodeset(body):  # noqa: E501
@@ -59,4 +59,4 @@ def post_nodeset(body):  # noqa: E501
     """
     if connexion.request.is_json:
         body = NodeSet.from_dict(connexion.request.get_json())  # noqa: E501
-    return db.nodesets.post_nodeset(body)
+    return server.nodesets.post_nodeset(body)

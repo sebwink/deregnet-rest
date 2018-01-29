@@ -23,11 +23,11 @@ class Scores(pymongo.collection.Collection, Controller):
                         'score_values': True
                       }
 
-    def __init__(self, db):
+    def __init__(self, client):
         '''
 
         '''
-        super().__init__(db, name='scores')
+        super().__init__(client.deregnet_rest, name='scores')
 
     @Controller.api_call
     def delete_score(self, score_id):

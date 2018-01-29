@@ -1,5 +1,5 @@
-from deregnet_rest.resources.database import get_database
+from deregnet_rest.resources.server import init_server
 
 __PATH_TO_CONF__ = False
 
-db = get_database(__PATH_TO_CONF__)
+server = init_server(__PATH_TO_CONF__)

@@ -2,7 +2,7 @@ import connexion
 
 from deregnet_rest.models.inital_graph_info import InitalGraphInfo  # noqa: E501
 
-from deregnet_rest import db
+from deregnet_rest import server
 
 def delete_graph(graph_id):  # noqa: E501
     """Delete a previously uploaded network
@@ -14,7 +14,7 @@ def delete_graph(graph_id):  # noqa: E501
 
     :rtype: None
     """
-    return db.graphs.delete_graph(graph_id)
+    return server.graphs.delete_graph(graph_id)
 
 
 def get_graph(graph_id):  # noqa: E501
@@ -27,7 +27,7 @@ def get_graph(graph_id):  # noqa: E501
 
     :rtype: GraphInfo
     """
-    return db.graphs.get_graph(graph_id)
+    return server.graphs.get_graph(graph_id)
 
 
 def get_graphs(searchString=None, skip=None, limit=None):  # noqa: E501
@@ -44,7 +44,7 @@ def get_graphs(searchString=None, skip=None, limit=None):  # noqa: E501
 
     :rtype: List[GraphInfo]
     """
-    return db.graphs.get_graphs(searchString, skip, limit)
+    return server.graphs.get_graphs(searchString, skip, limit)
 
 
 def post_graph(initalGraphInfo=None):  # noqa: E501
@@ -60,7 +60,7 @@ def post_graph(initalGraphInfo=None):  # noqa: E501
     """
     if connexion.request.is_json:
         initalGraphInfo = InitalGraphInfo.from_dict(connexion.request.get_json())  # noqa: E501
-    return db.graphs.post_graph(initalGraphInfo)
+    return server.graphs.post_graph(initalGraphInfo)
 
 
 def post_graphml(graph_id, file_to_upload):  # noqa: E501
@@ -76,4 +76,4 @@ def post_graphml(graph_id, file_to_upload):  # noqa: E501
 
     :rtype: None
     """
-    return db.graphs.post_graphml(graph_id, file_to_upload)
+    return server.graphs.post_graphml(graph_id, file_to_upload)

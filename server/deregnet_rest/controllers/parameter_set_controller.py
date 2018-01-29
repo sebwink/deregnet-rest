@@ -2,7 +2,7 @@ import connexion
 
 from deregnet_rest.models.parameter_set import ParameterSet  # noqa: E501
 
-from deregnet_rest import db
+from deregnet_rest import server
 
 def delete_parameter_set(parameter_set_id):  # noqa: E501
     """Delete a previously uploaded parameter collection
@@ -14,7 +14,7 @@ def delete_parameter_set(parameter_set_id):  # noqa: E501
 
     :rtype: None
     """
-    return db.parameter_sets.delete_parameter_set(parameter_set_id)
+    return server.parameter_sets.delete_parameter_set(parameter_set_id)
 
 
 def get_parameter_set(parameter_set_id):  # noqa: E501
@@ -27,7 +27,7 @@ def get_parameter_set(parameter_set_id):  # noqa: E501
 
     :rtype: ParameterSetInfo
     """
-    return db.parameter_sets.get_parameter_set(parameter_set_id)
+    return server.parameter_sets.get_parameter_set(parameter_set_id)
 
 
 def get_parameter_set_data(parameter_set_id):  # noqa: E501
@@ -40,7 +40,7 @@ def get_parameter_set_data(parameter_set_id):  # noqa: E501
 
     :rtype: ParameterSet
     """
-    return db.parameter_sets.get_parameter_set_data(parameter_set_id)
+    return server.parameter_sets.get_parameter_set_data(parameter_set_id)
 
 
 def get_parameter_set_default():  # noqa: E501
@@ -51,7 +51,7 @@ def get_parameter_set_default():  # noqa: E501
 
     :rtype: ParameterSetInfo
     """
-    return db.parameter_sets.get_parameter_set_default()
+    return server.parameter_sets.get_parameter_set_default()
 
 
 def get_parameter_set_default_data():  # noqa: E501
@@ -62,7 +62,7 @@ def get_parameter_set_default_data():  # noqa: E501
 
     :rtype: ParameterSet
     """
-    return db.parameter_sets.get_parameter_set_default_data()
+    return server.parameter_sets.get_parameter_set_default_data()
 
 
 def get_parameter_sets(searchString=None, skip=None, limit=None):  # noqa: E501
@@ -79,7 +79,7 @@ def get_parameter_sets(searchString=None, skip=None, limit=None):  # noqa: E501
 
     :rtype: List[ParameterSetInfo]
     """
-    return db.parameter_sets.get_parameter_sets(searchString, skip, limit)
+    return server.parameter_sets.get_parameter_sets(searchString, skip, limit)
 
 
 def post_parameter_set(body):  # noqa: E501
@@ -94,4 +94,4 @@ def post_parameter_set(body):  # noqa: E501
     """
     if connexion.request.is_json:
         body = ParameterSet.from_dict(connexion.request.get_json())  # noqa: E501
-    return db.parameter_sets.post_parameter_set(body)
+    return server.parameter_sets.post_parameter_set(body)

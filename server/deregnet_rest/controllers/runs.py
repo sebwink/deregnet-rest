@@ -22,8 +22,10 @@ from deregnet_rest.controllers.subgraphs import Subgraphs
 
 class RunQueue:
 
-    def __init__(self, redis_config):
-        self.redis = StrictRedis(**redis_config)
+    def __init__(self, redis_server):
+        self.redis = StrictRedis(port=redis_server.port,
+                                 host=redis_server.host,
+                                 password=redis_server.passwd)
 
     def push(self, run_id):
         self.redis.lpush('deregnet_run_queue', run_id)
@@ -40,15 +42,15 @@ class RunQueue:
 
 
 class _Runner:
-    def __init__(self, mongo_config, redis_config):
+    def __init__(self, mongo_config, redis_server):
         self._client = MongoClient(**mongo_config)
-        self._graphs = Graphs(self._client.deregnet_rest)
-        self._scores = Scores(self._client.deregnet_rest)
-        self._nodesets = NodeSets(self._client.deregnet_rest)
-        self._parameter_sets = ParameterSets(self._client.deregnet_rest)
+        self._graphs = Graphs(self._client)
+        self._scores = Scores(self._client)
+        self._nodesets = NodeSets(self._client)
+        self._parameter_sets = ParameterSets(self._client)
         self._runs = Runs(self._client,
-                          redis_config)
-        self._subgraphs = Subgraphs(self._client.deregnet_rest)
+                          redis_server)
+        self._subgraphs = Subgraphs(self._client)
 
     @property
     def graphs(self):
@@ -160,14 +162,14 @@ class _Runner:
 
 class Runner:
 
-    def __init__(self, mongo_config, redis_config):
+    def __init__(self, mongo_config, redis_server):
         self._p = mp.Process(target=self.run,
-                             args=(mongo_config, redis_config,),
+                             args=(mongo_config, redis_server,),
                              daemon=True)
         self._p.start()
 
-    def run(self, mongo_config, redis_config):
-        runner = _Runner(mongo_config, redis_config)
+    def run(self, mongo_config, redis_server):
+        runner = _Runner(mongo_config, redis_server)
         while True:
             runner.run()
 
@@ -176,10 +178,10 @@ class Runs(Collection, Controller):
     '''
 
     '''
-    def __init__(self, client, redis_config):
+    def __init__(self, client, redis_server):
         super().__init__(client.deregnet_rest, name='runs')
         self._client = client
-        self._queue = RunQueue(redis_config)
+        self._queue = RunQueue(redis_server)
 
 
     @property

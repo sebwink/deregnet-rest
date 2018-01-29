@@ -2,7 +2,7 @@ import connexion
 
 from deregnet_rest.models.score import Score
 
-from deregnet_rest import db
+from deregnet_rest import server
 
 def delete_score(score_id):  # noqa: E501
     """Delete a previously uploaded node score
@@ -14,7 +14,7 @@ def delete_score(score_id):  # noqa: E501
 
     :rtype: None
     """
-    return db.scores.delete_score(score_id)
+    return server.scores.delete_score(score_id)
 
 
 def get_score(score_id):  # noqa: E501
@@ -27,7 +27,7 @@ def get_score(score_id):  # noqa: E501
 
     :rtype: ScoreInfo
     """
-    return db.scores.get_score(score_id)
+    return server.scores.get_score(score_id)
 
 
 def get_scores(searchString=None, skip=None, limit=None):  # noqa: E501
@@ -44,7 +44,7 @@ def get_scores(searchString=None, skip=None, limit=None):  # noqa: E501
 
     :rtype: List[ScoreInfo]
     """
-    return db.scores.get_scores(searchString, skip, limit)
+    return server.scores.get_scores(searchString, skip, limit)
 
 
 def post_score(body):  # noqa: E501
@@ -59,4 +59,4 @@ def post_score(body):  # noqa: E501
     """
     if connexion.request.is_json:
         body = Score.from_dict(connexion.request.get_json())  # noqa: E501
-    return db.scores.post_score(body)
+    return server.scores.post_score(body)

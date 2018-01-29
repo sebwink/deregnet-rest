@@ -22,8 +22,8 @@ class Subgraphs(Collection, Controller):
                         'graphmlz': True
                       }
 
-    def __init__(self, db, subgraph_storage='data/subgraphs'):
-        super().__init__(db, name='subgraphs')
+    def __init__(self, client, subgraph_storage='data/subgraphs'):
+        super().__init__(client.deregnet_rest, name='subgraphs')
         self._subgraphs = subgraph_storage
 
     def register_subgraphs(self, subgraphs, run_id):

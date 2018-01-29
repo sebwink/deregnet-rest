@@ -1,4 +1,4 @@
-from deregnet_rest import db
+from deregnet_rest import server
 
 def delete_subgraph(subgraph_id):  # noqa: E501
     """Delete a previously found subgraph
@@ -10,7 +10,7 @@ def delete_subgraph(subgraph_id):  # noqa: E501
 
     :rtype: None
     """
-    return db.subgraphs.delete_subgraph(subgraph_id)
+    return server.subgraphs.delete_subgraph(subgraph_id)
 
 
 def download_subgraph_as(subgraph_id, filetype):  # noqa: E501
@@ -25,7 +25,7 @@ def download_subgraph_as(subgraph_id, filetype):  # noqa: E501
 
     :rtype: None
     """
-    return db.subgraphs.download_subgraph_as(subgraph_id, filetype)
+    return server.subgraphs.download_subgraph_as(subgraph_id, filetype)
 
 
 def get_subgraph(subgraph_id):  # noqa: E501
@@ -38,7 +38,7 @@ def get_subgraph(subgraph_id):  # noqa: E501
 
     :rtype: SubgraphInfo
     """
-    return db.subgraphs.get_subgraph(subgraph_id)
+    return server.subgraphs.get_subgraph(subgraph_id)
 
 
 def get_subgraphs(searchString=None, skip=None, limit=None):  # noqa: E501
@@ -55,4 +55,4 @@ def get_subgraphs(searchString=None, skip=None, limit=None):  # noqa: E501
 
     :rtype: List[SubgraphInfo]
     """
-    return db.subgraphs.get_subgraphs(searchString=None, skip=None, limit=None)
+    return server.subgraphs.get_subgraphs(searchString=None, skip=None, limit=None)
