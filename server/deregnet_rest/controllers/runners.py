@@ -106,6 +106,7 @@ class _Runner(Database):
         if not parameter_set_id:
             parameter_set = default_parameters
         else:
+            print(type(self.parameter_sets))
             parameter_set = self.parameter_sets.get_parameter_set_data(parameter_set_id)
         parameter_set = {**default_parameters.to_dict(), **parameter_set.to_dict()}
         args = {**args, **parameter_set}
