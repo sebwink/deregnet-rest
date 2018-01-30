@@ -1,4 +1,5 @@
 from hashids import Hashids
+import datetime
 import time
 import yaml
 
@@ -10,6 +11,10 @@ class Controller:
     def timestamp(cls, sep=''):
         return time.strftime(sep.join(['%Y', '%m', '%d', '%H', '%M', '%S']),
                              time.gmtime())
+
+    @classmethod
+    def datetime(cls):
+        return datetime.datetime.now()
 
     @classmethod
     def generate_id(cls):

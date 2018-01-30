@@ -11,11 +11,11 @@ from deregnet_rest.resources.mongodb import Database
 from deregnet_rest.controllers.runners import Runner
 
 
-
 class Server:
     def __init__(self, database, redis_server):
         self._db = database
         self._redis = redis_server
+        # TODO: factor into method
         NUM_RUNNERS = 2
         self._runners = []
         for runner_id in range(NUM_RUNNERS):
@@ -29,9 +29,16 @@ class Server:
                                          log_file)
                                  )
 
+        # TODO: implement run dependency graph
+        self._run_deps = None
+
     @property
     def db(self):
         return self._db
+
+    @property
+    def mongod(self):
+        return self._db.mongod
 
     @property
     def redis(self):
@@ -60,6 +67,10 @@ class Server:
     @property
     def subgraphs(self):
         return self._db._subgraphs
+
+    @property
+    def run_dependency(self):
+        return self._run_deps
 
 
 def init_server(path2conf):

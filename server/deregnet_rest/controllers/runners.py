@@ -10,22 +10,45 @@ from deregnet_rest.resources.mongodb import Database
 from deregnet_rest.controllers.controller import Controller
 
 class _Runner(Database):
+    '''
+
+    '''
     def __init__(self,
                  mongo_config,
                  mongod,
                  redis_server,
-                 runner_id=None,
+                 runner_id=0,
                  run_search_interval=20,
                  log_file=None):
-        super().__init__(mongo_config['username'], mongo_config['password'], mongod, redis_server)
+        '''
+
+        '''
+        super().__init__(mongo_config['username'],
+                         mongo_config['password'],
+                         mongod,
+                         redis_server)
         self._id = runner_id
         self._run_search_interval = run_search_interval
+        self.log_file = log_file
         if log_file:
-            sys.stdout = open(log_file, 'w', buffering=1)
+            sys.stdout = open(log_file, 'a', buffering=1)
+
+    def startup_message(self):
+        timestamp = Controller.datetime()
+        print('%s %s: Starting runner%s ...' % (self.namelog, timestamp, self.id))
+
+    def shutdown_message(self):
+        timestamp = Controller.datetime()
+        print('%s %s: Stopping runner%s ...' % (self.namelog, timestamp, self.id))
 
     def __del__(self):
+        self.shutdown_message()
         if sys.stdout != sys.__stdout__:
             sys.stdout.close()
+
+    @property
+    def id(self):
+        return self._id
 
     @property
     def queue(self):
@@ -35,19 +58,23 @@ class _Runner(Database):
     def wait_time(self):
         return self._run_search_interval
 
+    @property
+    def namelog(self):
+        return '(runner%s)' % str(self.id)
+
     def run(self):
         '''
 
         '''
         run_id = self.queue.pop()
+        timestamp = Controller.datetime()
         if not run_id:
-            timestamp = Controller.timestamp('-')
-            print('%s: No runs to run ...' % timestamp)
+            print('%s %s: No runs to run ...' % (self.namelog, timestamp))
             time.sleep(self.wait_time)
             return
         else:
             run_id = run_id.decode('utf-8')
-        print('Running run %s ...' % run_id)
+        print('%s %s:Running run %s ...' % (self.namelog, timestamp, run_id))
         run_info = self.runs.find_one_and_update(filter={'id': run_id},
                                                  update={'$set': {'started': True}})
         run_input = run_info['run_input']
@@ -62,13 +89,19 @@ class _Runner(Database):
         try:
             args = AverageDeregnetArguments(**args)
         except:
-            pass
+            # TODO
+            return
         graph, id_attr = self.get_graph(run_input)
-        run = SubgraphFinder(graph, id_attr)
+        tempdir = 'data/runs/runner'+str(self.id)
+        run = SubgraphFinder(graph,
+                             id_attr,
+                             tmp_file_path=tempdir,
+                             log_file=self.log_file)
         try:
             subgraphs = run.run(args)
         except:
-            pass
+            # TODO
+            return
         self.register_subgraphs(subgraphs, run_id)
 
     def get_graph(self, run_input):
@@ -106,7 +139,6 @@ class _Runner(Database):
         if not parameter_set_id:
             parameter_set = default_parameters
         else:
-            print(type(self.parameter_sets))
             parameter_set = self.parameter_sets.get_parameter_set_data(parameter_set_id)
         parameter_set = {**default_parameters.to_dict(), **parameter_set.to_dict()}
         args = {**args, **parameter_set}
@@ -136,8 +168,12 @@ class Runner:
                              daemon=True)
         self._p.start()
 
-    def run(self, mongo_config, mongod, redis_server, runner_id, run_search_interval, log_file):
-        runner = _Runner(mongo_config, mongod, redis_server, runner_id, run_search_interval, log_file)
+    def run(self, *args):
+        runner = _Runner(*args)
+        runner.startup_message()
         while True:
             runner.run()
 
+    @property
+    def process(self):
+        return self._p

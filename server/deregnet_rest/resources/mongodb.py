@@ -89,7 +89,7 @@ class Database(MongoClient):
 
     @property
     def parameter_sets(self):
-        return self._paramter_sets
+        return self._parameter_sets
 
     @property
     def runs(self):
