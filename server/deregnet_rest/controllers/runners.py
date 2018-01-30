@@ -102,7 +102,7 @@ class _Runner(Database):
 
     def set_parameters(self, run_input, args):
         parameter_set_id = run_input.get('paramter_set_id')
-        default_parameters = self.paramter_sets.get_parameter_set_default_data()
+        default_parameters = self.parameter_sets.get_parameter_set_default_data()
         if not parameter_set_id:
             parameter_set = default_parameters
         else:
