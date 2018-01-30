@@ -50,7 +50,6 @@ class MongoD:
 
 class Database(MongoClient):
     def __init__(self, user, passwd, mongod, redis_server):
-        config = {}
         self._config = {
                          'username': user,
                          'password': passwd,
@@ -72,10 +71,33 @@ class Database(MongoClient):
     def mongod(self):
         return self._mongod
 
-    def __del__(self):
-        self.close()
-
     @property
     def config(self):
         return self._config
 
+    @property
+    def graphs(self):
+        return self._graphs
+
+    @property
+    def scores(self):
+        return self._scores
+
+    @property
+    def nodesets(self):
+        return self._nodesets
+
+    @property
+    def parameter_sets(self):
+        return self._paramter_sets
+
+    @property
+    def runs(self):
+        return self._runs
+
+    @property
+    def subgraphs(self):
+        return self._subgraphs
+
+    def __del__(self):
+        self.close()

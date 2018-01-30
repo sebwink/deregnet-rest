@@ -8,7 +8,7 @@ import pymongo
 from deregnet_rest.resources.redis import RedisServer
 from deregnet_rest.resources.mongodb import MongoD
 from deregnet_rest.resources.mongodb import Database
-from deregnet_rest.controllers.runs import Runner
+from deregnet_rest.controllers.runners import Runner
 
 
 
@@ -16,8 +16,18 @@ class Server:
     def __init__(self, database, redis_server):
         self._db = database
         self._redis = redis_server
-        self._runner = Runner(database.config,
-                              self.redis)
+        NUM_RUNNERS = 2
+        self._runners = []
+        for runner_id in range(NUM_RUNNERS):
+            log_file = 'data/runners/runner'+str(runner_id)+'.log'
+            self._runners.append(
+                                  Runner(database.config,
+                                         database.mongod,
+                                         self.redis,
+                                         runner_id,
+                                         20,
+                                         log_file)
+                                 )
 
     @property
     def db(self):

@@ -40,6 +40,7 @@ class Graphs(pymongo.collection.Collection, Controller):
         # TODO: check that nothing depends on the graph (runs, subgraphs)
         graph_path = self.find_one_and_delete(filter={'id': graph_id},
                                               projection=self.GRAPH_DATA_PROJ)
+        #dependend_run = self._runs.find_one(
         if not graph_path:
             return 'Invalid graph ID', 400
         os.remove(graph_path['graphmlz'])
