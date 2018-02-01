@@ -5,11 +5,11 @@ import multiprocessing as mp
 from deregnet.core import AverageDeregnetArguments
 from deregnet.core import SubgraphFinder
 
-from deregnet_rest.resources.mongodb import Database
+from deregnet_rest.resources.database import DatabaseServer
 
 from deregnet_rest.controllers.controller import Controller
 
-class _Runner(Database):
+class _Runner(DatabaseServer):
     '''
 
     '''
