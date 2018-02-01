@@ -18,7 +18,9 @@ class MongoD:
         if not os.path.isfile(path2config):
             raise RuntimeError('Could not find mongod configuration file')
         self._config = self.read_config(path2config)
-        mongod_call = [os.path.join(mongo_bindir, 'mongod'), '--config', path2config]
+        mongod_call = [os.path.join(mongo_bindir, 'mongod'),
+                       '--config',
+                       path2config]
         self._mongod = subprocess.Popen(mongod_call)
 
     @classmethod

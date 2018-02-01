@@ -1,9 +1,4 @@
-import os
-import subprocess
 import getpass
-
-import yaml
-import pymongo
 
 from deregnet_rest.resources.redis import RedisServer
 from deregnet_rest.resources.mongodb import MongoD
