@@ -1,7 +1,20 @@
 #!/bin/bash
 
+declare -a allvars=("SERVER_ROOT" \
+		            "START_MONGO" \
+				    "MONGOD" \
+				    "START_REDIS" \
+				    "REDIS" \
+				    "PYTHON_INTERP" \
+					"HOST" \
+					"PORT" \
+					"SERVER_BACKEND" \
+					"START_RUNNERS" \
+					"DEBUG")
+
+# defaults
 # path of the server module root
-SERVER_ROOT=server
+SERVER_ROOT=$(pwd)/server
 # whether to start mongod
 START_MONGOD=true
 # mongod executable
@@ -23,6 +36,22 @@ START_RUNNERS=true
 # whether to start the server in debug mode
 DEBUG=false
 
+
+# overwrite above defaults if config file is specified via DEREGNET_CONFIG_FILE:
+# variables set in this file are default and are overwritten by setting the respective
+# in the script or with an entry in *a possibly different* config file specified via
+# -c|--config-file.
+#
+# It is recommended to specifiy exactly one config file in exactly one way, ie either
+# DEREGNET_CONFIG_FILE or -c|--config-file .............................
+if [ ! -z "$DEREGNET_CONFIG_FILE" ]; then
+	for VAR in "${allvars[@]}"; do
+		VALUE=$(cat $DEREGNET_CONFIG_FILE | shyaml get-value $VAR '')
+		if [ ! -z "$VALUE" ]; then
+			declare $VAR=$VALUE
+		fi
+	done
+fi
 
 # argument parsing from: https://stackoverflow.com/questions/192249
 
@@ -84,7 +113,6 @@ while [[ $# -gt 0 ]]; do
 		-c|--config-file)
 			# global config file overwriting almost *anything* set here (if also in file)
 			DEREGNET_REST_CONFIG="$2"
-			export DEREGNET_REST_CONFIG
 			shift
 			shift
 			;;
@@ -95,6 +123,7 @@ while [[ $# -gt 0 ]]; do
 	esac
 done
 set -- "${POSITIONAL[@]}"
+
 
 if [ -z "$MONGOD_CONFIG" ]; then
 	MONGOD_CONFIG=$SERVER_ROOT/config/mongod.conf
@@ -120,4 +149,4 @@ export SERVER_BACKEND
 export START_RUNNERS
 export DEBUG
 
-$PYTHON_INTERP -m deregnet_rest
+#$PYTHON_INTERP -m deregnet_rest
