@@ -4,6 +4,7 @@ from deregnet_rest.models.node_set import NodeSet
 from deregnet_rest.models.node_set_info import NodeSetInfo
 from deregnet_rest import util
 
+from deregnet_rest.resources.redis import RedisSetDict
 from deregnet_rest.controllers.controller import Controller
 
 class NodeSets(pymongo.collection.Collection, Controller):
@@ -26,15 +27,22 @@ class NodeSets(pymongo.collection.Collection, Controller):
 
         '''
         super().__init__(client.deregnet_rest, name='nodesets')
+        self._depruns = RedisSetDict('nodeset2run', client.redis)
+
+    @property
+    def dependent_runs(self):
+        return self._depruns
 
     @Controller.api_call
     def delete_nodeset(self, nodeset_id):
         '''
 
         '''
+        if not self.dependent_runs.is_empty(nodeset_id):
+            return 'Invalid nodeset ID: some runs depend on this nodeset', 400
         deletion = self.delete_one(filter={'id': nodeset_id})
         if not deletion:
-            return 'Invalid score ID', 400
+            return 'Invalid nodeset ID: No nodeset with that ID', 400
         return 'Node set successfully deleted', 201
 
     @Controller.api_call

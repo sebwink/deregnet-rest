@@ -15,7 +15,6 @@ from deregnet_rest.controllers.subgraphs import Subgraphs
 
 class DatabaseServer(MongoClient):
     def __init__(self, user, passwd, mongod, redis):
-        # TODO run dependencies
         self._config = {
                          'username': user,
                          'password': passwd,
@@ -24,15 +23,16 @@ class DatabaseServer(MongoClient):
                          'port': mongod.port
                        }
         super().__init__(**self._config)
+        self._mongod = mongod
+        self._redis = redis
+
         self._graphs = Graphs(self)
         self._scores = Scores(self)
         self._nodesets = NodeSets(self)
         self._parameter_sets = ParameterSets(self)
-        self._runs = Runs(self, redis)
+        self._runs = Runs(self)
         self._subgraphs = Subgraphs(self)
 
-        self._mongod = mongod
-        self._redis = redis
 
     @property
     def mongod(self):

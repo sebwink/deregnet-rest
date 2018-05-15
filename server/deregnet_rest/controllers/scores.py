@@ -1,12 +1,13 @@
-import pymongo
+from pymongo.collection import Collection
 
 from deregnet_rest.models.score import Score
 from deregnet_rest.models.score_info import ScoreInfo
 from deregnet_rest import util
 
+from deregnet_rest.resources.redis import RedisSetDict
 from deregnet_rest.controllers.controller import Controller
 
-class Scores(pymongo.collection.Collection, Controller):
+class Scores(Collection, Controller):
     '''
 
     '''
@@ -28,12 +29,19 @@ class Scores(pymongo.collection.Collection, Controller):
 
         '''
         super().__init__(client.deregnet_rest, name='scores')
+        self._depruns = RedisSetDict('score2run', client.redis)
+
+    @property
+    def dependent_runs(self):
+        return self._depruns
 
     @Controller.api_call
     def delete_score(self, score_id):
         '''
 
         '''
+        if not self.dependent_runs.is_empty(score_id):
+            return 'Invalid score ID: runs depend on this score', 400
         deletion = self.delete_one(filter={'id': score_id})
         if not deletion:
             return 'Invalid score ID', 400

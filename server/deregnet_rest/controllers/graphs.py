@@ -3,6 +3,7 @@ import pymongo
 from deregnet_rest.models.graph_info import GraphInfo
 from deregnet_rest import util
 
+from deregnet_rest.resources.redis import RedisSetDict
 from deregnet_rest.controllers.controller import Controller
 
 import os
@@ -22,7 +23,8 @@ class Graphs(pymongo.collection.Collection, Controller):
     GRAPH_INFO_PROJ = {
                         '_id': False,
                         'graphmlz': False,
-                        'node_id_attr': False
+                        'node_id_attr': False,
+                        'runs': False
                       }
 
     def __init__(self, client, graph_storage='data/graphs'):
@@ -31,18 +33,22 @@ class Graphs(pymongo.collection.Collection, Controller):
         '''
         super().__init__(client.deregnet_rest, name='graphs')
         self._graphs = graph_storage
+        self._depruns = RedisSetDict('graph2run', client.redis)
+
+    def dependent_runs(self, graph_id):
+        return self._depruns
 
     @Controller.api_call
     def delete_graph(self, graph_id):
         '''
 
         '''
-        # TODO: check that nothing depends on the graph (runs, subgraphs)
+        if not self.dependent_runs.is_empty(graph_id):
+            return 'Invalid graph ID: some runs depend on this graph', 400
         graph_path = self.find_one_and_delete(filter={'id': graph_id},
                                               projection=self.GRAPH_DATA_PROJ)
-        #dependend_run = self._runs.find_one(
         if not graph_path:
-            return 'Invalid graph ID', 400
+            return 'Invalid graph ID: no graph with that ID', 400
         os.remove(graph_path['graphmlz'])
         return 'Graph successfully deleted', 201
 
@@ -54,7 +60,7 @@ class Graphs(pymongo.collection.Collection, Controller):
         graph_info = self.find_one(filter={'id': graph_id},
                                    projection=self.GRAPH_INFO_PROJ)
         if not graph_info:
-            return 'invalid ID', 400
+            return 'Invalid graph ID: no graph with that ID', 400
         return util.deserialize_model(graph_info, GraphInfo)
 
     @Controller.api_call
@@ -80,7 +86,8 @@ class Graphs(pymongo.collection.Collection, Controller):
                        'num_edges': 0
                      }
         graph_data = {
-                       'graphmlz': os.path.join(self._graphs, graph_info['id']+'.grapml.gz'),
+                       'graphmlz': os.path.join(self._graphs,
+                                                graph_info['id']+'.graphml.gz'),
                        'node_id_attr': initial_graph_info.node_id_attr
                      }
         self.insert_one( { **graph_info, **graph_data } )

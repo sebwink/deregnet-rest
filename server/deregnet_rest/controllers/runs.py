@@ -33,21 +33,23 @@ class RunQueue:
         return self.redis.llen('deregnet_run_queue')
 
 
-
-
 class Runs(Collection, Controller):
     '''
 
     '''
-    def __init__(self, client, redis_server):
+    def __init__(self, client):
         super().__init__(client.deregnet_rest, name='runs')
         self._client = client
-        self._queue = RunQueue(redis_server)
+        self._queue = RunQueue(client.redis)
 
 
     @property
     def queue(self):
         return self._queue
+
+    @property
+    def graphs(self):
+        return self._client.graphs
 
     @Controller.api_call
     def delete_run(self, run_id):
@@ -77,7 +79,8 @@ class Runs(Collection, Controller):
         run_input = body.to_dict()
         run_input = {k: v for k,v in run_input.items() if v is not None}
         if not self.validate_run(run_input):
-            return 'Invalid run, invalid IDs encountered', 400
+            return 'Invalid run, invalid IDs encountered, check your run input', 400
+        # generate run info and insert into database
         run_info = {
                      'id': self.generate_id(),
                      'post_time': self.timestamp('-'),
@@ -87,8 +90,33 @@ class Runs(Collection, Controller):
                      'run_input': run_input
                    }
         self.insert_one( run_info )
+        # push run onto the job queue
         self.queue.push( run_info['id'] )
+        # register new run dependencies
+        self.client.graphs.dependent_runs[run_input['graph_id']] = run_info['id']
+        if run_input['score_id']:
+            self.client.scores.dependent_runs[run_input['score_id']] = run_info['id']
+        if run_input['terminals_id']:
+            self.client.nodesets.dependent_runs[run_input['terminals_id']] = run_info['id']
+        if run_input['receptors_id']:
+            self.client.nodesets.dependent_runs[run_input['receptors_id']] = run_info['id']
+        if run_input['exclude_id']:
+            self.client.nodesets.dependent_runs[run_input['exclude_id']] = run_info['id']
+        if run_input['include_id']:
+            self.client.nodesets.dependent_runs[run_input['include_id']] = run_info['id']
+        if run_input['parameter_set_id']:
+            self.client.parameter_sets.dependent_runs[run_input['parameter_set_id']] = run_info['id']
+
         return util.deserialize_model(run_info, RunInfo)
 
     def validate_run(self, run_input):
+        if not self.client.graphs.find_one(filter={'graph_id': run_input['graph_id']}):
+            return False
+        if run_input['score_id'] and not \
+           self.client.scores.find_one(filter={'score_id': run_input['score_id']}):
+            return False
+        #  TODO: nodesets
+        if run_input['parameter_set_id'] and not \
+           self.client.parameter_sets.find_one(filter={'parameter_set_id': run_input['parameter_set_id']}):
+            return False
         return True

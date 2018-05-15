@@ -6,6 +6,7 @@ from deregnet_rest.models.parameter_set import ParameterSet
 from deregnet_rest.models.parameter_set_info import ParameterSetInfo
 from deregnet_rest import util
 
+from deregnet_rest.resources.redis import RedisSetDict
 from deregnet_rest.controllers.controller import Controller
 
 class ParameterSets(Collection, Controller):
@@ -30,12 +31,19 @@ class ParameterSets(Collection, Controller):
     def __init__(self, client, default='data/defaults/parameter_set.yaml'):
         super().__init__(client.deregnet_rest, name='parameter_sets')
         self._default_params = default
+        self._depruns = RedisSetDict('parameters2runs', client.redis)
+
+    @property
+    def dependent_runs(self):
+        return self._depruns
 
     @Controller.api_call
     def delete_parameter_set(self, parameter_set_id):
+        if not self.dependent_runs.is_empty(parameter_set_id):
+            return 'Invalid parameter set ID: runs depend on this parameter set', 400
         deletion = self.delete_one({'id': parameter_set_id})
         if not deletion:
-            return 'Invalid parameter set ID', 400
+            return 'Invalid parameter set ID: No parameter set with that ID', 400
         return 'Parameter set successfully deleted', 201
 
     @Controller.api_call
