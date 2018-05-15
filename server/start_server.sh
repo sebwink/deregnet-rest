@@ -1,16 +1,16 @@
 #!/bin/bash
 
 declare -a allvars=("SERVER_ROOT" \
-		            "START_MONGO" \
-				    "MONGOD" \
-				    "START_REDIS" \
-				    "REDIS" \
-				    "PYTHON_INTERP" \
-					"HOST" \
-					"PORT" \
-					"SERVER_BACKEND" \
-					"START_RUNNERS" \
-					"DEBUG")
+	            "START_MONGO" \
+		    "MONGOD" \
+		    "START_REDIS" \
+		    "REDIS" \
+		    "PYTHON_INTERP" \
+		    "HOST" \
+		    "PORT" \
+		    "SERVER_BACKEND" \
+		    "START_RUNNERS" \
+		    "DEBUG")
 
 # defaults
 # path of the server module root
