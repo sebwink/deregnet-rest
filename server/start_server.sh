@@ -1,16 +1,21 @@
 #!/bin/bash
 
+if [ -z "$DEREGNET_CONFIG_FILE" ]; then
+	# uncomment if you want to set defaults from configuration file instead
+	DEREGNET_CONFIG_FILE=server/deregnet_rest.conf
+fi
+
 declare -a allvars=("SERVER_ROOT" \
-		            "START_MONGO" \
-				    "MONGOD" \
-				    "START_REDIS" \
-				    "REDIS" \
-				    "PYTHON_INTERP" \
-					"HOST" \
-					"PORT" \
-					"SERVER_BACKEND" \
-					"START_RUNNERS" \
-					"DEBUG")
+                    "START_MONGO" \
+		    "MONGOD" \
+		    "START_REDIS" \
+		    "REDIS" \
+		    "PYTHON_INTERP" \
+	            "HOST" \
+		    "PORT" \
+		    "SERVER_BACKEND" \
+		    "START_RUNNERS" \
+		    "DEBUG")
 
 # defaults
 # path of the server module root
@@ -36,6 +41,7 @@ START_RUNNERS=true
 # whether to start the server in debug mode
 DEBUG=false
 
+unset DEREGNET_REST_CONFIG
 
 # overwrite above defaults if config file is specified via DEREGNET_CONFIG_FILE:
 # variables set in this file are default and are overwritten by setting the respective
@@ -111,8 +117,20 @@ while [[ $# -gt 0 ]]; do
 			shift
 			;;
 		-c|--config-file)
-			# global config file overwriting almost *anything* set here (if also in file)
+			# global config file overwriting almost *anything*
+			# set here (if also in file)
 			DEREGNET_REST_CONFIG="$2"
+			export DEREGNET_REST_CONFIG
+			shift
+			shift
+			;;
+		--uwsgi)
+			DEPLOY_UWSGI=true
+			shift
+			;;
+		--uwsgi-ini)
+			DEPLOY_UWSGI=true
+			UWSGI_INI="$2"
 			shift
 			shift
 			;;
@@ -149,4 +167,19 @@ export SERVER_BACKEND
 export START_RUNNERS
 export DEBUG
 
-#$PYTHON_INTERP -m deregnet_rest
+if [ -z "$DEPLOY_UWSGI" ]; then
+	$PYTHON_INTERP -m deregnet_rest
+else
+	if [ -z "$UWSGI_INI" ]; then
+		uwsgi --socket $SERVER_ROOT/deregnet.sock \
+		  	  --protocol=uwsgi \
+		  	  --manage-script-name \
+		      --mount $SERVER_ROOT=deregnet_rest:app \
+			  --processes 2 \
+		  	  --die-on-term 
+	else
+		uwsgi --ini $UWSGI_INI
+	fi
+fi
+
+chmod 666 $SERVER_ROOT/deregnet.sock

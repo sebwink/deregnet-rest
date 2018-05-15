@@ -1,5 +1,9 @@
-#from deregnet_rest.resources.server import init_server
+import connexion
 
-#__PATH_TO_CONF__ = False
+from deregnet_rest import encoder
 
-#server = init_server(__PATH_TO_CONF__)
+
+app = connexion.App(__name__, specification_dir='./swagger/')
+app.app.json_encoder = encoder.JSONEncoder
+app.add_api('swagger.yaml',
+            arguments={'title': 'DeRegNet REST API'})
