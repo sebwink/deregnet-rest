@@ -2,7 +2,7 @@ import connexion
 
 from deregnet_rest.models.node_set import NodeSet  # noqa: E501
 
-from deregnet_rest import server
+from deregnet_rest.init import server
 
 def delete_nodeset(nodeset_id):  # noqa: E501
     """Delete a previously uploaded node set

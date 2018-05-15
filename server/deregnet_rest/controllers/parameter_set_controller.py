@@ -2,7 +2,7 @@ import connexion
 
 from deregnet_rest.models.parameter_set import ParameterSet  # noqa: E501
 
-from deregnet_rest import server
+from deregnet_rest.init import server
 
 def delete_parameter_set(parameter_set_id):  # noqa: E501
     """Delete a previously uploaded parameter collection

@@ -2,7 +2,7 @@ import connexion
 
 from deregnet_rest.models.inital_graph_info import InitalGraphInfo  # noqa: E501
 
-from deregnet_rest import server
+from deregnet_rest.init import server
 
 def delete_graph(graph_id):  # noqa: E501
     """Delete a previously uploaded network

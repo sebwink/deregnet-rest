@@ -2,7 +2,7 @@ import connexion
 
 from deregnet_rest.models.score import Score
 
-from deregnet_rest import server
+from deregnet_rest.init import server
 
 def delete_score(score_id):  # noqa: E501
     """Delete a previously uploaded node score

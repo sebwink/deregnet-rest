@@ -1,72 +1,119 @@
 import os
-import subprocess
-import getpass
-
 import yaml
-import pymongo
 
-from deregnet_rest.resources.redis import RedisServer
-from deregnet_rest.resources.mongodb import MongoD
-from deregnet_rest.resources.mongodb import Database
-from deregnet_rest.controllers.runs import Runner
+from deregnet_rest.resources.redis import get_redis
+from deregnet_rest.resources.mongodb import get_mongod
+from deregnet_rest.resources.database import (DatabaseServer,
+                                              get_database_server,
+                                              mongo_auth)
+from deregnet_rest.controllers.runners import Runner
 
+class Config:
 
+    def __init__(self, config_file=None):
+        self._file_config = None
+        if config_file:
+            with open(config_file, 'r') as yamlfp:
+                self._file_config = yaml.load(yamlfp)
 
-class Server:
-    def __init__(self, database, redis_server):
-        self._db = database
-        self._redis = redis_server
-        self._runner = Runner(database.config,
-                              self.redis)
+    def file_config(self, ATTR):
+        if self._file_config:
+            return self._file_config.get(ATTR)
+        return None
+
+    def __call__(self, ATTR):
+        file_value = self.file_config(ATTR)
+        if file_value is not None:
+            return file_value
+        return os.environ.get(ATTR)
 
     @property
-    def db(self):
-        return self._db
+    def mongod_config(self):
+        return str(self('MONGOD_CONFIG'))
+
+    @property
+    def mongod(self):
+        return str(self('MONGOD'))
+
+    @property
+    def start_mongod(self):
+        if self('START_MONGOD') == 'false':
+            return False
+        return True
+
+    @property
+    def redis_config(self):
+        return str(self('REDIS_CONFIG'))
 
     @property
     def redis(self):
-        return self._redis
+        return str(self('REDIS'))
 
     @property
-    def graphs(self):
-        return self._db._graphs
+    def start_redis(self):
+        if self('START_REDIS') == 'false':
+            return False
+        return True
 
     @property
-    def scores(self):
-        return self._db._scores
+    def host(self):
+        return str(self('HOST'))
 
     @property
-    def nodesets(self):
-        return self._db._nodesets
+    def port(self):
+        return int(self('PORT'))
 
     @property
-    def parameter_sets(self):
-        return self._db._parameter_sets
+    def debug(self):
+        if self('DEBUG') == 'false':
+            return False
+        return True
 
     @property
-    def runs(self):
-        return self._db._runs
+    def server_backend(self):
+        return self('SERVER_BACKEND')
 
     @property
-    def subgraphs(self):
-        return self._db._subgraphs
+    def start_runners(self):
+        if self('START_RUNNERS') == 'false':
+            return False
+        return True
 
 
-def init_server(path2conf):
-    path2redis_conf = 'server/config/redis.conf'
-    redis_bindir = '/opt/redis/4.0.2/bin'
-    redis_server = RedisServer(path2redis_conf, redis_bindir)
-    return Server(get_database({}, redis_server),
-                  redis_server)
+class Server(DatabaseServer):
+    def __init__(self, num_runners=2, **kwargs):
+        super().__init__(**kwargs)
+        self._runners = []
+        for runner_id in range(num_runners):
+            log_file = 'data/runners/runner'+str(runner_id)+'.log'
+            self._runners.append(
+                                  Runner(self.config,
+                                         self.mongod,
+                                         self.redis,
+                                         runner_id,
+                                         20,
+                                         log_file)
+                                 )
 
-def get_database(conf, redis_server):
-    #user = getpass.getpass(prompt='User: ')
-    user = 'deregnet_rest_server'
-    #passwd = getpass.getpass(prompt='Password: ')
-    passwd = 'deregnet'
-    path2conf = 'server/config/mongod.conf'
-    mongod_bindir = '/usr/bin'
-    return Database(user,
-                    passwd,
-                    MongoD(path2conf, mongod_bindir),
-                    redis_server)
+    def runner(self, i):
+        return self._runners[i]
+
+    @property
+    def runners(self):
+        self._runners
+
+
+def get_server(config):
+    user, passwd = mongo_auth()
+    mongod = get_mongod(config)
+    redis = get_redis(config)
+    return Server(user=user,
+                  passwd=passwd,
+                  mongod=mongod,
+                  redis=redis)
+
+
+def init_server(config):
+    if config.start_runners:
+        return get_server(config)
+    return get_database_server(config)
