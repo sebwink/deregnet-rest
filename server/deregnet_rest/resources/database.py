@@ -22,7 +22,8 @@ class DatabaseServer(MongoClient):
                          'host': mongod.host,
                          'port': mongod.port
                        }
-        super().__init__(**self._config)
+        #super().__init__(**self._config)
+        super().__init__(host=mongod.host, port=mongod.port)
         self._mongod = mongod
         self._redis = redis
 

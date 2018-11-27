@@ -35,6 +35,7 @@ class Controller:
             try:
                 return method(self, *args, **kwargs)
             except:
+                print('Something bad has happebed!')
                 'Internal Server Error', 500
 
         return _m

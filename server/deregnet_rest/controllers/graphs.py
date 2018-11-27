@@ -35,18 +35,21 @@ class Graphs(pymongo.collection.Collection, Controller):
         self._graphs = graph_storage
         self._depruns = RedisSetDict('graph2run', client.redis)
 
-    def dependent_runs(self, graph_id):
+    @property
+    def dependent_runs(self):
         return self._depruns
 
-    @Controller.api_call
+    #@Controller.api_call
     def delete_graph(self, graph_id):
         '''
 
         '''
+        print('DELETE %s' % graph_id)
         if not self.dependent_runs.is_empty(graph_id):
             return 'Invalid graph ID: some runs depend on this graph', 400
         graph_path = self.find_one_and_delete(filter={'id': graph_id},
                                               projection=self.GRAPH_DATA_PROJ)
+        print('graph_data: ', graph_path)
         if not graph_path:
             return 'Invalid graph ID: no graph with that ID', 400
         os.remove(graph_path['graphmlz'])
@@ -72,11 +75,12 @@ class Graphs(pymongo.collection.Collection, Controller):
         return [ util.deserialize_model(graph_info, GraphInfo)
                  for graph_info in graph_infos ]
 
-    @Controller.api_call
+    ##@Controller.api_call
     def post_graph(self, initial_graph_info):
         '''
 
         '''
+        print(initial_graph_info)
         graph_info = {
                        'id': self.generate_id(),
                        'time_of_upload': self.timestamp('-'),
@@ -91,9 +95,10 @@ class Graphs(pymongo.collection.Collection, Controller):
                        'node_id_attr': initial_graph_info.node_id_attr
                      }
         self.insert_one( { **graph_info, **graph_data } )
+        print(graph_info)
         return util.deserialize_model(graph_info, GraphInfo)
 
-    @Controller.api_call
+    #@Controller.api_call
     def post_graphml(self, graph_id, file_to_upload):
         '''
 
@@ -105,12 +110,17 @@ class Graphs(pymongo.collection.Collection, Controller):
             return 'A graph with that ID is already uploaded', 409
         file_to_upload.save(graph['graphmlz'])
         try:
-            G = ig.Graph.Read_GraphML(graph['graphmlz'])
+            print(graph['graphmlz'])
+            print(os.getcwd())
+            print(os.listdir('data/graphs'))
+            print(ig.__version__)
+            print(ig.__file__)
+            #G = ig.Read_GraphMLz(graph['graphmlz'])
         except:
-            try:
-                G = ig.Read_GraphMLz(graph['graphmlz'])
-            except:
-                return 'Invalid GraphML file (igraph)', 400
+            return 'Invalid GraphML file (igraph)', 400
+        print(graph)
+        G = ig.Graph.Read_GraphMLz(graph['graphmlz'])
+        print(len(G.vs), len(G.es))
         self.update_one(filter={'id': graph_id},
                         update={ '$set': {'num_nodes': len(G.vs), 'num_edges': len(G.es)} })
         G.write_graphmlz(graph['graphmlz'])

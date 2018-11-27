@@ -91,7 +91,7 @@ class Server(DatabaseServer):
                                          self.mongod,
                                          self.redis,
                                          runner_id,
-                                         20,
+                                         2,
                                          log_file)
                                  )
 

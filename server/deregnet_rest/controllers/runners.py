@@ -18,7 +18,7 @@ class _Runner(DatabaseServer):
                  mongod,
                  redis_server,
                  runner_id=0,
-                 run_search_interval=20,
+                 run_search_interval=2,
                  log_file=None):
         '''
 
@@ -90,16 +90,19 @@ class _Runner(DatabaseServer):
             args = AverageDeregnetArguments(**args)
         except:
             # TODO
+
+            print('Parameter construction failed')
             return
         graph, id_attr = self.get_graph(run_input)
         tempdir = 'data/runs/runner'+str(self.id)
-        run = SubgraphFinder(graph,
-                             id_attr,
-                             tmp_file_path=tempdir,
-                             log_file=self.log_file)
+        finder = SubgraphFinder(graph,
+                                id_attr,
+                                tmp_file_path=tempdir,
+                                log_file=self.log_file)
         try:
-            subgraphs = run.run(args)
+            subgraphs = finder.run(args)
         except:
+            print('Subgraph run failed')
             # TODO
             return
         self.register_subgraphs(subgraphs, run_id)

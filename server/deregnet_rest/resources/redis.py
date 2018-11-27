@@ -53,9 +53,9 @@ class RedisServer:
 
 class RedisSetDict:
     def __init__(self, name, redis_server):
-        self.redis = StrictRedis(redis_server.port,
-                                 redis_server.host,
-                                 redis_server.passwd)
+        self.redis = StrictRedis(port=redis_server.port,
+                                 host=redis_server.host,
+                                 password=redis_server.passwd)
         self._name = name
 
     @property
@@ -104,7 +104,7 @@ class RedisSetDict:
         return self._name+'_setdict_keys'
 
     @property
-    def keyprfx(self, key):
+    def keyprfx(self):
         return self._name+'_'
 
 

@@ -60,15 +60,16 @@ class ParameterSets(Collection, Controller):
                                            projection=self.PARAMSET_DATA_PROJ)
         if not parameter_set_data:
             return 'Invalid parameter set ID', 400
-        return util.deserialize(parameter_set_data, ParameterSet)
-
+        return util.deserialize_model(parameter_set_data, ParameterSet)
+    
     @Controller.api_call
     def get_parameter_set_default(self):
         default_info = {
                          'id': '__default__',
-                       # 'description': 'Default parameter set',
+                         'description': 'Default parameter set',
                          'set_parameters': list(self.get_parameter_set_default_data().keys())
                        }
+        print(default_info)
         return util.deserialize_model(default_info, ParameterSetInfo)
 
     @Controller.api_call

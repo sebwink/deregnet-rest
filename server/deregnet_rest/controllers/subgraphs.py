@@ -44,7 +44,7 @@ class Subgraphs(Collection, Controller):
             subgraph_data = {
                               'graphmlz': os.path.join(rundir, subgraph_info['id']+'.graphml.gz')
                             }
-            subgraphs.write_to_graphml(i, subgraph_data['graphmlz'], compress=True)
+            subgraphs.to_graphmlz(i, subgraph_data['graphmlz'])
             self.insert_one( {**subgraph_info, **subgraph_data} )
             subgraph_ids.append(subgraph_info['id'])
         return subgraph_ids

@@ -70,7 +70,7 @@ while [[ $# -gt 0 ]]; do
 			shift
 			shift
 			;;
-	    -m|--mongod-config)
+	        -m|--mongod-config)
 			MONGOD_CONFIG="$2"
 			shift
 			shift
@@ -172,14 +172,14 @@ if [ -z "$DEPLOY_UWSGI" ]; then
 else
 	if [ -z "$UWSGI_INI" ]; then
 		uwsgi --socket $SERVER_ROOT/deregnet.sock \
-		  	  --protocol=uwsgi \
-		  	  --manage-script-name \
+		      --protocol=uwsgi \
+		      --manage-script-name \
 		      --mount $SERVER_ROOT=deregnet_rest:app \
-			  --processes 2 \
-		  	  --die-on-term 
+		      --processes 2 \
+		      --die-on-term 
+		#chmod 666 $SERVER_ROOT/deregnet.sock
 	else
 		uwsgi --ini $UWSGI_INI
 	fi
 fi
 
-chmod 666 $SERVER_ROOT/deregnet.sock
