@@ -1,15 +1,22 @@
 #!/bin/bash
 
+# path of the server module root
+SERVER_ROOT="$( cd "$(dirname "$0")" ; pwd -P )"
+
 if [ -z "$DEREGNET_CONFIG_FILE" ]; then
 	# uncomment if you want to set defaults from configuration file instead
-	DEREGNET_CONFIG_FILE=server/deregnet_rest.conf
+	DEREGNET_CONFIG_FILE=$SERVER_ROOT/deregnet_rest.conf
 fi
 
 declare -a allvars=("SERVER_ROOT" \
                     "START_MONGO" \
 		    "MONGOD" \
+		    "MONGO_HOST" \
+		    "MONGO_PORT" \
 		    "START_REDIS" \
 		    "REDIS" \
+		    "REDIS_HOST" \
+		    "REDIS_PORT" \
 		    "PYTHON_INTERP" \
 	            "HOST" \
 		    "PORT" \
@@ -18,16 +25,22 @@ declare -a allvars=("SERVER_ROOT" \
 		    "DEBUG")
 
 # defaults
-# path of the server module root
-SERVER_ROOT=$(pwd)/server
 # whether to start mongod
-START_MONGOD=true
+START_MONGOD=false
 # mongod executable
 MONGOD=mongod
+# mongo host
+MONGO_HOST=localhost
+# mongo port
+MONGO_PORT=27017
 # whether to start redis
-START_REDIS=true
+START_REDIS=false
 # redis-server executable
 REDIS=redis-server
+# redis host
+REDIS_HOST=localhost
+# redis port
+REDIS_PORT=6379
 # python interpreter
 PYTHON_INTERP=python3
 # host on which to run the server
@@ -41,7 +54,7 @@ START_RUNNERS=true
 # whether to start the server in debug mode
 DEBUG=false
 
-unset DEREGNET_REST_CONFIG
+##  unset DEREGNET_REST_CONFIG
 
 # overwrite above defaults if config file is specified via DEREGNET_CONFIG_FILE:
 # variables set in this file are default and are overwritten by setting the respective
@@ -71,21 +84,39 @@ while [[ $# -gt 0 ]]; do
 			shift
 			;;
 	        -m|--mongod-config)
+			START_MONGOD=true
 			MONGOD_CONFIG="$2"
 			shift
 			shift
 			;;
-		--mongod-running)
+	        --mongo-host)
 			START_MONGOD=false
+			MONGO_HOST="$2"
+			shift
+			shift
+			;;
+		--mongo-port)
+			START_MONGOD=false
+			MONGO_PORT="$2"
+			shift
 			shift
 			;;
 		-r|--redis-config)
+			START_REDIS=true
 			REDIS_CONFIG="$2"
 			shift
 			shift
 			;;
-		--redis-running)
+		--redis-host)
 			START_REDIS=false
+			REDIS_HOST="$2"
+			shift
+			shift
+			;;
+		--redis-port)
+			START_REDIS=false
+			REDIS_PORT="$2"
+			shift
 			shift
 			;;
 		-i|--python-interp)
@@ -156,10 +187,14 @@ fi
 export MONGOD_CONFIG
 export START_MONGOD
 export MONGOD
+export MONGO_HOST
+export MONGO_PORT
 # Redis
 export REDIS_CONFIG
 export START_REDIS
 export REDIS
+export REDIS_HOST
+export REDIS_PORT
 # Server
 export HOST
 export PORT
@@ -182,4 +217,3 @@ else
 		uwsgi --ini $UWSGI_INI
 	fi
 fi
-

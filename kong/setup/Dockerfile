@@ -1,0 +1,9 @@
+FROM alpine:3.6
+
+RUN apk update && apk add git bash curl
+RUN git clone https://github.com/vishnubob/wait-for-it
+
+WORKDIR /wait-for-it
+COPY setup.sh .
+
+CMD ["./wait-for-it.sh", "--timeout=0", "kong:8001" ,"--", "bash", "setup.sh"]

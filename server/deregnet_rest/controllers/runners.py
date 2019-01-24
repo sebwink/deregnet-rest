@@ -85,14 +85,15 @@ class _Runner(DatabaseServer):
         args['terminals'] = self.get_terminals(run_input)
         args['included_nodes'] = self.get_include(run_input)
         args['excluded_nodes'] = self.get_exclude(run_input)
-        self.set_parameters(run_input, args)
-        try:
-            args = AverageDeregnetArguments(**args)
-        except:
+        #args = self.set_parameters(run_input, args)
+        args = {**args, **run_input['parameter_set']}
+        #try:
+        args = AverageDeregnetArguments(**args)
+        #except:
             # TODO
 
-            print('Parameter construction failed')
-            return
+        #    print('Parameter construction failed')
+        #    return
         graph, id_attr = self.get_graph(run_input)
         tempdir = 'data/runs/runner'+str(self.id)
         finder = SubgraphFinder(graph,
@@ -135,16 +136,6 @@ class _Runner(DatabaseServer):
 
     def get_exclude(self, run_input):
         return self.get_nodeset(run_input, 'exclude')
-
-    def set_parameters(self, run_input, args):
-        parameter_set_id = run_input.get('paramter_set_id')
-        default_parameters = self.parameter_sets.get_parameter_set_default_data()
-        if not parameter_set_id:
-            parameter_set = default_parameters
-        else:
-            parameter_set = self.parameter_sets.get_parameter_set_data(parameter_set_id)
-        parameter_set = {**default_parameters.to_dict(), **parameter_set.to_dict()}
-        args = {**args, **parameter_set}
 
     def register_subgraphs(self, subgraphs, run_id):
         subgraph_ids = self.subgraphs.register_subgraphs(subgraphs, run_id)

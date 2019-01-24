@@ -5,9 +5,14 @@ from redis import StrictRedis
 
 
 class RedisServer:
-    def __init__(self, path2config='server/config/redis.conf',
-                       redis_server='/usr/bin/env redis-server',
-                       start_it=True):
+    def __init__(self,
+                 host=None,
+                 port=None,
+                 path2config='server/config/redis.conf',
+                 redis_server='/usr/bin/env redis-server',
+                 start_it=True):
+        self._host = host
+        self._port = port
         if not os.path.isfile(path2config):
             raise RuntimeError("No Redis configuration file found")
         self._path2config = path2config
@@ -40,11 +45,15 @@ class RedisServer:
 
     @property
     def host(self):
-        return self._config.get('host', 'localhost')
+        if self._host is None:
+            return self._config.get('host', 'localhost')
+        return self._host
 
     @property
     def port(self):
-        return self._config['port']
+        if self._port is None:
+            return self._config['port']
+        return int(self._port)
 
     @property
     def passwd(self):
@@ -55,7 +64,8 @@ class RedisSetDict:
     def __init__(self, name, redis_server):
         self.redis = StrictRedis(port=redis_server.port,
                                  host=redis_server.host,
-                                 password=redis_server.passwd)
+                                 #password=redis_server.passwd,
+                                 )
         self._name = name
 
     @property
@@ -70,14 +80,14 @@ class RedisSetDict:
 
     def __setitem__(self, key, items):
         items = set(items)
-        redis.sadd(self.keypfrx+key, *items)
-        redis.sadd(self.keyset_name, key)
+        self.redis.sadd(self.keyprfx+key, *items)
+        self.redis.sadd(self.keyset_name, key)
 
     def __delitem__(self, key):
         self.redis.delete(self.keyprfx+key)
 
     def delete_keys(self, *keys):
-        self.delete(*[self.keyprfx+key for key in keys])
+        self.redis.delete(*[self.keyprfx+key for key in keys])
 
     def delete(self):
         self.delete_keys(*self.keys)
@@ -97,7 +107,7 @@ class RedisSetDict:
 
     @property
     def keys(self):
-        return redis.smembers(self.keyset_name)
+        return self.redis.smembers(self.keyset_name)
 
     @property
     def keyset_name(self):
@@ -109,6 +119,8 @@ class RedisSetDict:
 
 
 def get_redis(config):
-    return RedisServer(path2config=config.redis_config,
+    return RedisServer(host=config.redis_host,
+                       port=config.redis_port,
+                       path2config=config.redis_config,
                        redis_server=config.redis,
                        start_it=config.start_redis)

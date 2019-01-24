@@ -18,7 +18,8 @@ class RunQueue:
     def __init__(self, redis_server):
         self.redis = StrictRedis(port=redis_server.port,
                                  host=redis_server.host,
-                                 password=redis_server.passwd)
+                                 #password=redis_server.passwd,
+                                 )
 
     def push(self, run_id):
         self.redis.lpush('deregnet_run_queue', run_id)
@@ -68,6 +69,7 @@ class Runs(Collection, Controller):
 
     @Controller.api_call
     def get_runs(self, searchString, skip, limit):
+        print(self.find_one())
         return [ util.deserialize_model(run_info, RunInfo)
                  for run_info in self.find() ]
 
@@ -82,6 +84,18 @@ class Runs(Collection, Controller):
             return 'Invalid run, invalid IDs encountered, check your run input', 400
 
         # generate run info and insert into database
+        parameter_set_id = run_input.get('parameter_set_id')
+        default_parameters = self._client.parameter_sets.get_parameter_set_default_data()
+        if not parameter_set_id:
+            parameter_set = default_parameters
+        else:
+            parameter_set = self._client.parameter_sets.get_parameter_set_as_dict(parameter_set_id)
+        parameter_set = {**default_parameters, **parameter_set}
+        parameter_set = {**parameter_set, **{k:v for k,v in run_input.get('parameter_set', {}).items() if v is not None}}
+
+        run_input['parameter_set'] = parameter_set
+        
+        
         run_info = {
                      'id': self.generate_id(),
                      'post_time': self.timestamp('-'),
@@ -90,6 +104,7 @@ class Runs(Collection, Controller):
                      'subgraph_ids': [],
                      'run_input': run_input
                    }
+
         self.insert_one( run_info )
         # push run onto the job queue
         self.queue.push( run_info['id'] )
@@ -97,15 +112,15 @@ class Runs(Collection, Controller):
         self.graphs.dependent_runs[run_input['graph_id']] = run_info['id']
         if run_input['score_id']:
             self._client.scores.dependent_runs[run_input['score_id']] = run_info['id']
-        if run_input['terminals_id']:
+        if run_input.get('terminals_id'):
             self._client.nodesets.dependent_runs[run_input['terminals_id']] = run_info['id']
-        if run_input['receptors_id']:
+        if run_input.get('receptors_id'):
             self._client.nodesets.dependent_runs[run_input['receptors_id']] = run_info['id']
-        if run_input['exclude_id']:
+        if run_input.get('exclude_id'):
             self._client.nodesets.dependent_runs[run_input['exclude_id']] = run_info['id']
-        if run_input['include_id']:
+        if run_input.get('include_id'):
             self._client.nodesets.dependent_runs[run_input['include_id']] = run_info['id']
-        if run_input['parameter_set_id']:
+        if run_input.get('parameter_set_id'):
             self._client.parameter_sets.dependent_runs[run_input['parameter_set_id']] = run_info['id']
 
         return util.deserialize_model(run_info, RunInfo)

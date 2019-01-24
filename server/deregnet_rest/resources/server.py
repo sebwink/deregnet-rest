@@ -42,12 +42,28 @@ class Config:
         return True
 
     @property
+    def mongo_host(self):
+        return str(self('MONGO_HOST'))
+
+    @property
+    def mongo_port(self):
+        return str(self('MONGO_PORT'))
+
+    @property
     def redis_config(self):
         return str(self('REDIS_CONFIG'))
 
     @property
     def redis(self):
         return str(self('REDIS'))
+
+    @property
+    def redis_host(self):
+        return str(self('REDIS_HOST'))
+
+    @property
+    def redis_port(self):
+        return str(self('REDIS_PORT'))
 
     @property
     def start_redis(self):

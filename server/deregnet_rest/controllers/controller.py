@@ -32,10 +32,10 @@ class Controller:
     def api_call(cls, method):
 
         def _m(self, *args, **kwargs):
-            try:
-                return method(self, *args, **kwargs)
-            except:
-                print('Something bad has happebed!')
-                'Internal Server Error', 500
+            #try:
+            return method(self, *args, **kwargs)
+            #except:
+            #    print('Something bad has happened!')
+            #    return 'Internal Server Error', 500
 
         return _m

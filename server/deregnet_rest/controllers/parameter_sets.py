@@ -72,10 +72,9 @@ class ParameterSets(Collection, Controller):
         print(default_info)
         return util.deserialize_model(default_info, ParameterSetInfo)
 
-    @Controller.api_call
     def get_parameter_set_default_data(self):
         default = self.read_yaml(self._default_params)
-        return util.deserialize_model(default, ParameterSet)
+        return default
 
     @Controller.api_call
     def get_parameter_sets(self, searchString, skip, limit):
