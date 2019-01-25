@@ -4,21 +4,11 @@ services:
     image: mongo 
   redis:
     image: redis
-    #clinvap_example_data:
-    #  image: clinvap/report_db_api_example_data
-    #depends_on:
-    #  - 'clinvap_db'
-    #links:
-    #  - 'clinvap_db:db'
-    #clinvap:
-    #image: clinvap/report_db_api
-    #depends_on:
-    #  - 'clinvap_example_data'
-    #links: 
-    #  - 'clinvap_db:db'
   deregnet-rest:
-    image: sebwink/deregnet-rest
-    build: .
+    image: sebwink/deregnet-rest:dev
+    build: 
+      context: ../..
+      dockerfile: ./docker/Dockerfile
     environment:
       ENV: DEV
       DEBUG: 'true'
@@ -31,4 +21,4 @@ services:
       - 'mongodb'
       - 'redis'
     ports:
-            - "${DEREGNET_PORT}:8080"
+            - "8080:8080"

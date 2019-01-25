@@ -7,12 +7,11 @@ services:
   deregnet-rest:
     image: sebwink/deregnet-rest
     build: 
-      context: ..
+      context: .
+      dockerfile: docker/Dockerfile
     links:
       - 'deregnet-mongodb:mongodb'
       - 'deregnet-redis:redis'
-    ports:
-      - "${DEREGNET_PORT}:8080"
   kong-db:
     image: postgres:9.6
     environment:
@@ -30,7 +29,7 @@ services:
   kong-migrations:
     image: sebwink/kong
     build:
-      context: ./kong
+      context: ./docker/kong
     command: kong migrations bootstrap
     depends_on:
       - kong-db
@@ -44,6 +43,8 @@ services:
       - kong-db
   kong:
     image: sebwink/kong
+    build:
+      context: ./docker/kong
     depends_on:
       - kong-migrations
     environment:
@@ -69,8 +70,22 @@ services:
   deregnet-kong-setup:
     image: sebwink/deregnet-kong-setup
     build:
-      context: ./setup
+      context: ./docker/setup
     depends_on:
       - kong
     links:
       - kong
+  konga:
+    image: pantsel/konga:next
+    depends_on:
+      - kong
+    ports:
+      - '1337:1337'
+    environment:
+      NODE_ENV: production
+      TOKEN_SECRET: test123
+      DB_ADAPTER: mongo
+      DB_HOST: mongodb
+    links:
+      - kong
+      - 'deregnet-mongodb:mongodb'    
