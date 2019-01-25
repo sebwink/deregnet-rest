@@ -1,16 +1,10 @@
 #!/usr/bin/env python3
 
-import connexion
-
-from deregnet_rest import encoder
-
-
-def main():
-    app = connexion.App(__name__, specification_dir='./swagger/')
-    app.app.json_encoder = encoder.JSONEncoder
-    app.add_api('swagger.yaml', arguments={'title': 'DeRegNet REST API'})
-    app.run(port=8080, debug=False)
-
+from deregnet_rest import app
+from deregnet_rest.init import config
 
 if __name__ == '__main__':
-    main()
+    app.run(host=config.host,
+            port=config.port,
+            debug=True, #config.debug,
+            server=config.server_backend)

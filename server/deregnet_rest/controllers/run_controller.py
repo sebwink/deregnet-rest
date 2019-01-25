@@ -2,7 +2,7 @@ import connexion
 
 from deregnet_rest.models.run_input import RunInput  # noqa: E501
 
-from deregnet_rest import server
+from deregnet_rest.init import server
 
 def delete_run(run_id):  # noqa: E501
     """Cancel an active run, you cannot delete finished runs

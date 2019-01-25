@@ -2,7 +2,7 @@ import connexion
 
 from deregnet_rest.models.inital_graph_info import InitalGraphInfo  # noqa: E501
 
-from deregnet_rest import server
+from deregnet_rest.init import server
 
 def delete_graph(graph_id):  # noqa: E501
     """Delete a previously uploaded network
@@ -14,6 +14,7 @@ def delete_graph(graph_id):  # noqa: E501
 
     :rtype: None
     """
+    print('Delete a graph!')
     return server.graphs.delete_graph(graph_id)
 
 
@@ -47,7 +48,7 @@ def get_graphs(searchString=None, skip=None, limit=None):  # noqa: E501
     return server.graphs.get_graphs(searchString, skip, limit)
 
 
-def post_graph(initalGraphInfo=None):  # noqa: E501
+def post_graph(initalGraphInfo):  # noqa: E501
     """Allows to initiate GraphML upload
 
     This Endpoint creates a Metadata-Object for a Graph. It returns the endpoint that is to be called with the
@@ -60,6 +61,7 @@ def post_graph(initalGraphInfo=None):  # noqa: E501
     """
     if connexion.request.is_json:
         initalGraphInfo = InitalGraphInfo.from_dict(connexion.request.get_json())  # noqa: E501
+    print(initalGraphInfo)
     return server.graphs.post_graph(initalGraphInfo)
 
 

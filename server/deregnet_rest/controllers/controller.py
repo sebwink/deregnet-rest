@@ -1,4 +1,5 @@
 from hashids import Hashids
+import datetime
 import time
 import yaml
 
@@ -10,6 +11,10 @@ class Controller:
     def timestamp(cls, sep=''):
         return time.strftime(sep.join(['%Y', '%m', '%d', '%H', '%M', '%S']),
                              time.gmtime())
+
+    @classmethod
+    def datetime(cls):
+        return datetime.datetime.now()
 
     @classmethod
     def generate_id(cls):
@@ -27,9 +32,10 @@ class Controller:
     def api_call(cls, method):
 
         def _m(self, *args, **kwargs):
-            try:
-                return method(self, *args, **kwargs)
-            except:
-                'Internal Server Error', 500
+            #try:
+            return method(self, *args, **kwargs)
+            #except:
+            #    print('Something bad has happened!')
+            #    return 'Internal Server Error', 500
 
         return _m

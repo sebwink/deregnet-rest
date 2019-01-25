@@ -1,4 +1,4 @@
-from deregnet_rest import server
+from deregnet_rest.init import server
 
 def delete_subgraph(subgraph_id):  # noqa: E501
     """Delete a previously found subgraph

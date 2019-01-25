@@ -9,7 +9,7 @@ info:
   license:
     name: "BSD 3-clause"
     url: "https://opensource.org/licenses/BSD-3-Clause"
-host: "localhost"
+host: "oxacillin"
 basePath: "/deregnet"
 tags:
 - name: "graph"
