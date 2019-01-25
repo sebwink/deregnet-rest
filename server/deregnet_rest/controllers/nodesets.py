@@ -4,6 +4,7 @@ from deregnet_rest.models.node_set import NodeSet
 from deregnet_rest.models.node_set_info import NodeSetInfo
 from deregnet_rest import util
 
+import deregnet_rest.resources.xdata as X
 from deregnet_rest.resources.redis import RedisSetDict
 from deregnet_rest.controllers.controller import Controller
 
@@ -40,7 +41,10 @@ class NodeSets(pymongo.collection.Collection, Controller):
         '''
         if not self.dependent_runs.is_empty(nodeset_id):
             return 'Invalid nodeset ID: some runs depend on this nodeset', 400
-        deletion = self.delete_one(filter={'id': nodeset_id})
+        deletion = self.delete_one(filter={
+            'id': nodeset_id,
+            'X-Consumer-ID': X.consumer_id(),
+        })
         if not deletion:
             return 'Invalid nodeset ID: No nodeset with that ID', 400
         return 'Node set successfully deleted', 201
@@ -50,8 +54,13 @@ class NodeSets(pymongo.collection.Collection, Controller):
         '''
 
         '''
-        nodeset_info = self.find_one(filter={'id': nodeset_id},
-                                     projection=self.NODESET_INFO_PROJ)
+        nodeset_info = self.find_one(
+            filter={
+                'id': nodeset_id,
+                'X-Consumer-ID': X.consumer_id(),
+            },
+            projection=self.NODESET_INFO_PROJ
+        )
         if not nodeset_info:
             return 'Invalid node set Id', 400
         return util.deserialize_model(nodeset_info, NodeSetInfo)
@@ -61,7 +70,10 @@ class NodeSets(pymongo.collection.Collection, Controller):
         '''
 
         '''
-        nodeset_infos = self.find(projection=self.NODESET_INFO_PROJ)
+        nodeset_infos = self.find(
+            filter={'X-Consumer-ID': X.consumer_id()},
+            projection=self.NODESET_INFO_PROJ 
+        )
         return [ util.deserialize_model(nodeset_info, NodeSetInfo)
                  for nodeset_info in nodeset_infos ]
 
@@ -79,7 +91,8 @@ class NodeSets(pymongo.collection.Collection, Controller):
                         }
         document = {
                      **nodeset_info,
-                     **{'nodes': body.nodes}
+                     **{'nodes': body.nodes},
+                     'X-Consumer-ID': X.consumer_id(),
                    }
         # insert into database and return NodeSetInfo
         self.insert_one(document)
