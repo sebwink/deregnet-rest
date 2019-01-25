@@ -87,13 +87,13 @@ class _Runner(DatabaseServer):
         args['excluded_nodes'] = self.get_exclude(run_input)
         #args = self.set_parameters(run_input, args)
         args = {**args, **run_input['parameter_set']}
-        #try:
-        args = AverageDeregnetArguments(**args)
-        #except:
+        try:
+            args = AverageDeregnetArguments(**args)
+        except:
             # TODO
 
-        #    print('Parameter construction failed')
-        #    return
+            print('Parameter construction failed')
+            return
         graph, id_attr = self.get_graph(run_input)
         tempdir = 'data/runs/runner'+str(self.id)
         finder = SubgraphFinder(graph,
@@ -106,7 +106,8 @@ class _Runner(DatabaseServer):
             print('Subgraph run failed')
             # TODO
             return
-        self.register_subgraphs(subgraphs, run_id)
+        x_consumer_id = run_info['X-Consumer-ID']
+        self.register_subgraphs(subgraphs, run_id, x_consumer_id)
 
     def get_graph(self, run_input):
         graph_id = run_input['graph_id']
@@ -137,9 +138,9 @@ class _Runner(DatabaseServer):
     def get_exclude(self, run_input):
         return self.get_nodeset(run_input, 'exclude')
 
-    def register_subgraphs(self, subgraphs, run_id):
-        subgraph_ids = self.subgraphs.register_subgraphs(subgraphs, run_id)
-        self.runs.update_one(filter={'id': run_id},
+    def register_subgraphs(self, subgraphs, run_id, x_consumer_id):
+        subgraph_ids = self.subgraphs.register_subgraphs(subgraphs, run_id, x_consumer_id)
+        self.runs.update_one(filter={'id': run_id, 'X-Consumer-ID': x_consumer_id},
                              update={'$set': {'done': True, 'subgraph_ids': subgraph_ids}})
 
 
