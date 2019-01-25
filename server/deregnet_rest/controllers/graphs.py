@@ -1,13 +1,14 @@
+import os
+import igraph as ig
 import pymongo
 
 from deregnet_rest.models.graph_info import GraphInfo
 from deregnet_rest import util
 
+import deregnet_rest.resources.xdata as X
 from deregnet_rest.resources.redis import RedisSetDict
 from deregnet_rest.controllers.controller import Controller
 
-import os
-import igraph as ig
 
 class Graphs(pymongo.collection.Collection, Controller):
     '''
@@ -39,7 +40,7 @@ class Graphs(pymongo.collection.Collection, Controller):
     def dependent_runs(self):
         return self._depruns
 
-    #@Controller.api_call
+    @Controller.api_call
     def delete_graph(self, graph_id):
         '''
 
@@ -47,8 +48,13 @@ class Graphs(pymongo.collection.Collection, Controller):
         print('DELETE %s' % graph_id)
         if not self.dependent_runs.is_empty(graph_id):
             return 'Invalid graph ID: some runs depend on this graph', 400
-        graph_path = self.find_one_and_delete(filter={'id': graph_id},
-                                              projection=self.GRAPH_DATA_PROJ)
+        graph_path = self.find_one_and_delete(
+            filter={
+                'id': graph_id,
+                'X-Consumer-ID': X.consumer_id(),
+            },
+            projection=self.GRAPH_DATA_PROJ
+        )
         print('graph_data: ', graph_path)
         if not graph_path:
             return 'Invalid graph ID: no graph with that ID', 400
@@ -60,8 +66,13 @@ class Graphs(pymongo.collection.Collection, Controller):
         '''
 
         '''
-        graph_info = self.find_one(filter={'id': graph_id},
-                                   projection=self.GRAPH_INFO_PROJ)
+        graph_info = self.find_one(
+            filter={
+                'id': graph_id,
+                'X-Consumer-ID': X.consumer_id(),
+            },
+            projection=self.GRAPH_INFO_PROJ
+        )
         if not graph_info:
             return 'Invalid graph ID: no graph with that ID', 400
         return util.deserialize_model(graph_info, GraphInfo)
@@ -71,16 +82,18 @@ class Graphs(pymongo.collection.Collection, Controller):
         '''
 
         '''
-        graph_infos = self.find(projection=self.GRAPH_INFO_PROJ)
+        graph_infos = self.find(
+            filter={'X-Consumer-ID': X.consumer_id()},
+            projection=self.GRAPH_INFO_PROJ
+        )
         return [ util.deserialize_model(graph_info, GraphInfo)
                  for graph_info in graph_infos ]
 
-    ##@Controller.api_call
+    @Controller.api_call
     def post_graph(self, initial_graph_info):
         '''
 
         '''
-        print(initial_graph_info)
         graph_info = {
                        'id': self.generate_id(),
                        'time_of_upload': self.timestamp('-'),
@@ -94,16 +107,23 @@ class Graphs(pymongo.collection.Collection, Controller):
                                                 graph_info['id']+'.graphml.gz'),
                        'node_id_attr': initial_graph_info.node_id_attr
                      }
-        self.insert_one( { **graph_info, **graph_data } )
-        print(graph_info)
+        self.insert_one({
+            **graph_info,
+            **graph_data,
+            'X-Consumer-ID': X.consumer_id(),
+        })
         return util.deserialize_model(graph_info, GraphInfo)
 
-    #@Controller.api_call
+    @Controller.api_call
     def post_graphml(self, graph_id, file_to_upload):
         '''
 
         '''
-        graph = self.find_one(filter={'id': graph_id})
+        x_consumer_id = X.consumer_id()
+        graph = self.find_one(filter={
+            'id': graph_id,
+            'X-Consumer-ID': x_consumer_id,
+        })
         if not graph:
             return 'Invalid graph ID', 400
         if os.path.isfile(graph['graphmlz']):
@@ -121,8 +141,17 @@ class Graphs(pymongo.collection.Collection, Controller):
         print(graph)
         G = ig.Graph.Read_GraphMLz(graph['graphmlz'])
         print(len(G.vs), len(G.es))
-        self.update_one(filter={'id': graph_id},
-                        update={ '$set': {'num_nodes': len(G.vs), 'num_edges': len(G.es)} })
+        self.update_one(
+            filter={
+                'id': graph_id,
+                'X-Consumer-ID': x_consumer_id,
+            },
+            update={
+                '$set': {
+                    'num_nodes': len(G.vs),
+                    'num_edges': len(G.es)
+                }
+            })
         G.write_graphmlz(graph['graphmlz'])
         return 'GraphML successfully uploaded', 201
 

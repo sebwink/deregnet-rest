@@ -14,7 +14,6 @@ def delete_graph(graph_id):  # noqa: E501
 
     :rtype: None
     """
-    print('Delete a graph!')
     return server.graphs.delete_graph(graph_id)
 
 

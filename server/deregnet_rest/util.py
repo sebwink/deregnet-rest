@@ -4,6 +4,7 @@ import six
 import typing
 
 
+
 def _deserialize(data, klass):
     """Deserializes dict, list, str into an object.
 
