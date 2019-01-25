@@ -6,6 +6,7 @@ from deregnet_rest.models.parameter_set import ParameterSet
 from deregnet_rest.models.parameter_set_info import ParameterSetInfo
 from deregnet_rest import util
 
+import deregnet_rest.resources.xdata as X
 from deregnet_rest.resources.redis import RedisSetDict
 from deregnet_rest.controllers.controller import Controller
 
@@ -41,23 +42,36 @@ class ParameterSets(Collection, Controller):
     def delete_parameter_set(self, parameter_set_id):
         if not self.dependent_runs.is_empty(parameter_set_id):
             return 'Invalid parameter set ID: runs depend on this parameter set', 400
-        deletion = self.delete_one({'id': parameter_set_id})
+        deletion = self.delete_one({
+            'id': parameter_set_id,
+            'X-Consumer-ID': X.consumer_id(),
+        })
         if not deletion:
             return 'Invalid parameter set ID: No parameter set with that ID', 400
         return 'Parameter set successfully deleted', 201
 
     @Controller.api_call
     def get_parameter_set(self, parameter_set_id):
-        parameter_set_info = self.find_one(filter={'id': parameter_set_id},
-                                           projection=self.PARAMSET_INFO_PROJ)
+        parameter_set_info = self.find_one(
+            filter={
+                'id': parameter_set_id,
+                'X-Consumer-ID': X.consumer_id(),
+            },
+            projection=self.PARAMSET_INFO_PROJ
+        )
         if not parameter_set_info:
             return 'Invalid parameter set ID', 400
         return util.deserialize_model(parameter_set_info, ParameterSetInfo)
 
     @Controller.api_call
     def get_parameter_set_data(self, parameter_set_id):
-        parameter_set_data = self.find_one(filter={'id': parameter_set_id},
-                                           projection=self.PARAMSET_DATA_PROJ)
+        parameter_set_info = self.find_one(
+            filter={
+                'id': parameter_set_id,
+                'X-Consumer-ID': X.consumer_id()
+            },
+            projection=self.PARAMSET_DATA_PROJ
+        )
         if not parameter_set_data:
             return 'Invalid parameter set ID', 400
         return util.deserialize_model(parameter_set_data, ParameterSet)
@@ -69,7 +83,6 @@ class ParameterSets(Collection, Controller):
                          'description': 'Default parameter set',
                          'set_parameters': list(self.get_parameter_set_default_data().keys())
                        }
-        print(default_info)
         return util.deserialize_model(default_info, ParameterSetInfo)
 
     def get_parameter_set_default_data(self):
@@ -78,7 +91,10 @@ class ParameterSets(Collection, Controller):
 
     @Controller.api_call
     def get_parameter_sets(self, searchString, skip, limit):
-        parameter_set_infos = self.find(projection=self.PARAMSET_INFO_PROJ)
+        parameter_set_infos = self.find(
+            filter={'X-Consumer-ID': X.consumer_id()},
+            projection=self.PARAMSET_INFO_PROJ
+        )
         return [ util.deserialize_model(parameter_set_info, ParameterSetInfo)
                  for parameter_set_info in parameter_set_infos ]
 
@@ -98,7 +114,11 @@ class ParameterSets(Collection, Controller):
                              # 'description': body.description,
                                'set_parameters': list(parameter_set_data.keys())
                              }
-        self.insert_one( { **parameter_set_data, **parameter_set_info } )
+        self.insert_one({
+            **parameter_set_data,
+            **parameter_set_info,
+            'X-Consumer-ID': X.consumer_id(),
+        })
         return util.deserialize_model(parameter_set_info, ParameterSetInfo)
 
     # ------------------------------------------------------------------------- #
