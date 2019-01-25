@@ -4,6 +4,7 @@ from deregnet_rest.models.score import Score
 from deregnet_rest.models.score_info import ScoreInfo
 from deregnet_rest import util
 
+import deregnet_rest.resources.xdata as X
 from deregnet_rest.resources.redis import RedisSetDict
 from deregnet_rest.controllers.controller import Controller
 
@@ -42,7 +43,10 @@ class Scores(Collection, Controller):
         '''
         if not self.dependent_runs.is_empty(score_id):
             return 'Invalid score ID: runs depend on this score', 400
-        deletion = self.delete_one(filter={'id': score_id})
+        deletion = self.delete_one(filter={
+            'id': score_id,
+            'X-Consumer-ID': X.consumer_id(),
+        })
         if not deletion:
             return 'Invalid score ID', 400
         return 'Score successfully deleted', 201
@@ -52,8 +56,13 @@ class Scores(Collection, Controller):
         '''
 
         '''
-        score_info = self.find_one(filter={'id': score_id},
-                                   projection=self.SCORE_INFO_PROJ)
+        score_info = self.find_one(
+            filter={ 
+                'id': score_id,
+                'X-Consumer-ID': X.consumer_id(),
+            },
+            projection=self.SCORE_INFO_PROJ
+        )
         if not score_info:
             return 'Invalid ID', 400
         return util.deserialize_model(score_info, ScoreInfo)
@@ -65,7 +74,10 @@ class Scores(Collection, Controller):
         '''
 
         '''
-        score_infos = self.find(projection=self.SCORE_INFO_PROJ)
+        score_infos = self.find(
+                filter={'X-Consumer-ID': X.consumer_id()},
+                projection=self.SCORE_INFO_PROJ
+        )
         return [ util.deserialize_model(score_info, ScoreInfo)
                  for score_info in score_infos ]
 
@@ -88,7 +100,11 @@ class Scores(Collection, Controller):
                        'score_values': body.score_values
                      }
         # insert into database and return ScoreInfo
-        self.insert_one({ **score_info, **score_data })
+        self.insert_one({
+            **score_info,
+            **score_data,
+            'X-Consumer-ID': X.consumer_id(),    
+        })
         return util.deserialize_model(score_info, ScoreInfo)
 
     # ------------------------------------------------------------------------- #
