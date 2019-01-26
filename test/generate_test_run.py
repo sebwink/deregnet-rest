@@ -11,6 +11,8 @@ run = {
     "score_id": score_id,
     "parameter_set": {
         "num_suboptimal": 1,
+        "max_overlap": 0,
+        "algorithm": "dta"
     },
 }
 

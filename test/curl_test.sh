@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
-./curl_graph_upload.sh
-./curl_score_upload.sh
-./curl_test_run.sh
+CREDENTIALS=$@
+
+./curl_graph_upload.sh $CREDENTIALS
+./curl_score_upload.sh $CREDENTIALS
+./curl_test_run.sh $CREDENTIALS

@@ -1,0 +1,22 @@
+{
+  "done": false,
+  "id": "KXqVYKq6eL",
+  "post_time": "2019-01-25-23-51-11",
+  "run_input": {
+    "description": "test run!",
+    "graph_id": "lp6oLg62A9",
+    "parameter_set": {
+      "abs_values": false,
+      "algorithm": "dta",
+      "default_score": 0.0,
+      "max_overlap": 0.0,
+      "max_size": 30,
+      "min_size": 10,
+      "model_sense": "max",
+      "num_suboptimal": 1
+    },
+    "score_id": "1YJgwoJA2B"
+  },
+  "started": false,
+  "subgraph_ids": []
+}
