@@ -1,0 +1,3 @@
+[submodule "deregnet"]
+	path = deregnet
+	url = https://github.com/sebwink/deregnet
