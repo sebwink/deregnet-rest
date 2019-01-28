@@ -1,8 +1,11 @@
 all: deregnet-rest kong deregnet-kong-setup
 
 deregnet-rest:
-	./compose.sh build deregnet-rest 
+	docker-compose build deregnet-rest 
 kong:
-	./compose.sh build kong 
+	docker-compose build kong 
 deregnet-kong-setup:
-	./compose.sh build deregnet-kong-setup
+	docker-compose build deregnet-kong-setup
+
+deploy: deregnet-rest
+	docker-compose -f docker-compose.yml -f docker-compose.deploy.yml up

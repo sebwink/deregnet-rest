@@ -155,20 +155,14 @@ while [[ $# -gt 0 ]]; do
 			shift
 			shift
 			;;
-		--uwsgi)
-			DEPLOY_UWSGI=true
-			shift
-			;;
-		--uwsgi-ini)
-			DEPLOY_UWSGI=true
-			UWSGI_INI="$2"
-			shift
+		--gunicorn)
+			DEPLOY=gunicorn
 			shift
 			;;
 		*)
-		    POSITIONAL+=("$1")
-			shift
-			;;
+		    	POSITIONAL+=("$1")
+		    	shift
+		    	;;
 	esac
 done
 set -- "${POSITIONAL[@]}"
@@ -202,18 +196,10 @@ export SERVER_BACKEND
 export START_RUNNERS
 export DEBUG
 
-if [ -z "$DEPLOY_UWSGI" ]; then
-	$PYTHON_INTERP -m deregnet_rest
+if [ -z "$DEPLOY" ]; then
+  $PYTHON_INTERP -m deregnet_rest
 else
-	if [ -z "$UWSGI_INI" ]; then
-		uwsgi --socket $SERVER_ROOT/deregnet.sock \
-		      --protocol=uwsgi \
-		      --manage-script-name \
-		      --mount $SERVER_ROOT=deregnet_rest:app \
-		      --processes 2 \
-		      --die-on-term 
-		#chmod 666 $SERVER_ROOT/deregnet.sock
-	else
-		uwsgi --ini $UWSGI_INI
-	fi
+  if [ $DEPLOY == 'gunicorn' ]; then
+    gunicorn --config config/wsgi/gunicorn.py deregnet_rest:app
+  fi
 fi

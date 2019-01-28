@@ -6,9 +6,11 @@ services:
     image: redis
   deregnet-rest:
     image: sebwink/deregnet-rest
-    build: 
-      context: .
-      dockerfile: docker/Dockerfile
+    build: . 
+    environment:
+      HOST: 0.0.0.0
+      PORT: 8080
+    restart: on-failure
     links:
       - 'deregnet-mongodb:mongodb'
       - 'deregnet-redis:redis'

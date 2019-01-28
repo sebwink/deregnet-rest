@@ -1,0 +1,5 @@
+version: "3"
+services:
+  deregnet-rest:
+    volumes:
+      - './server:/server'

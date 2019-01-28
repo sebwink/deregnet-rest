@@ -7,6 +7,7 @@ WORKDIR /server
 RUN python3 -m pip install pip==18.1
 RUN python3 -m pip install --no-cache-dir -r requirements.txt
 RUN python3 -m pip install connexion[swagger-ui]
+RUN python3 -m pip install gunicorn
 
 RUN mkdir -p data/db data/graphs data/redis data/runners data/runs data/subgraphs
 
