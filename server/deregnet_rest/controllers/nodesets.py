@@ -72,7 +72,7 @@ class NodeSets(pymongo.collection.Collection, Controller):
         '''
         nodeset_infos = self.find(
             filter={'X-Consumer-ID': X.consumer_id()},
-            projection=self.NODESET_INFO_PROJ 
+            projection=self.NODESET_INFO_PROJ
         )
         return [ util.deserialize_model(nodeset_info, NodeSetInfo)
                  for nodeset_info in nodeset_infos ]
@@ -84,18 +84,31 @@ class NodeSets(pymongo.collection.Collection, Controller):
         '''
         # compose nodeset_info and document for database
         nodeset_info = {
-                         'description': body.description,
-                         'id': self.generate_id(),
-                         'size': len(body.nodes),
-                         'time_of_upload': self.timestamp('-')
-                        }
+            'description': body.description,
+            'size': len(body.nodes),
+            'time_of_upload': self.timestamp('-')
+        }
+        x_consumer_id = X.consumer_id()
         document = {
-                     **nodeset_info,
-                     **{'nodes': body.nodes},
-                     'X-Consumer-ID': X.consumer_id(),
-                   }
+            **nodeset_info,
+            'nodes': body.nodes,
+            'X-Consumer-ID': x_consumer_id,
+        }
         # insert into database and return NodeSetInfo
-        self.insert_one(document)
+        _id = self.insert_one(document).inserted_id
+        nodeset_id = self.generate_uuid(_id)
+        self.update_one(
+            filter={
+                '_id': _id,
+                'X-Consumer-ID': x_consumer_id,
+            },
+            update={
+                '$set': {
+                    'id': nodeset_id,
+                },
+            }
+        )
+        nodeset_info['id'] = nodeset_id
         return util.deserialize_model(nodeset_info, NodeSetInfo)
 
 

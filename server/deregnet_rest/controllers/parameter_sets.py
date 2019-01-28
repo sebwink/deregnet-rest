@@ -75,7 +75,7 @@ class ParameterSets(Collection, Controller):
         if not parameter_set_data:
             return 'Invalid parameter set ID', 400
         return util.deserialize_model(parameter_set_data, ParameterSet)
-    
+
     @Controller.api_call
     def get_parameter_set_default(self):
         default_info = {
@@ -110,15 +110,28 @@ class ParameterSets(Collection, Controller):
         except:
             return 'Invalid input data', 409
         parameter_set_info = {
-                               'id': self.generate_id(),
-                             # 'description': body.description,
-                               'set_parameters': list(parameter_set_data.keys())
-                             }
-        self.insert_one({
+            # 'description': body.description,
+            'set_parameters': list(parameter_set_data.keys()),
+        }
+        x_consumer_id = X.consumer_id()
+        _id = self.insert_one({
             **parameter_set_data,
             **parameter_set_info,
-            'X-Consumer-ID': X.consumer_id(),
-        })
+            'X-Consumer-ID': x_consumer_id,
+        }).inserted_id
+        parameter_set_id = self.generate_uuid(_id)
+        self.update_one(
+            filter={
+                '_id': _id,
+                'X-Consumer-ID': x_consumer_id,
+            },
+            update={
+                '$set': {
+                    'id': parameter_set_id,
+                },
+            }
+        )
+        parameter_set_info['id'] = parameter_set_id
         return util.deserialize_model(parameter_set_info, ParameterSetInfo)
 
     # ------------------------------------------------------------------------- #

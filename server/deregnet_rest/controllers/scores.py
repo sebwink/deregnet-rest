@@ -57,7 +57,7 @@ class Scores(Collection, Controller):
 
         '''
         score_info = self.find_one(
-            filter={ 
+            filter={
                 'id': score_id,
                 'X-Consumer-ID': X.consumer_id(),
             },
@@ -91,7 +91,7 @@ class Scores(Collection, Controller):
         # compose score_info and document for database
         score_info = {
                        'description': body.description,
-                       'id': self.generate_id(),
+                       'id': None,
                        'size': len(body.node_ids),
                        'time_of_upload': self.timestamp('-')
                      }
@@ -100,11 +100,25 @@ class Scores(Collection, Controller):
                        'score_values': body.score_values
                      }
         # insert into database and return ScoreInfo
-        self.insert_one({
+        x_consumer_id = X.consumer_id()
+        _id = self.insert_one({
             **score_info,
             **score_data,
-            'X-Consumer-ID': X.consumer_id(),    
-        })
+            'X-Consumer-ID': x_consumer_id,
+        }).inserted_id
+        score_id = self.generate_uuid(_id)
+        self.update_one(
+            filter={
+                '_id': _id,
+                'X-Consumer-ID': x_consumer_id,
+            },
+            update={
+                '$set': {
+                    'id': score_id,
+                },
+            }
+        )
+        score_info['id'] = score_id
         return util.deserialize_model(score_info, ScoreInfo)
 
     # ------------------------------------------------------------------------- #

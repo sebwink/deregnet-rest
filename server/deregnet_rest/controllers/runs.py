@@ -103,7 +103,6 @@ class Runs(Collection, Controller):
         '''
         run_input = body.to_dict()
         run_input = {k: v for k,v in run_input.items() if v is not None}
-        
         graph_id = run_input['graph_id']
         score_id = run_input.get('score_id')
         receptors_id = run_input.get('receptors_id')
@@ -111,9 +110,9 @@ class Runs(Collection, Controller):
         exclude_id = run_input.get('exclude_id')
         include_id = run_input.get('include_id')
         parameter_set_id = run_input.get('parameter_set_id')
- 
+
         x_consumer_id = X.consumer_id()
- 
+
         valid, message = self.validate_run(
             x_consumer_id,
             graph_id,
@@ -137,10 +136,8 @@ class Runs(Collection, Controller):
         parameter_set = {**parameter_set, **{k:v for k,v in run_input.get('parameter_set', {}).items() if v is not None}}
 
         run_input['parameter_set'] = parameter_set
-        
-        
+
         run_info = {
-                     'id': self.generate_id(),
                      'post_time': self.timestamp('-'),
                      'started': False,
                      'done': False,
@@ -148,11 +145,22 @@ class Runs(Collection, Controller):
                      'run_input': run_input
                    }
 
-        self.insert_one({
+        _id = self.insert_one({
             **run_info,
             'X-Consumer-ID': x_consumer_id,
-        })
-        run_id = run_info['id']
+        }).inserted_id
+        run_id = self.generate_uuid(_id)
+        self.update_one(
+            filter={
+                '_id': _id,
+                'X-Consumer-ID': x_consumer_id,
+            },
+            update={
+                '$set': {
+                    'id': run_id,
+                },
+            }
+        )
         # push run onto the job queue
         self.queue.push(run_id)
         # register new run dependencies
@@ -163,6 +171,7 @@ class Runs(Collection, Controller):
         self.update_dependent_runs(run_id, exclude_id, self.nodesets)
         self.update_dependent_runs(run_id, include_id, self.nodesets)
         self.update_dependent_runs(run_id, parameter_set_id, self.parameter_sets)
+        run_info['id'] = run_id
         return util.deserialize_model(run_info, RunInfo)
 
     @classmethod
