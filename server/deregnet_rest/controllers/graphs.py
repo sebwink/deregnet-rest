@@ -95,23 +95,37 @@ class Graphs(pymongo.collection.Collection, Controller):
 
         '''
         graph_info = {
-                       'id': self.generate_id(),
-                       'time_of_upload': self.timestamp('-'),
-                       'name': initial_graph_info.name,
-                       'description': initial_graph_info.description,
-                       'num_nodes': 0,
-                       'num_edges': 0
-                     }
+            'time_of_upload': self.timestamp('-'),
+            'name': initial_graph_info.name,
+            'description': initial_graph_info.description,
+            'num_nodes': 0,
+            'num_edges': 0,
+        }
         graph_data = {
-                       'graphmlz': os.path.join(self._graphs,
-                                                graph_info['id']+'.graphml.gz'),
-                       'node_id_attr': initial_graph_info.node_id_attr
-                     }
-        self.insert_one({
+            'graphmlz': None,
+            'node_id_attr': initial_graph_info.node_id_attr,
+        }
+        x_consumer_id = X.consumer_id()
+        _id = self.insert_one({
             **graph_info,
             **graph_data,
-            'X-Consumer-ID': X.consumer_id(),
-        })
+            'X-Consumer-ID': x_consumer_id,
+        }).inserted_id
+        graph_id = self.generate_uuid(_id)
+        graphmlz_path = os.path.join(self._graphs, graph_id+'.graphml.gz')
+        self.update_one(
+            filter={
+                '_id': _id,
+                'X-Consumer-ID': x_consumer_id,
+            },
+            update={
+                '$set': {
+                    'id': graph_id,
+                    'graphmlz': graphmlz_path,
+                },
+            }
+        )
+        graph_info['id'] = graph_id
         return util.deserialize_model(graph_info, GraphInfo)
 
     @Controller.api_call

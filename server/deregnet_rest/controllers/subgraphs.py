@@ -33,24 +33,36 @@ class Subgraphs(Collection, Controller):
         subgraph_ids = []
         for i in range(len(subgraphs.subgraphs)):
             subgraph_info = {
-                              'run_id': run_id,
-                              'id': self.generate_id(),
-                              'score': subgraphs.avg_scores[i],
-                              'optimal': True, # TODO
-                              'optimality_type': 'optimal' if i == 0 else 'suboptimal:'+str(i),
-                              'num_nodes': len(subgraphs.subgraphs[i].vs),
-                              'num_edges': len(subgraphs.subgraphs[i].es),
-                              'root': 'ABC' # TODO
-                            }
+                'run_id': run_id,
+                'score': subgraphs.avg_scores[i],
+                'optimal': True, # TODO
+                'optimality_type': 'optimal' if i == 0 else 'suboptimal:'+str(i),
+                'num_nodes': len(subgraphs.subgraphs[i].vs),
+                'num_edges': len(subgraphs.subgraphs[i].es),
+                'root': 'ABC' # TODO
+            }
             subgraph_data = {
-                              'graphmlz': os.path.join(rundir, subgraph_info['id']+'.graphml.gz')
-                            }
+                'graphmlz': os.path.join(rundir, subgraph_info['id']+'.graphml.gz')
+            }
             subgraphs.to_graphmlz(i, subgraph_data['graphmlz'])
-            self.insert_one({
+            _id = self.insert_one({
                 **subgraph_info,
                 **subgraph_data,
-                'X-Consumer-ID': x_consumer_id
-            })
+                'X-Consumer-ID': x_consumer_id,
+            }).inserted_id
+            subgraph_id = self.generate_uuid(str(_id)+str(i))
+            self.update_one(
+                filter={
+                    '_id': _id,
+                    'X-Consumer-ID': x_consumer_id,
+                },
+                update={
+                    '$set': {
+                        'id': subgraph_id,
+                    },
+                }
+            )
+            subgraph_info['id'] = subgraph_id
             subgraph_ids.append(subgraph_info['id'])
         return subgraph_ids
 

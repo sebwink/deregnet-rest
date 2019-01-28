@@ -1,10 +1,10 @@
 {
   "done": false,
-  "id": "eg67OmN3VK",
-  "post_time": "2019-01-28-09-07-40",
+  "id": "94eWwQYVQk",
+  "post_time": "2019-01-28-11-54-23",
   "run_input": {
     "description": "test run!",
-    "graph_id": "mQ6Dxm9dRM",
+    "graph_id": "ppd5Mmwzmr",
     "parameter_set": {
       "abs_values": false,
       "algorithm": "dta",
@@ -15,7 +15,7 @@
       "model_sense": "max",
       "num_suboptimal": 1
     },
-    "score_id": "64PB3q7yzy"
+    "score_id": "94eWwQYVQk"
   },
   "started": false,
   "subgraph_ids": []
