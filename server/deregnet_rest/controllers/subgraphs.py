@@ -41,16 +41,12 @@ class Subgraphs(Collection, Controller):
                 'num_edges': len(subgraphs.subgraphs[i].es),
                 'root': 'ABC' # TODO
             }
-            subgraph_data = {
-                'graphmlz': os.path.join(rundir, subgraph_info['id']+'.graphml.gz')
-            }
-            subgraphs.to_graphmlz(i, subgraph_data['graphmlz'])
             _id = self.insert_one({
                 **subgraph_info,
-                **subgraph_data,
                 'X-Consumer-ID': x_consumer_id,
             }).inserted_id
             subgraph_id = self.generate_uuid(str(_id)+str(i))
+            subgraph_path = os.path.join(rundir, subgraph_id+'.graphml.gz')
             self.update_one(
                 filter={
                     '_id': _id,
@@ -59,9 +55,11 @@ class Subgraphs(Collection, Controller):
                 update={
                     '$set': {
                         'id': subgraph_id,
+                        'graphmlz': subgraph_path,
                     },
                 }
             )
+            subgraphs.to_graphmlz(i, subgraph_path)
             subgraph_info['id'] = subgraph_id
             subgraph_ids.append(subgraph_info['id'])
         return subgraph_ids
