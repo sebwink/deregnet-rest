@@ -1,0 +1,10 @@
+[
+  {
+    "description": "Human KEGG graph",
+    "id": "218ac88a-0232-5d19-8d56-13348fff22ff",
+    "name": "kegg_hsa",
+    "num_edges": 71363,
+    "num_nodes": 5512,
+    "time_of_upload": "2019-01-28-15-59-15"
+  }
+]

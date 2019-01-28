@@ -23,3 +23,12 @@ deregnet-kong-setup:
 
 deploy: deregnet-rest
 	docker-compose -f docker-compose.yml -f docker-compose.deploy.yml up
+
+.PHONY: test
+
+test: 
+	docker-compose -f docker-compose.test.yml build 
+	docker run --network deregnetrest_default --link deregnetrest_kong_1:kong --rm sebwink/deregnet-rest-test 
+
+clean:
+	docker volume prune

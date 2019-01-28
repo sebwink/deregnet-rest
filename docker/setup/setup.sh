@@ -6,7 +6,7 @@ ENV="${ENV:-development}"
 
 function add_consumer {
   username=$1
-  password=$1
+  password=$2
   curl --silent -X POST \
        --url http://kong:8001/consumers \
        --data "username=$username" > /dev/null
@@ -40,7 +40,7 @@ curl --silent -X POST \
 
 if [ $ENV == "development" ]; then
   echo "Adding some test user a:a"
-  add_consumer 'a' 'a' 
+  add_consumer 'test' 'test' 
   echo "Adding some test user b:b"
-  add_consumer 'b' 'b'
+  add_consumer 'user' 'password'
 fi

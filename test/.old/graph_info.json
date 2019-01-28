@@ -1,8 +1,8 @@
 {
   "description": "Human KEGG graph",
-  "id": "896eec52-277f-5345-b9f7-b08b2aa72b09",
+  "id": "704e282c-64bb-5607-868b-8be188c2ed2a",
   "name": "kegg_hsa",
   "num_edges": 0,
   "num_nodes": 0,
-  "time_of_upload": "2019-01-28-14-08-19"
+  "time_of_upload": "2019-01-28-18-06-06"
 }

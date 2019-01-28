@@ -63,6 +63,7 @@ services:
       KONG_PROXY_ERROR_LOG: /dev/stderr
     links:
       - kong-db
+      - deregnet-rest
     ports:
       - '8000:8000/tcp'
       - '8001:8001/tcp'
