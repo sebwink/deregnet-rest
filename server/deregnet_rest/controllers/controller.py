@@ -1,12 +1,9 @@
-from hashids import Hashids
 import uuid
 import datetime
 import time
 import yaml
 
 __SALT__ = 'This should be constant during the entire lifetime of the database!'
-hashids = Hashids(salt=__SALT__)
-
 __SALT_UUID__ = uuid.uuid5(uuid.uuid1(), __SALT__)
 
 class Controller:
@@ -19,15 +16,6 @@ class Controller:
     @classmethod
     def datetime(cls):
         return datetime.datetime.now()
-
-    @classmethod
-    def generate_id(cls, seed=None):
-        if seed is None:
-            seed = int(cls.timestamp())
-        else:
-            seed = str(seed)
-            seed = int.from_bytes(seed.encode('utf-8'), 'little')
-        return hashids.encode(seed)
 
     @classmethod
     def generate_uuid(cls, name):
