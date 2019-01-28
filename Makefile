@@ -7,7 +7,7 @@ deregnet-rest: deregnet
 
 .PHONY: deregnet
 
-deregnet: deregnet-submodule 
+deregnet: 
 ifeq ($(DEREGNET_CONTAINER_ID),i)
 	git submodule update --init --recursive
 	cd deregnet && make -f docker.mak
