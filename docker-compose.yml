@@ -14,6 +14,21 @@ services:
     links:
       - 'deregnet-mongodb:mongodb'
       - 'deregnet-redis:redis'
+  something-else:
+    image: sebwink/flask-deploy-test
+    environment:
+      HOST: 0.0.0.0
+  deregnet-docs:
+    image: sebwink/swagger-docs 
+    build:
+      context: .
+      dockerfile: ./docs/Dockerfile 
+    environment:
+      SWAGGER_DOCS_SPEC: /app/test/specs/deregnet.json 
+      SWAGGER_DOCS_NAME: deregnet 
+      SWAGGER_DOCS_AUTH: basic
+    volumes:
+      - './docs:/app'
   kong-db:
     image: postgres:9.6
     environment:
@@ -63,7 +78,9 @@ services:
       KONG_PROXY_ERROR_LOG: /dev/stderr
     links:
       - kong-db
-      - deregnet-rest
+      - deregnet-rest 
+      - something-else 
+      - deregnet-docs
     ports:
       - '8000:8000/tcp'
       - '8001:8001/tcp'
