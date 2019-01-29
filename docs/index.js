@@ -6,7 +6,6 @@ const swaggerUi = require('swagger-ui-express');
 const HOST = process.env.SWAGGER_DOCS_HOST || 'localhost';
 const PORT = process.env.SWAGGER_DOCS_PORT || 5000;
 
-
 const SPEC = process.env.SWAGGER_DOCS_SPEC;
 const spec = JSON.parse(fs.readFileSync(SPEC));
 
@@ -64,7 +63,6 @@ app.get('/', (req, res) => {
   spec.basePath = `/${NAME}`;
   return swaggerUiSetup(spec, base)(req, res);
 });
-
 
 // app.set('trust proxy', '172.27.0.9');
 

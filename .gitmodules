@@ -1,3 +1,6 @@
 [submodule "deregnet"]
 	path = deregnet
 	url = https://github.com/sebwink/deregnet
+[submodule "ndex-graphml"]
+	path = ndex-graphml
+	url = http://github.com/sebwink/ndex-graphml

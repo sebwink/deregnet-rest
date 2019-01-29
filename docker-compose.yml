@@ -14,21 +14,35 @@ services:
     links:
       - 'deregnet-mongodb:mongodb'
       - 'deregnet-redis:redis'
-  something-else:
-    image: sebwink/flask-deploy-test
+  ndex-graphml:
+    image: sebwink/ndex-graphml
+    build: 
+      context: ndex-graphml
     environment:
       HOST: 0.0.0.0
+      PORT: 5000
+  ndex-graphml-docs:
+    image: sebwink/swagger-docs 
+    build:
+      context: .
+      dockerfile: ./docs/Dockerfile
+    environment:
+      SWAGGER_DOCS_SPEC: /app/specs/ndex-graphml.json 
+      SWAGGER_DOCS_NAME: ndex-graphml 
+      SWAGGER_DOCS_AUTH: basic
+    volumes:
+      - './ndex-graphml/server/swagger:/app/specs'
   deregnet-docs:
     image: sebwink/swagger-docs 
     build:
       context: .
       dockerfile: ./docs/Dockerfile 
     environment:
-      SWAGGER_DOCS_SPEC: /app/test/specs/deregnet.json 
+      SWAGGER_DOCS_SPEC: /app/specs/swagger.json 
       SWAGGER_DOCS_NAME: deregnet 
       SWAGGER_DOCS_AUTH: basic
     volumes:
-      - './docs:/app'
+      - './server/deregnet_rest/swagger:/app/specs'
   kong-db:
     image: postgres:9.6
     environment:
@@ -78,9 +92,6 @@ services:
       KONG_PROXY_ERROR_LOG: /dev/stderr
     links:
       - kong-db
-      - deregnet-rest 
-      - something-else 
-      - deregnet-docs
     ports:
       - '8000:8000/tcp'
       - '8001:8001/tcp'
