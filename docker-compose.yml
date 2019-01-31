@@ -1,6 +1,6 @@
 version: '3'
 services:
-  deregnet-mongodb:
+  mongodb:
     image: mongo 
   deregnet-redis:
     image: redis
@@ -12,7 +12,7 @@ services:
       PORT: 8080
     restart: on-failure
     links:
-      - 'deregnet-mongodb:mongodb'
+      - mongodb
       - 'deregnet-redis:redis'
   ndex-graphml:
     image: sebwink/ndex-graphml
@@ -96,7 +96,6 @@ services:
       - '8000:8000/tcp'
       - '8001:8001/tcp'
       - '8443:8443/tcp'
-      - '8444:8444/tcp'
     restart: on-failure
   deregnet-kong-setup:
     image: sebwink/deregnet-kong-setup
@@ -105,6 +104,23 @@ services:
     depends_on:
       - kong
     links:
+      - kong
+  kong-auth:
+    image: sebwink/kong-auth 
+    build: 
+      context: ./auth
+    env_file:
+      - './.kong.auth.env'
+    volumes:
+      - './auth:/app'
+    depends_on:
+      - kong                  
+      - mongodb
+  kong-auth-setup:
+    image: sebwink/kong-auth-setup 
+    build:
+      context: ./auth/docker/setup 
+    depends_on:
       - kong
   konga:
     image: pantsel/konga:next
@@ -119,4 +135,4 @@ services:
       DB_HOST: mongodb
     links:
       - kong
-      - 'deregnet-mongodb:mongodb'    
+      - mongodb    
