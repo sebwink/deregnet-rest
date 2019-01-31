@@ -1,7 +1,5 @@
 version: "3"
 services:
-  db:
-    image: mongo 
   kong-db:
     image: postgres:9.6
     environment:
@@ -53,10 +51,10 @@ services:
       - kong-db
     ports:
       - '8000:8000/tcp'
-      - '8001:8001/tcp'
       - '8443:8443/tcp'
-      - '8444:8444/tcp'
     restart: on-failure
+  db:
+    image: mongo 
   kong-auth:
     image: sebwink/kong-auth 
     build: .
@@ -67,5 +65,9 @@ services:
     depends_on:
       - kong                  
       - db
-    ports:
-      - '5000:5000/tcp'
+  kong-auth-setup:
+    image: sebwink/kong-auth-setup 
+    build:
+      context: ./docker/setup 
+    depends_on:
+      - kong

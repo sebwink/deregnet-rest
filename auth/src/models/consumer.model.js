@@ -20,10 +20,6 @@ const consumerSchema = mongoose.Schema({
     type: String,
     required: true,
   },
-  salt: {
-    type: String,
-    required: true,
-  },
   name: {
     type: String,
   },

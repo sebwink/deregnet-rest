@@ -15,12 +15,12 @@ const smtp = nodemailer.createTransport({
   },
 });
 
-const sendConfirmationLink = async (to, token) => {
+const sendConfirmationLink = async (to, token, root) => {
   const mail = {
     from: `"DeRegNet API" <${MAIL_FROM}>`,
     to,
     subject: 'DeRegNet sign up confirmation',
-    text: `http://localhost:5000/signup/confirm/${token}`,
+    text: `${root}/signup/confirm/${token}`,
   };
   await smtp.sendMail(mail);
 };
