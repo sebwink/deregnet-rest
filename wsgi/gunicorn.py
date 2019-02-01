@@ -9,4 +9,3 @@ bind = '{}:{}'.format(HOST, PORT)
 workers = os.getenv('WORKERS', mp.cpu_count() * 2 + 1)
 # logging
 accesslog = '-'
-

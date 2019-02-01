@@ -1,3 +1,8 @@
+const apm = require('elastic-apm-node').start({
+  serviceName: `${process.env.SWAGGER_DOCS_NAME}-docs`,
+  serverUrl: 'http://apm-server:8200',
+});
+
 const fs = require('fs');
 const app = require('express')();
 const morgan = require('morgan');
