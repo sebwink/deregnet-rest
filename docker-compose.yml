@@ -29,7 +29,7 @@ services:
   ndex-graphml:
     image: sebwink/ndex-graphml
     build: 
-      context: ndex-graphml
+      context: ./upstream/ndex-graphml
     environment:
       HOST: 0.0.0.0
       PORT: 5000

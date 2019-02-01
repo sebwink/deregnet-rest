@@ -11,7 +11,7 @@ deregnet-rest: deregnet
 deregnet: 
 ifeq ($(DEREGNET_CONTAINER_ID),)
 	git submodule update --init --recursive
-	cd deregnet && make -f docker.mak
+	cd upstream/deregnet && make -f docker.mak
 else
 	echo "deregnet container already build."
 endif
@@ -21,7 +21,7 @@ endif
 ndex-graphml: 
 ifeq ($(NDEX_GRAPHML_CONTAINER_ID),)
 	git submodule update --init --recursive
-	cd ndex-graphml && make
+	cd upstream/ndex-graphml && make
 else
 	echo "ndex-graphml container already build."
 endif
