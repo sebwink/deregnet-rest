@@ -2,7 +2,9 @@ node_modules/
 
 data/
 
-.kong.auth.env
+.secrets/
+.data/
+
 .env
 .keys/
 .old/
