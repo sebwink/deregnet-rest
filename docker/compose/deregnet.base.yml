@@ -1,82 +1,76 @@
 version: '3'
 services:
-  mongodb:
-    image: mongo 
-  deregnet-redis:
+  redis:
     image: redis
+    networks:
+      - deregnet
   deregnet-rest:
     image: sebwink/deregnet-rest
-    build: . 
+    build: 
+      context: ../..
     environment:
       HOST: 0.0.0.0
       PORT: 8080
     restart: on-failure
-    links:
+    networks:
+      - deregnet 
+    depends_on:
+      - redis 
       - mongodb
-      - 'deregnet-redis:redis'
-      - apm-server
   deregnet-docs:
     image: sebwink/swagger-docs 
     build:
-      context: .
+      context: ../..
       dockerfile: ./docs/Dockerfile 
     environment:
       SWAGGER_DOCS_SPEC: /app/specs/swagger.json 
       SWAGGER_DOCS_NAME: deregnet 
       SWAGGER_DOCS_AUTH: basic
     volumes:
-      - './server/deregnet_rest/swagger:/app/specs'
+      - '../../server/deregnet_rest/swagger:/app/specs'
+    networks:
+      - deregnet
   ndex-graphml:
     image: sebwink/ndex-graphml
     build: 
-      context: ./upstream/ndex-graphml
+      context: ../../upstream/ndex-graphml
     environment:
       HOST: 0.0.0.0
       PORT: 5000
+    networks:
+      - deregnet
   ndex-graphml-docs:
     image: sebwink/swagger-docs 
     build:
-      context: .
+      context: ../..
       dockerfile: ./docs/Dockerfile
     environment:
       SWAGGER_DOCS_SPEC: /app/specs/ndex-graphml.json 
       SWAGGER_DOCS_NAME: ndex-graphml 
       SWAGGER_DOCS_AUTH: basic
     volumes:
-      - './ndex-graphml/server/swagger:/app/specs'
-  kong-db:
-    image: postgres:9.6
-    environment:
-      POSTGRES_DB: ${KONG_PG_DATABASE:-kong}
-      POSTGRES_PASSWORD: ${KONG_PG_PASSWORD:-kong}
-      POSTGRES_USER: ${KONG_PG_USER:-kong}
-    healthcheck:  
-      test: ["CMD", "pg_isready", "-U", "${KONG_PG_USER:-kong}", "-d", "${KONG_PG_DATABASE:-kong}"]
-      interval: 30s
-      timeout: 30s
-      retries: 3
-    restart: on-failure
-    stdin_open: true
-    tty: true
+      - '../../upstream/ndex-graphml/server/swagger:/app/specs'
+    networks:
+      - deregnet
   kong-migrations:
     image: sebwink/kong
     build:
-      context: ./docker/kong
+      context: ../kong
     command: kong migrations bootstrap
     depends_on:
-      - kong-db
+      - postgres
     environment:
       KONG_DATABASE: postgres
       KONG_PG_DATABASE: ${KONG_PG_DATABASE:-kong}
-      KONG_PG_HOST: kong-db
+      KONG_PG_HOST: postgres
       KONG_PG_PASSWORD: ${KONG_PG_PASSWORD:-kong}
       KONG_PG_USER: ${KONG_PG_USER:-kong}
-    links:
-      - kong-db
+    networks:
+      - deregnet
   kong:
     image: sebwink/kong
     build:
-      context: ./docker/kong
+      context: ../kong
     depends_on:
       - kong-migrations
     environment:
@@ -86,72 +80,76 @@ services:
       KONG_CASSANDRA_CONTACT_POINTS: kong-db
       KONG_DATABASE: postgres
       KONG_PG_DATABASE: ${KONG_PG_DATABASE:-kong}
-      KONG_PG_HOST: kong-db
+      KONG_PG_HOST: postgres
       KONG_PG_PASSWORD: ${KONG_PG_PASSWORD:-kong}
       KONG_PG_USER: ${KONG_PG_USER:-kong}
       KONG_PROXY_ACCESS_LOG: /dev/stdout
       KONG_PROXY_ERROR_LOG: /dev/stderr
-    links:
-      - kong-db
+    networks:
+      - deregnet
     ports:
       - '8443:8443/tcp'
     restart: on-failure 
   kong-ssl:
     image: sebwink/kong-ssl 
     build:
-      context: ./docker/kong-ssl 
+      context: ../kong-ssl 
     environment:
       SSL_CERT: /.secrets/ssl.crt 
       SSL_KEY: /.secrets/ssl.key 
     volumes:
-      - './.secrets:/.secrets'
+      - '../../.secrets:/.secrets'
     depends_on:
       - kong
-    links:
-      - kong
+    networks:
+      - deregnet
   deregnet-kong-setup:
     image: sebwink/deregnet-kong-setup
     build:
-      context: ./docker/setup-deregnet
+      context: ../setup-deregnet
     depends_on:
       - kong
-    links:
-      - kong
+    networks:
+      - deregnet
   ndex-graphml-kong-setup:
     image: sebwink/ndex-graphml-kong-setup
     build:
-      context: ./docker/setup-ndex-graphml
+      context: ../setup-ndex-graphml
     depends_on:
       - kong
-    links:
-      - kong
+    networks:
+      - deregnet
   kong-admin-api:
     image: sebwink/kong-admin-api
     build:
-      context: ./docker/kong-admin-api 
+      context: ../kong-admin-api 
     environment:
       KONG_ADMIN_USER: deregnet
     depends_on:
       - kong
-    links:
-      - kong
+    networks:
+      - deregnet
   kong-auth:
     image: sebwink/kong-auth 
     build: 
-      context: ./auth
+      context: ../../auth
     env_file:
-      - './.secrets/kong.auth.env'
+      - '../../.secrets/kong.auth.env'
     volumes:
-      - './auth:/app'
+      - '../../auth:/app'
     depends_on:
       - kong                  
       - mongodb
+    networks:
+      - deregnet
   kong-auth-setup:
     image: sebwink/kong-auth-setup 
     build:
-      context: ./auth/docker/setup 
+      context: ../../auth/docker/setup 
     depends_on:
       - kong
+    networks:
+      - deregnet
   konga:
     image: pantsel/konga:next
     depends_on:
@@ -163,30 +161,17 @@ services:
       DB_HOST: mongodb 
       KONGA_SEED_USER_DATA_SOURCE_FILE: /.secrets/konga.user.seed 
     volumes:
-      - './.secrets:/.secrets'
-    links:
-      - kong
-      - mongodb    
+      - '../../.secrets:/.secrets'
+    networks:
+      - deregnet
   konga-setup:
     image: sebwink/konga-setup
     build:
-      context: ./docker/setup-konga
+      context: ../setup-konga
     depends_on:
       - kong
-    links:
-      - kong 
-  logstash:
-    image: docker.elastic.co/logstash/logstash:6.6.0
-  elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:6.6.0
-    environment:
-      #- bootstrap.memory_lock=true 
-      - 'ES_JAVA_OPTS=-Xms512m -Xmx512m'
-    volumes:
-      - '.data/elasticsearch:/usr/share/elasticsearch/data/'
-  kibana:
-    image: docker.elastic.co/kibana/kibana:6.6.0
-    ports:
-      - '5601:5601/tcp'
-  apm-server:
-    image: docker.elastic.co/apm/apm-server:6.6.0
+    networks:
+      - deregnet
+networks:
+  deregnet:
+    external: True
