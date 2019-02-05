@@ -29,8 +29,8 @@ const validate = async (key, data) => {
 };
 
 const validateSchema = async (req, res, next) => {
-  const { method, originalUrl } = req;
-  const url = originalUrl.replace(/\/$/, '');
+  const { method, baseUrl, path } = req;
+  const url = `${baseUrl}${path.replace(/\/$/, '')}`;
   const schemaKey = `${method}@${url}`;
   const valid = await validate(schemaKey, req.body);
   if (valid) {

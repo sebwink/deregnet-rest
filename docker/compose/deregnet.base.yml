@@ -88,7 +88,7 @@ services:
     networks:
       - deregnet
     ports:
-      - '8443:8443/tcp'
+      - '443:8443/tcp'
     restart: on-failure 
   kong-ssl:
     image: sebwink/kong-ssl 

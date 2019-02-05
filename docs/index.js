@@ -1,7 +1,7 @@
-const apm = require('elastic-apm-node').start({
-  serviceName: `${process.env.SWAGGER_DOCS_NAME}-docs`,
-  serverUrl: 'http://apm-server:8200',
-});
+//const apm = require('elastic-apm-node').start({
+//  serviceName: `${process.env.SWAGGER_DOCS_NAME}-docs`,
+//  serverUrl: 'http://apm-server:8200',
+//});
 
 const fs = require('fs');
 const app = require('express')();
@@ -10,6 +10,8 @@ const swaggerUi = require('swagger-ui-express');
 
 const HOST = process.env.SWAGGER_DOCS_HOST || 'localhost';
 const PORT = process.env.SWAGGER_DOCS_PORT || 5000;
+
+const PUBLIC_HOST = process.env.PUBLIC_HOST || 'dereg.net';
 
 const SPEC = process.env.SWAGGER_DOCS_SPEC;
 const spec = JSON.parse(fs.readFileSync(SPEC));
@@ -59,12 +61,8 @@ const swaggerUiSetup = (
 
 app.use('/', swaggerUi.serve);
 app.get('/', (req, res) => {
-  const { headers } = req;
-  const proto = headers['x-forwarded-proto'];
-  const host = headers['x-forwarded-host'];
-  const port = headers['x-forwarded-port'];
-  const base = `${proto}://${host}:${port}${BASE}`;
-  spec.host = `${host}:${port}`;
+  const base = `${BASE}`;
+  spec.host = `${PUBLIC_HOST}`;
   spec.basePath = `/${NAME}`;
   return swaggerUiSetup(spec, base)(req, res);
 });

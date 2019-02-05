@@ -1,15 +1,13 @@
-const bcrypt = require('bcrypt');
-
+const crypto = require('../utils/crypto.util.js');
 const jwt = require('../utils/jwt.util');
 const mail = require('../utils/mail.util');
-const Consumer = require('../models/consumer.model');
-const SignUp = require('../models/signup.model');
 const kongConsumer = require('../utils/kong/consumer.util');
 const kongBasicAuth = require('../utils/kong/basic.auth.util');
-
-const SALT_COST = process.env.KONG_AUTH_SALT_COST || 10;
+const Consumer = require('../models/consumer.model');
+const SignUp = require('../models/signup.model');
 
 const usernameOccupied = async (username) => {
+  // TODO: check kong too?, artificial consumers ...
   const usernameRegistered = await Consumer.findOne({ username });
   if (usernameRegistered) {
     return true;
@@ -27,26 +25,31 @@ const emailOccupied = async (email) => {
   return emailPendingSignUp;
 };
 
-const postSignup = async (data, root) => {
-  const { username, email, password } = data;
-  const signup = new SignUp({
+const postSignup = async (data) => {
+  const {
     username,
     email,
     password,
+    ui,
+  } = data;
+  const encryptedPassword = crypto.encrypt(password);
+  const signup = new SignUp({
+    username,
+    email,
+    password: encryptedPassword,
   });
   await signup.save();
-  const confirmationToken = await jwt.sign({ username }, {
+  const confirmationToken = await jwt.sign({ email }, {
     algorithm: jwt.algorithm,
     expiresIn: jwt.expiresIn,
   });
-  await mail.sendConfirmationLink(
+  mail.sendConfirmationLink(
     email,
     confirmationToken,
-    root,
+    ui,
   );
   return {
-    username,
-    email,
+    message: 'Check your E-Mail for further instructions.',
   };
 };
 
@@ -63,21 +66,28 @@ const confirm = token => (
   })
 );
 
-const stillInDatabase = async ({ username }) => {
-  const signup = await SignUp.findOne({ username });
+const stillInDatabase = async ({ email }) => {
+  const signup = await SignUp.findOne({ email });
   return signup;
 };
 
-const registerConsumer = async (signup) => {
-  const { username, password } = signup;
+const verifySignupConfirmation = (signup, { username, password }) => {
+  const { username: signupUsername, password: encryptedPassword } = signup;
+  const signupPassword = crypto.decrypt(encryptedPassword);
+  if (signupUsername !== username || signupPassword !== password) {
+    return false;
+  }
+  return password;
+};
+
+const registerConsumer = async (signup, password) => {
+  const { username } = signup;
   // delete signup entity
   await SignUp.deleteOne({ username });
   // kong consumer and credentials
   const kongResponse = await kongConsumer.post(username);
   await kongBasicAuth.postCredentials(username, password);
-  // password hash
-  const salt = await bcrypt.genSalt(SALT_COST);
-  const passwordHash = await bcrypt.hash(password, salt);
+  const passwordHash = await crypto.hashPassword(password);
   // consumer
   const consumer = new Consumer({
     username,
@@ -98,6 +108,7 @@ module.exports = {
   emailOccupied,
   confirm,
   stillInDatabase,
+  verifySignupConfirmation,
   registerConsumer,
   post: postSignup,
 };

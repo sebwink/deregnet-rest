@@ -1,9 +1,9 @@
 version: "3"
 services:
-  #logstash:
-  #  image: docker.elastic.co/logstash/logstash:6.6.0
-  #  networks:
-  #    - deregnet
+  logstash:
+    image: docker.elastic.co/logstash/logstash:6.6.0
+    networks:
+      - deregnet
   metricbeat:
     image: docker.elastic.co/beats/metricbeat:6.6.0
     networks:

@@ -1,6 +1,5 @@
 const { Router } = require('express');
 
-const proxy = require('../utils/proxy.util');
 const messages = require('../utils/messages.util');
 const signup = require('../controllers/signup.controller');
 
@@ -16,8 +15,7 @@ router.post('/', async (req, res) => {
     } else if (emailInvalid) {
       messages.send(['Email already in use.', 409], res);
     } else {
-      const root = proxy.getRealRoot(req);
-      const response = await signup.post(req.body, root);
+      const response = await signup.post(req.body);
       res.status(201);
       res.json(response);
     }
@@ -27,16 +25,37 @@ router.post('/', async (req, res) => {
   }
 });
 
-// POST /signup/confirm/:confirmationToken
-router.get('/confirm/:confirmationToken', async (req, res) => {
+// GET /signup/confirm?token=<token>
+router.get('/confirm', async (req, res) => {
   try {
-    const verified = await signup.confirm(req.params.confirmationToken);
+    const verified = await signup.confirm(req.query.token);
     if (!verified) {
       messages.send(messages.INVALID_TOKEN, res);
     } else {
       const validSignup = await signup.stillInDatabase(verified);
       if (validSignup) {
-        await signup.registerConsumer(validSignup);
+        messages.send(['Token valid.', 201], res);
+      } else {
+        messages.send(messages.INVALID_TOKEN, res);
+      }
+    }
+  } catch (error) {
+    console.log(error);
+    messages.send(messages.INTERNAL_SERVER_ERROR, res);
+  }
+});
+
+// POST /signup/confirm?token=<token>
+router.post('/confirm', async (req, res) => {
+  try {
+    const verified = await signup.confirm(req.query.token);
+    if (!verified) {
+      messages.send(messages.INVALID_TOKEN, res);
+    } else {
+      const validSignup = await signup.stillInDatabase(verified);
+      const password = signup.verifySignupConfirmation(validSignup, req.body);
+      if (validSignup && password) {
+        await signup.registerConsumer(validSignup, password);
         messages.send(['Your account has been confirmed.', 201], res);
       } else {
         messages.send(messages.INVALID_TOKEN, res);
