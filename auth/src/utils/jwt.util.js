@@ -26,7 +26,10 @@ const jwtSign = (payload, secretOrPrivateKey, options) => (
 const sign = (payload, options) => (
   new Promise(async (resolve, reject) => {
     try {
-      const token = await jwtSign(payload, privateKey, options);
+      const token = await jwtSign(payload, privateKey, {
+        ...options,
+        algorithm: JWT_ALGORITHM,
+      });
       resolve(token);
     } catch (error) {
       reject(error);
@@ -49,7 +52,10 @@ const jwtVerify = (token, secretOrPrivateKey, options) => (
 const verify = (token, options) => (
   new Promise(async (resolve) => {
     try {
-      const decoded = await jwtVerify(token, publicKey, options);
+      const decoded = await jwtVerify(token, publicKey, {
+        ...options,
+        algorithms: [JWT_ALGORITHM],
+      });
       resolve(decoded);
     } catch (error) {
       resolve(false);
@@ -60,7 +66,7 @@ const verify = (token, options) => (
 module.exports = {
   sign,
   verify,
-  publicKey,
+  publicKey: publicKey.toString('utf-8'),
   algorithm: JWT_ALGORITHM,
   expiresIn: SIGNUP_CONFIRMATION_TIME_WINDOW,
 };

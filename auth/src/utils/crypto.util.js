@@ -1,3 +1,4 @@
+const { exec } = require('child_process');
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 
@@ -29,8 +30,46 @@ const decrypt = (data) => {
   return decrypted;
 };
 
+const generatePrivateRsaKey = (keySize = 2048) => (
+  new Promise((resolve, reject) => {
+    const cmd = `openssl genrsa ${keySize}`;
+    exec(cmd, (err, stdout, stderr) => {
+      if (err) {
+        reject(stderr);
+      } else {
+        resolve(stdout);
+      }
+    });
+  })
+);
+
+const generatePublicRsaKey = privateKey => (
+  new Promise((resolve, reject) => {
+    const cmd = `echo '${privateKey}' | openssl rsa -outform PEM -pubout`;
+    exec(cmd, (err, stdout, stderr) => {
+      if (err) {
+        reject(stderr);
+      } else {
+        resolve(stdout);
+      }
+    });
+  })
+);
+
+const generateRsaKeyPair = async (keySize = 2048) => {
+  const privateKey = await generatePrivateRsaKey(keySize);
+  const publicKey = await generatePublicRsaKey(privateKey);
+  return {
+    privateKey,
+    publicKey,
+  };
+};
+
 module.exports = {
   hashPassword,
   encrypt,
   decrypt,
+  generatePrivateRsaKey,
+  generatePublicRsaKey,
+  generateRsaKeyPair,
 };

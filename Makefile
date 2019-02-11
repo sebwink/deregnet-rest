@@ -29,9 +29,6 @@ endif
 kong:
 	docker-compose build kong 
 
-deregnet-kong-setup:
-	docker-compose build deregnet-kong-setup
-
 deploy: deregnet-rest ndex-graphml
 	docker-compose -f docker-compose.yml -f docker-compose.deploy.yml up
 
@@ -42,19 +39,25 @@ deregnet-network:
 
 network: deregnet-network
 
+deregnet-kong-setup:
+	docker-compose -f docker/compose/deregnet.base.yml \
+                   -f docker/compose/deregnet.dev.yml \
+				   -f docker/compose/mongodb.base.yml \
+				   -f docker/compose/postgres.base.yml build deregnet-kong-setup
+
+
 dev: 
 	docker-compose -f docker/compose/deregnet.base.yml \
                    -f docker/compose/deregnet.dev.yml \
 				   -f docker/compose/mongodb.base.yml \
-				   -f docker/compose/postgres.base.yml \
-                   -f docker/compose/elk.base.yml up
+				   -f docker/compose/postgres.base.yml up
+                   
 
 dev-down: 
 	docker-compose -f docker/compose/deregnet.base.yml \
                    -f docker/compose/deregnet.dev.yml \
 				   -f docker/compose/mongodb.base.yml \
-				   -f docker/compose/postgres.base.yml \
-                   -f docker/compose/elk.base.yml down
+				   -f docker/compose/postgres.base.yml down
 
 .PHONY: test
 

@@ -2,4 +2,4 @@
 
 SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
 
-http --verify $SCRIPTPATH/../.secrets/ssl.crt "$@"
+curl --cacert $SCRIPTPATH/../.secrets/ssl.crt "$@"

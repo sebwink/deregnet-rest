@@ -47,7 +47,7 @@ def registerAccountServiceRoute():
     )
 
 @loadsJson
-def enableBasicAuthOnAccountService(routeId):
+def enableBasicAuthOnRoute(routeId):
     return $(
         curl --silent -X POST \ 
              --url $KONG/routes/@(routeId)/plugins \
@@ -55,8 +55,32 @@ def enableBasicAuthOnAccountService(routeId):
              --data 'config.hide_credentials=false'
     )
 
-registerSignupService()
-registerSignupServiceRoute()
-registerAccountService()
-accountRouteId = registerAccountServiceRoute()['id']
-enableBasicAuthOnAccountService(accountRouteId)
+@loadsJson
+def registerAccessService():
+    return $(
+        curl --silent -X POST \
+             --url $KONG/services \
+             --data 'name=access' \
+             --data 'url=http://kong-auth:5000/access/'
+    )
+
+@loadsJson
+def registerAccessServiceRoute():
+    return $(
+        curl --silent -X POST \
+             --url $KONG/services/access/routes \
+             --data 'paths[]=/access'
+    )
+
+if __name__ == '__main__':
+    # /signup
+    registerSignupService()
+    registerSignupServiceRoute()
+    # /account
+    registerAccountService()
+    accountRouteId = registerAccountServiceRoute()['id']
+    enableBasicAuthOnRoute(accountRouteId)
+    # /access
+    registerAccessService()
+    accessRouteId = registerAccessServiceRoute()['id']
+    enableBasicAuthOnRoute(accessRouteId)

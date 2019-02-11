@@ -32,12 +32,11 @@ def registerDeregnetServiceRoute():
     )
 
 @loadsJson 
-def enableBasicAuthForDeregnetService():
+def enableJwtForDeregnetService():
     return $(
         curl --silent -X POST \
              --url http://kong:8001/services/deregnet/plugins \
-             --data "name=basic-auth" \
-             --data "config.hide_credentials=true"
+             --data "name=jwt"
     )
 
 @loadsJson 
@@ -62,7 +61,7 @@ if __name__ == '__main__':
     # DeRegNet service
     registerDeregnetService()
     registerDeregnetServiceRoute()
-    enableBasicAuthForDeregnetService()
+    enableJwtForDeregnetService()
     # DeRegNet documentation
     registerDeregnetDocumentation()
     registerDeregnetDocumentationRoute()

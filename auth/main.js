@@ -9,9 +9,10 @@ const bodyParser = require('body-parser');
 const helmet = require('helmet');
 const mongoose = require('mongoose');
 
-const schemaValidator = require('./src/middleware/schema.validation.middleware');
-const signUp = require('./src/routes/signup.route');
-const consumer = require('./src/routes/consumer.route');
+const schemaValidatorMiddleware = require('./src/middleware/schema.validation.middleware');
+const signUpRoute = require('./src/routes/signup.route');
+const consumerRoute = require('./src/routes/consumer.route');
+const accessRoute = require('./src/routes/access.route');
 
 const app = express();
 
@@ -22,9 +23,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(helmet());
 
-app.use(schemaValidator);
-app.use('/signup', signUp);
-app.use('/consumer', consumer);
+app.use(schemaValidatorMiddleware);
+app.use('/signup', signUpRoute);
+app.use('/consumer', consumerRoute);
+app.use('/access', accessRoute);
 
 const HOST = process.env.KONG_AUTH_HOST || 'localhost';
 const PORT = process.env.KONG_AUTH_PORT || 5000;

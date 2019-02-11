@@ -40,7 +40,6 @@ const postSignup = async (data) => {
   });
   await signup.save();
   const confirmationToken = await jwt.sign({ email }, {
-    algorithm: jwt.algorithm,
     expiresIn: jwt.expiresIn,
   });
   mail.sendConfirmationLink(
@@ -56,9 +55,7 @@ const postSignup = async (data) => {
 const confirm = token => (
   new Promise(async (resolve) => {
     try {
-      const verified = await jwt.verify(token, {
-        algorithms: [jwt.algorithm],
-      });
+      const verified = await jwt.verify(token);
       resolve(verified);
     } catch (error) {
       resolve(false);
@@ -74,6 +71,8 @@ const stillInDatabase = async ({ email }) => {
 const verifySignupConfirmation = (signup, { username, password }) => {
   const { username: signupUsername, password: encryptedPassword } = signup;
   const signupPassword = crypto.decrypt(encryptedPassword);
+  console.log(signupPassword, password);
+  console.log(signupUsername, username);
   if (signupUsername !== username || signupPassword !== password) {
     return false;
   }
