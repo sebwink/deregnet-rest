@@ -25,3 +25,7 @@ services:
       - '8111:80/tcp'
     networks:
       - deregnet
+
+networks:
+  deregnet:
+    external: True

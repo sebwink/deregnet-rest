@@ -1,10 +1,19 @@
 DEREGNET_CONTAINER_ID = $(shell docker images -q sebwink/deregnet)
 NDEX_GRAPHML_CONTAINER_ID = $(shell docker images -q sebwink/ndex-graphml)
 
-all: deregnet-rest kong deregnet-kong-setup
+COMPOSE=docker/compose
+NETWORK=-f $(COMPOSE)/network.yml
+DOCKER_COMPOSE=docker-compose $(NETWORK)
+DEREGNET_BASE=-f $(COMPOSE)/deregnet.base.yml
+DEREGNET_DEV=$(DEREGNET_BASE) -f $(COMPOSE)/deregnet.dev.yml
+POSTGRES_BASE=-f $(COMPOSE)/postgres.base.yml
+POSTGRES_DEV=$(POSTGRES_BASE) -f $(COMPOSE)/postgres.dev.yml
+MONGODB_BASE=-f $(COMPOSE)/mongodb.base.yml 
+MONGODB_DEV=$(MONGODB_BASE) -f $(COMPOSE)/mongodb.dev.yml
+REDIS_BASE=-f $(COMPOSE)/redis.base.yml 
+REDIS_DEV=$(REDIS_BASE) -f $(COMPOSE)/redis.dev.yml
 
-deregnet-rest: deregnet
-	docker-compose build deregnet-rest 
+all: deregnet-rest kong deregnet-kong-setup
 
 .PHONY: deregnet
 
@@ -46,18 +55,15 @@ deregnet-kong-setup:
 				   -f docker/compose/postgres.base.yml build deregnet-kong-setup
 
 
-dev: 
-	docker-compose -f docker/compose/deregnet.base.yml \
-                   -f docker/compose/deregnet.dev.yml \
-				   -f docker/compose/mongodb.base.yml \
-				   -f docker/compose/postgres.base.yml up
+deregnet-rest: deregnet
+	$(DOCKER_COMPOSE) $(DEREGNET_BASE) $(MONGODB_BASE) $(REDIS_BASE) $(POSTGRES_BASE) build $@
+
+dev:
+	$(DOCKER_COMPOSE) $(DEREGNET_DEV) $(POSTGRES_DEV) $(MONGODB_DEV) $(REDIS_DEV) up
                    
 
 dev-down: 
-	docker-compose -f docker/compose/deregnet.base.yml \
-                   -f docker/compose/deregnet.dev.yml \
-				   -f docker/compose/mongodb.base.yml \
-				   -f docker/compose/postgres.base.yml down
+	$(DOCKER_COMPOSE) $(DEREGNET_DEV) $(POSTGRES_DEV) $(MONGODB_DEV) $(REDIS_DEV) down
 
 .PHONY: test
 

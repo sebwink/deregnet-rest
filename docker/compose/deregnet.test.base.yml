@@ -1,8 +1,0 @@
-version: '3'
-services:
-  deregnet-rest-test:
-    image: sebwink/deregnet-rest-test 
-    build:
-      context: ./test
-    external_links:
-      - 'deregnetrest_kong_1:kong'

@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
-API_ROOT=http://localhost:8000/deregnet
+API_ROOT=https://dereg.net/deregnet
 
-CREDENTIALS=$(echo "$@" | base64)
+CREDENTIALS="$@"
 
-curl -X POST \
+../curl -X POST \
      -H "Content-type: application/json" \
-     -H "Authorization: Basic $CREDENTIALS" \
+     -H "Authorization: Bearer $CREDENTIALS" \
      --data @score_data.json \
      --url $API_ROOT/score > score.json
 

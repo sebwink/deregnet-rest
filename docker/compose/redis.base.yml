@@ -1,0 +1,10 @@
+version: '3'
+services:
+  redis:
+    image: redis
+    networks:
+      - deregnet
+
+networks:
+  deregnet:
+    external: True

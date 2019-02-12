@@ -1,0 +1,1194 @@
+---
+swagger: "2.0"
+info:
+  description: "DeRegNet REST API\n"
+  version: "0.0.1"
+  title: "DeRegNet REST API"
+  contact:
+    email: "deregnet@informatik.uni-tuebingen.de"
+  license:
+    name: "BSD 3-clause"
+    url: "https://opensource.org/licenses/BSD-3-Clause"
+host: "oxacillin"
+basePath: "/deregnet"
+tags:
+- name: "graph"
+  description: "Uploading and retrieving networks for use with DeRegNet algorithms"
+- name: "score"
+  description: "Upload node scores for use with DeRegNet algorithms"
+- name: "nodeset"
+  description: "Endpoint for uploading node sets (i.e. gene sets, etc.)"
+- name: "parameter_set"
+  description: "Administration of additional algorithm parameters"
+- name: "run"
+  description: "Run DeRegNet algorithms"
+- name: "subgraph"
+  description: "Access found subgraphs"
+- name: "info"
+  description: "Help and Documentation"
+schemes:
+- "http"
+- "https"
+paths:
+  /graph:
+    post:
+      tags:
+      - "graph"
+      summary: "Allows to initiate GraphML upload"
+      description: "This Endpoint creates a Metadata-Object for a Graph.\nIt returns\
+        \ the endpoint that is to be called with the \nfile containing the graph as\
+        \ payload/body in the header-attribute \"location\"\n"
+      operationId: "post_graph"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "initalGraphInfo"
+        description: "The intial Information required for creating a new graph"
+        required: false
+        schema:
+          $ref: "#/definitions/InitalGraphInfo"
+      responses:
+        200:
+          description: "Graph entity created"
+          schema:
+            $ref: "#/definitions/GraphInfo"
+        400:
+          description: "invalid input, object invalid"
+        409:
+          description: "an existing item already exists"
+      x-swagger-router-controller: "deregnet_rest.controllers.graph_controller"
+  /graph/{graph_id}:
+    get:
+      tags:
+      - "graph"
+      summary: "Retrieve information on a previously uploaded graph\n"
+      operationId: "get_graph"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "graph_id"
+        in: "path"
+        description: "ID of graph to return"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/GraphInfo"
+        400:
+          description: "Invalid ID supplied"
+        404:
+          description: "Graph not found"
+      x-swagger-router-controller: "deregnet_rest.controllers.graph_controller"
+    post:
+      tags:
+      - "graph"
+      summary: "Uploads a GraphML file"
+      description: "Adds a Graph to the system. The Graph Object with name:graphname\
+        \ must already be created by issuing a POST Request to /graph with repsective\
+        \ payload\n"
+      operationId: "post_graphml"
+      consumes:
+      - "multipart/form-data"
+      parameters:
+      - name: "graph_id"
+        in: "path"
+        description: "The Name of the graph"
+        required: true
+        type: "string"
+      - name: "file_to_upload"
+        in: "formData"
+        description: "The file containing the graph"
+        required: true
+        type: "file"
+      responses:
+        201:
+          description: "item created"
+        400:
+          description: "invalid input, object invalid"
+        409:
+          description: "an item with that name already exists"
+      x-swagger-router-controller: "deregnet_rest.controllers.graph_controller"
+    delete:
+      tags:
+      - "graph"
+      summary: "Delete a previously uploaded network"
+      description: "Delete a previously uplaoded network"
+      operationId: "delete_graph"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "graph_id"
+        in: "path"
+        description: "ID of the graph to be deleted"
+        required: true
+        type: "string"
+      responses:
+        400:
+          description: "Invalid ID supplied"
+        404:
+          description: "Graph not found"
+      x-swagger-router-controller: "deregnet_rest.controllers.graph_controller"
+  /graphs:
+    get:
+      tags:
+      - "graph"
+      summary: "List available previously uploaded graphs"
+      description: "Returns a list of all available graphs"
+      operationId: "get_graphs"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "searchString"
+        in: "query"
+        description: "pass an optional search string for narrowing the list"
+        required: false
+        type: "string"
+      - name: "skip"
+        in: "query"
+        description: "number of records to skip for pagination"
+        required: false
+        type: "integer"
+        minimum: 0
+        format: "int32"
+      - name: "limit"
+        in: "query"
+        description: "maximum number of records to return"
+        required: false
+        type: "integer"
+        maximum: 50
+        minimum: 0
+        format: "int32"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/GraphInfo"
+      x-swagger-router-controller: "deregnet_rest.controllers.graph_controller"
+  /score:
+    post:
+      tags:
+      - "score"
+      summary: "Upload a node score for use with DeRegNet algorithms"
+      operationId: "post_score"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Node scores to be uploaded for later use with a DeRegNet algorithm"
+        required: true
+        schema:
+          $ref: "#/definitions/Score"
+      responses:
+        200:
+          description: "Score upload successful"
+          schema:
+            $ref: "#/definitions/ScoreInfo"
+        405:
+          description: "Invalid input"
+      x-swagger-router-controller: "deregnet_rest.controllers.score_controller"
+  /scores:
+    get:
+      tags:
+      - "score"
+      summary: "List available previously uploaded node scores"
+      description: "Returns a list with all available node scores"
+      operationId: "get_scores"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "searchString"
+        in: "query"
+        description: "pass an optional search string for narrowing the list"
+        required: false
+        type: "string"
+      - name: "skip"
+        in: "query"
+        description: "number of records to skip for pagination"
+        required: false
+        type: "integer"
+        minimum: 0
+        format: "int32"
+      - name: "limit"
+        in: "query"
+        description: "maximum number of records to return"
+        required: false
+        type: "integer"
+        maximum: 50
+        minimum: 0
+        format: "int32"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/ScoreInfo"
+      x-swagger-router-controller: "deregnet_rest.controllers.score_controller"
+  /score/{score_id}:
+    get:
+      tags:
+      - "score"
+      summary: "Retrieve information on a previously uploaded score"
+      operationId: "get_score"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "score_id"
+        in: "path"
+        description: "ID of node score to return"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/ScoreInfo"
+        400:
+          description: "Invalid ID supplied"
+        404:
+          description: "Node score not found"
+      x-swagger-router-controller: "deregnet_rest.controllers.score_controller"
+    delete:
+      tags:
+      - "score"
+      summary: "Delete a previously uploaded node score"
+      description: "Delete a previously uploaded node score"
+      operationId: "delete_score"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "score_id"
+        in: "path"
+        description: "ID of the node score to be deleted"
+        required: true
+        type: "string"
+      responses:
+        201:
+          description: "Score successfully deleted"
+        400:
+          description: "Invalid ID supplied"
+        404:
+          description: "Node score not found"
+      x-swagger-router-controller: "deregnet_rest.controllers.score_controller"
+  /nodeset:
+    post:
+      tags:
+      - "nodeset"
+      summary: "Upload a node set for use with DeRegNet algorithms"
+      operationId: "post_nodeset"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Node set to be uploaded for later use with a DeRegNet algorithm"
+        required: true
+        schema:
+          $ref: "#/definitions/NodeSet"
+      responses:
+        200:
+          description: "Node set upload successful"
+          schema:
+            $ref: "#/definitions/NodeSetInfo"
+        405:
+          description: "Invalid input"
+      x-swagger-router-controller: "deregnet_rest.controllers.nodeset_controller"
+  /nodesets:
+    get:
+      tags:
+      - "nodeset"
+      summary: "List available previously uploaded node sets"
+      description: "Returns a list with information of all available node sets"
+      operationId: "get_nodesets"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "searchString"
+        in: "query"
+        description: "pass an optional search string for narrowing the list"
+        required: false
+        type: "string"
+      - name: "skip"
+        in: "query"
+        description: "number of records to skip for pagination"
+        required: false
+        type: "integer"
+        minimum: 0
+        format: "int32"
+      - name: "limit"
+        in: "query"
+        description: "maximum number of records to return"
+        required: false
+        type: "integer"
+        maximum: 50
+        minimum: 0
+        format: "int32"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/NodeSetInfo"
+      x-swagger-router-controller: "deregnet_rest.controllers.nodeset_controller"
+  /nodeset/{nodeset_id}:
+    get:
+      tags:
+      - "nodeset"
+      summary: "Retrieve information on a previously uploaded node set"
+      operationId: "get_nodeset"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "nodeset_id"
+        in: "path"
+        description: "ID of node set to return"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/NodeSetInfo"
+        400:
+          description: "Invalid ID supplied"
+        404:
+          description: "Node set not found"
+      x-swagger-router-controller: "deregnet_rest.controllers.nodeset_controller"
+    delete:
+      tags:
+      - "nodeset"
+      summary: "Delete a previously uploaded node set"
+      description: "Deletes a node set"
+      operationId: "delete_nodeset"
+      parameters:
+      - name: "nodeset_id"
+        in: "path"
+        description: "ID of the node set to be deleted"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Node set successfully deleted"
+        400:
+          description: "Invalid ID supplied"
+        404:
+          description: "Node set not found"
+      x-swagger-router-controller: "deregnet_rest.controllers.nodeset_controller"
+  /parameter_set:
+    post:
+      tags:
+      - "parameter_set"
+      summary: "Upload a parameters collection for use with DeRegNet algorithms"
+      operationId: "post_parameter_set"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Parameters to be uploaded for later use with a DeRegNet algorithm"
+        required: true
+        schema:
+          $ref: "#/definitions/ParameterSet"
+      responses:
+        200:
+          description: "Parameter set successfully uploaded"
+          schema:
+            $ref: "#/definitions/ParameterSetInfo"
+        405:
+          description: "Invalid input"
+      x-swagger-router-controller: "deregnet_rest.controllers.parameter_set_controller"
+  /parameter_sets:
+    get:
+      tags:
+      - "parameter_set"
+      summary: "List available previously uploaded parameter collections"
+      description: "Returns a list with information about availabel parameter collections"
+      operationId: "get_parameter_sets"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "searchString"
+        in: "query"
+        description: "pass an optional search string for narrowing the list"
+        required: false
+        type: "string"
+      - name: "skip"
+        in: "query"
+        description: "number of records to skip for pagination"
+        required: false
+        type: "integer"
+        minimum: 0
+        format: "int32"
+      - name: "limit"
+        in: "query"
+        description: "maximum number of records to return"
+        required: false
+        type: "integer"
+        maximum: 50
+        minimum: 0
+        format: "int32"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/ParameterSetInfo"
+      x-swagger-router-controller: "deregnet_rest.controllers.parameter_set_controller"
+  /parameter_set/{parameter_set_id}:
+    get:
+      tags:
+      - "parameter_set"
+      summary: "Retrieve information on a previously uploaded score"
+      operationId: "get_parameter_set"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "parameter_set_id"
+        in: "path"
+        description: "ID of parameter collection to retrieve information about"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/ParameterSetInfo"
+        400:
+          description: "Invalid ID supplied"
+        404:
+          description: "Parameter collection not found"
+      x-swagger-router-controller: "deregnet_rest.controllers.parameter_set_controller"
+    delete:
+      tags:
+      - "parameter_set"
+      summary: "Delete a previously uploaded parameter collection"
+      description: "Deletes a parameter collection"
+      operationId: "delete_parameter_set"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "parameter_set_id"
+        in: "path"
+        description: "ID of the parameter collection to be deleted"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Parameter set successfully deleted"
+        400:
+          description: "Invalid ID supplied"
+        404:
+          description: "Parameter collection not found"
+      x-swagger-router-controller: "deregnet_rest.controllers.parameter_set_controller"
+  /parameter_set/{parameter_set_id}/data:
+    get:
+      tags:
+      - "parameter_set"
+      summary: "Retrieve a parameter collection"
+      description: "Returns a parameter collection"
+      operationId: "get_parameter_set_data"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "parameter_set_id"
+        in: "path"
+        description: "ID of the parameter collection to return"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/ParameterSet"
+        400:
+          description: "Invalid ID supplied"
+        404:
+          description: "Parameter collection not found"
+      x-swagger-router-controller: "deregnet_rest.controllers.parameter_set_controller"
+  /parameter_set/default:
+    get:
+      tags:
+      - "parameter_set"
+      summary: "Retrieve the defaul parameter collection"
+      description: "Returns the default parameter collection"
+      operationId: "get_parameter_set_default"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/ParameterSetInfo"
+        400:
+          description: "Invalid ID supplied"
+        404:
+          description: "Parameter collection not found"
+      x-swagger-router-controller: "deregnet_rest.controllers.parameter_set_controller"
+  /parameter_set/default/data:
+    get:
+      tags:
+      - "parameter_set"
+      summary: "Retrieve information on a previously uploaded score"
+      operationId: "get_parameter_set_default_data"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/ParameterSet"
+        400:
+          description: "Invalid ID supplied"
+        404:
+          description: "Parameter collection not found"
+      x-swagger-router-controller: "deregnet_rest.controllers.parameter_set_controller"
+  /run:
+    post:
+      tags:
+      - "run"
+      summary: "Run average score DeRegNet algorithm"
+      operationId: "post_run"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "All data needed to run the algorithm"
+        required: true
+        schema:
+          $ref: "#/definitions/RunInput"
+      responses:
+        200:
+          description: "Run posted successfully"
+          schema:
+            $ref: "#/definitions/RunInfo"
+        405:
+          description: "Invalid input"
+      x-swagger-router-controller: "deregnet_rest.controllers.run_controller"
+  /runs:
+    get:
+      tags:
+      - "run"
+      summary: "List current and past runs"
+      description: "Returns a single pet"
+      operationId: "get_runs"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "searchString"
+        in: "query"
+        description: "pass an optional search string for narrowing the list"
+        required: false
+        type: "string"
+      - name: "skip"
+        in: "query"
+        description: "number of records to skip for pagination"
+        required: false
+        type: "integer"
+        minimum: 0
+        format: "int32"
+      - name: "limit"
+        in: "query"
+        description: "maximum number of records to return"
+        required: false
+        type: "integer"
+        maximum: 50
+        minimum: 0
+        format: "int32"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/RunInfo"
+      x-swagger-router-controller: "deregnet_rest.controllers.run_controller"
+  /run/{run_id}:
+    get:
+      tags:
+      - "run"
+      summary: "Retrieve the status of a previously submitted run"
+      description: "Returns a single pet"
+      operationId: "get_run"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "run_id"
+        in: "path"
+        description: "ID of pet to return"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/RunInfo"
+        400:
+          description: "Invalid ID supplied"
+        404:
+          description: "Run not found"
+      x-swagger-router-controller: "deregnet_rest.controllers.run_controller"
+    delete:
+      tags:
+      - "run"
+      summary: "Cancel an active run, you cannot delete finished runs"
+      description: "Cancel a run"
+      operationId: "delete_run"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "run_id"
+        in: "path"
+        description: "ID of the run to be deleted"
+        required: true
+        type: "string"
+      responses:
+        201:
+          description: "Run successfully canceled"
+        400:
+          description: "Invalid ID supplied"
+        404:
+          description: "Run not found"
+        405:
+          description: "Run already finished"
+      x-swagger-router-controller: "deregnet_rest.controllers.run_controller"
+  /subgraphs:
+    get:
+      tags:
+      - "subgraph"
+      summary: "List available found subgraphs"
+      description: "Returns a single pet"
+      operationId: "get_subgraphs"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "searchString"
+        in: "query"
+        description: "pass an optional search string for narrowing the list"
+        required: false
+        type: "string"
+      - name: "skip"
+        in: "query"
+        description: "number of records to skip for pagination"
+        required: false
+        type: "integer"
+        minimum: 0
+        format: "int32"
+      - name: "limit"
+        in: "query"
+        description: "maximum number of records to return"
+        required: false
+        type: "integer"
+        maximum: 50
+        minimum: 0
+        format: "int32"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/SubgraphInfo"
+      x-swagger-router-controller: "deregnet_rest.controllers.subgraph_controller"
+  /subgraph/{subgraph_id}:
+    get:
+      tags:
+      - "subgraph"
+      summary: "Retrieve the information about a subgraph"
+      description: "Returns a single pet"
+      operationId: "get_subgraph"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "subgraph_id"
+        in: "path"
+        description: "ID of subgraph about which to retrieve information"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/SubgraphInfo"
+        400:
+          description: "Invalid ID supplied"
+        404:
+          description: "Subgraph not found"
+      x-swagger-router-controller: "deregnet_rest.controllers.subgraph_controller"
+    delete:
+      tags:
+      - "subgraph"
+      summary: "Delete a previously found subgraph"
+      description: "Deletes a subgraph"
+      operationId: "delete_subgraph"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "subgraph_id"
+        in: "path"
+        description: "ID of the order that needs to be deleted"
+        required: true
+        type: "string"
+      responses:
+        201:
+          description: "Subgraph successfully deleted"
+        400:
+          description: "Invalid ID supplied"
+        404:
+          description: "Subgraph not found"
+      x-swagger-router-controller: "deregnet_rest.controllers.subgraph_controller"
+  /subgraph/{subgraph_id}/{filetype}:
+    get:
+      tags:
+      - "subgraph"
+      summary: "Download a subgraph"
+      description: "With this GET Request you will retrieve a subgraph  \n"
+      operationId: "download_subgraph_as"
+      produces:
+      - "application/octet-stream"
+      parameters:
+      - name: "subgraph_id"
+        in: "path"
+        description: "The Name of the graph"
+        required: true
+        type: "string"
+      - name: "filetype"
+        in: "path"
+        description: "File type of file to be downloaded"
+        required: true
+        type: "string"
+        enum:
+        - "graphml"
+        - "sif"
+        - "gmt"
+        - "grp"
+      responses:
+        201:
+          description: "file download ok"
+        400:
+          description: "invalid input, object invalid"
+        409:
+          description: "an existing item already exists"
+      x-swagger-router-controller: "deregnet_rest.controllers.subgraph_controller"
+definitions:
+  GraphInfo:
+    type: "object"
+    required:
+    - "id"
+    - "num_edges"
+    - "num_nodes"
+    - "time_of_upload"
+    properties:
+      name:
+        type: "string"
+        description: "Name of the graph"
+      description:
+        type: "string"
+        description: "Description of the graph"
+      num_nodes:
+        type: "integer"
+        description: "Number of nodes in the graph"
+      num_edges:
+        type: "integer"
+        description: "Number of edges in the graph"
+      id:
+        type: "string"
+        description: "Id of the graph"
+      time_of_upload:
+        type: "string"
+        description: "Time of upload"
+    example:
+      time_of_upload: "time_of_upload"
+      name: "name"
+      description: "description"
+      id: "id"
+      num_nodes: 0
+      num_edges: 6
+  InitalGraphInfo:
+    type: "object"
+    properties:
+      description:
+        type: "string"
+        description: "Description of the graph"
+      name:
+        type: "string"
+        description: "Name of the graph"
+      node_id_attr:
+        type: "string"
+        description: "Node attribute containing node ids"
+    example:
+      node_id_attr: "node_id_attr"
+      name: "name"
+      description: "description"
+  Score:
+    type: "object"
+    required:
+    - "node_ids"
+    - "score_values"
+    properties:
+      description:
+        type: "string"
+        description: "Description of the score"
+      node_ids:
+        type: "array"
+        items:
+          type: "string"
+      score_values:
+        type: "array"
+        items:
+          type: "number"
+    example:
+      score_values:
+      - 0.80082819046101150206595775671303272247314453125
+      - 0.80082819046101150206595775671303272247314453125
+      description: "description"
+      node_ids:
+      - "node_ids"
+      - "node_ids"
+  ScoreInfo:
+    type: "object"
+    required:
+    - "id"
+    - "size"
+    - "time_of_upload"
+    properties:
+      description:
+        type: "string"
+        description: "Description of the score"
+      size:
+        type: "integer"
+        description: "Number of scored nodes"
+      id:
+        type: "string"
+        description: "Id of the score object"
+      time_of_upload:
+        type: "string"
+        description: "Time of upload"
+    example:
+      size: 0
+      time_of_upload: "time_of_upload"
+      description: "description"
+      id: "id"
+  NodeSet:
+    type: "object"
+    required:
+    - "nodes"
+    properties:
+      description:
+        type: "string"
+        description: "Description of the node set"
+      nodes:
+        type: "array"
+        items:
+          type: "string"
+    example:
+      nodes:
+      - "nodes"
+      - "nodes"
+      description: "description"
+  NodeSetInfo:
+    type: "object"
+    required:
+    - "id"
+    - "size"
+    - "time_of_upload"
+    properties:
+      description:
+        type: "string"
+        description: "Description of the score"
+      size:
+        type: "integer"
+        description: "Number of scored nodes"
+      id:
+        type: "string"
+        description: "Id of the score object"
+      time_of_upload:
+        type: "string"
+        description: "Time of upload"
+    example:
+      size: 0
+      time_of_upload: "time_of_upload"
+      description: "description"
+      id: "id"
+  RunInput:
+    type: "object"
+    required:
+    - "graph_id"
+    properties:
+      description:
+        type: "string"
+        description: "Description of run"
+      parameter_set_id:
+        type: "string"
+        description: "Id of a parameter set to run the algorithm with"
+      parameter_set:
+        $ref: "#/definitions/ParameterSet"
+      graph_id:
+        type: "string"
+        description: "Id of graph underlying the run"
+      score_id:
+        type: "string"
+        description: "Id of node score used in the run"
+      receptors_id:
+        type: "string"
+        description: "Id of a node set acting as receptors in the run"
+      terminals_id:
+        type: "string"
+        description: "Id of a node set acting as terminals in the run"
+      exclude_id:
+        type: "string"
+        description: "Id of a node set of nodes to be excluded from the subgraphs\n"
+      include_id:
+        type: "string"
+        description: "Id of a node set of nodes to be included in the subgraphs\n"
+      root:
+        type: "string"
+        description: "Node id of a fixed root node"
+    description: "All data and parameters the algorithm needs / can accept to run"
+    example:
+      include_id: "include_id"
+      terminals_id: "terminals_id"
+      parameter_set_id: "parameter_set_id"
+      score_id: "score_id"
+      root: "root"
+      description: "description"
+      receptors_id: "receptors_id"
+      exclude_id: "exclude_id"
+      parameter_set:
+        model_sense: "max"
+        default_score: 0.80082819046101150206595775671303272247314453125
+        time_limit: 0
+        num_suboptimal: 0
+        flip_orientation: true
+        max_overlap: 14.6581298050294517310021547018550336360931396484375
+        gap_cut: 0.59621339166831821554382031536079011857509613037109375
+        min_size: 0
+        abs_values: true
+        max_size: 0
+        algorithm: "dta"
+      graph_id: "graph_id"
+  RunInfo:
+    type: "object"
+    required:
+    - "done"
+    - "id"
+    - "post_time"
+    - "run_input"
+    - "started"
+    properties:
+      description:
+        type: "string"
+        description: "Description of the run"
+      id:
+        type: "string"
+        description: "Id of the score object"
+      post_time:
+        type: "string"
+        description: "Time of initial run post"
+      started:
+        type: "boolean"
+        description: "Whether the run has already started"
+      done:
+        type: "boolean"
+        description: "Whether the run is completed"
+      subgraph_ids:
+        type: "array"
+        items:
+          type: "string"
+      run_input:
+        $ref: "#/definitions/RunInput"
+    example:
+      subgraph_ids:
+      - "subgraph_ids"
+      - "subgraph_ids"
+      description: "description"
+      started: true
+      id: "id"
+      done: true
+      post_time: "post_time"
+      run_input:
+        include_id: "include_id"
+        terminals_id: "terminals_id"
+        parameter_set_id: "parameter_set_id"
+        score_id: "score_id"
+        root: "root"
+        description: "description"
+        receptors_id: "receptors_id"
+        exclude_id: "exclude_id"
+        parameter_set:
+          model_sense: "max"
+          default_score: 0.80082819046101150206595775671303272247314453125
+          time_limit: 0
+          num_suboptimal: 0
+          flip_orientation: true
+          max_overlap: 14.6581298050294517310021547018550336360931396484375
+          gap_cut: 0.59621339166831821554382031536079011857509613037109375
+          min_size: 0
+          abs_values: true
+          max_size: 0
+          algorithm: "dta"
+        graph_id: "graph_id"
+  ParameterSet:
+    type: "object"
+    properties:
+      default_score:
+        type: "number"
+        description: "Score of graph node when not defined in node score"
+      flip_orientation:
+        type: "boolean"
+        description: "Find a deregulated subgraph upstream of a terminal (root)"
+      num_suboptimal:
+        type: "integer"
+        description: "Number of suboptimal subgraphs to find"
+        minimum: 0
+      max_overlap:
+        type: "number"
+        description: "Maximal overlap (node percentage) of two subgraphs"
+        minimum: 0
+        maximum: 100
+      gap_cut:
+        type: "number"
+        description: "Gap cut to stop optimization prematurely when the best solution\
+          \ found so far is within <Gap cut> * 100 percent of the best possible solution.\n\
+          Best found solutions are accessible as subgraphs.\n"
+        minimum: 0
+        maximum: 1
+      min_size:
+        type: "integer"
+        description: "Minimal size of a subgraph (number of nodes)"
+        minimum: 0
+      max_size:
+        type: "integer"
+        description: "Maximal size of a subgraph (number of nodes)"
+        minimum: 0
+      abs_values:
+        type: "boolean"
+        description: "Whether to take the absolute values of the provided scores\n\
+          as actual scores in the computation\n"
+      model_sense:
+        type: "string"
+        description: "'max' means maximization, 'min' means minimization. \nSuitability\
+          \ depends on the semantics of the node scores\n"
+        enum:
+        - "max"
+        - "min"
+      algorithm:
+        type: "string"
+        description: "Which algorithm to use:\ngcc: Generalized Charnes-Cooper transform\
+          \ (recommended)\ndta: Dinkelbach-type algorithm\novt: Objective-Variable\
+          \ transform\n"
+        enum:
+        - "dta"
+        - "gcc"
+        - "ovt"
+      time_limit:
+        type: "integer"
+        description: "Time limit in second. A run is aborted if the limit is reached,\
+          \ in case there were feasible solutions found you can access those as subgraphs\
+          \ though\n"
+        minimum: 0
+    example:
+      model_sense: "max"
+      default_score: 0.80082819046101150206595775671303272247314453125
+      time_limit: 0
+      num_suboptimal: 0
+      flip_orientation: true
+      max_overlap: 14.6581298050294517310021547018550336360931396484375
+      gap_cut: 0.59621339166831821554382031536079011857509613037109375
+      min_size: 0
+      abs_values: true
+      max_size: 0
+      algorithm: "dta"
+  ParameterSetInfo:
+    type: "object"
+    required:
+    - "id"
+    - "set_parameters"
+    properties:
+      description:
+        type: "string"
+        description: "Description of the run"
+      id:
+        type: "string"
+        description: "Id of the score object"
+      set_parameters:
+        type: "array"
+        items:
+          type: "string"
+    example:
+      description: "description"
+      id: "id"
+      set_parameters:
+      - "set_parameters"
+      - "set_parameters"
+  SubgraphInfo:
+    type: "object"
+    required:
+    - "id"
+    - "num_edges"
+    - "num_nodes"
+    - "optimal"
+    - "optimality_type"
+    - "root"
+    - "run_id"
+    - "score"
+    properties:
+      id:
+        type: "string"
+        description: "Subgraph Id"
+      run_id:
+        type: "string"
+        description: "Id of run the subgraph is a result of"
+      num_nodes:
+        type: "integer"
+        description: "Number of nodes in subgraph"
+      num_edges:
+        type: "integer"
+        description: "Number of edges in subgraph"
+      optimal:
+        type: "boolean"
+        description: "Whether the subgraph is optimal, ie not prematurely\nstopped\
+          \ by a 'gap_cut' or 'time_limit'. This field is\nindependent from the 'optimality_type'\
+          \ field.\n"
+      optimality_type:
+        type: "string"
+        description: "'optimal': optimal subgraph\n'suboptimal:1': first suboptimal\
+          \ subgraph\n'suboptimal:2': second suboptimal subgraph, etc. ...\n"
+      root:
+        type: "string"
+        description: "Id of root node, either predefined or found by algorithm\n"
+      score:
+        type: "number"
+        description: "Score of the subgraph"
+    example:
+      score: 1.46581298050294517310021547018550336360931396484375
+      run_id: "run_id"
+      optimal: true
+      root: "root"
+      id: "id"
+      num_nodes: 0
+      num_edges: 6
+      optimality_type: "optimality_type"
+externalDocs:
+  description: "Find out more about DeRegNet"
+  url: "https://sebwink.github.io/deregnet/"

@@ -1,9 +1,5 @@
 version: '3'
 services:
-  redis:
-    image: redis
-    networks:
-      - deregnet
   deregnet-rest:
     image: sebwink/deregnet-rest
     build: 
