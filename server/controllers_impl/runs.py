@@ -9,7 +9,7 @@ from deregnet_rest.database.collections.scores import scores
 from deregnet_rest.database.collections.nodesets import nodesets
 from deregnet_rest.database.collections.parameter_sets import parameter_sets
 from deregnet_rest.database.collections.runs import runs
-from deregnet_rest.tasks.find_subgraphs import find_subgraphs
+from deregnet_rest.tasks.find_subgraphs import celery, find_subgraphs
 
 class RunController(Controller):
     '''
@@ -18,7 +18,7 @@ class RunController(Controller):
     @classmethod
     @Controller.api_call
     def delete_run(cls, run_id):
-        # TODO. Delete completed runs
+        # TODO. Delete completed runs if they do not reference subgraphs
         deletion = runs.delete_one(filter={
             'id': run_id,
             'started': False,
@@ -26,7 +26,7 @@ class RunController(Controller):
         })
         if not deletion:
             return 'Invalid run ID', 400
-        # self.queue.delete(run_id)  # TODO: fix
+        celery.control.revoke(run_id)
         return 'Run successfully deleted', 201
 
     @classmethod
@@ -126,7 +126,7 @@ class RunController(Controller):
         cls.update_dependent_runs(run_id, parameter_set_id, parameter_sets)
         run_info['id'] = run_id
         # push run onto the job queue
-        find_subgraphs.apply_async((run_id), queue='runs')
+        find_subgraphs.apply_async((run_id,), task_id=run_id, queue='runs')
         return util.deserialize_model(run_info, RunInfo)
 
     @classmethod

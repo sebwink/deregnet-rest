@@ -22,7 +22,7 @@ def delete_graph(graph_id):  # noqa: E501
 
 
 def get_graph(graph_id):  # noqa: E501
-    """Retrieve information on a previously uploaded graph 
+    """Retrieve information on a previously uploaded graph
 
      # noqa: E501
 
@@ -63,7 +63,7 @@ def post_graph(initalGraphInfo=None):  # noqa: E501
     """
     if connexion.request.is_json:
         initalGraphInfo = InitalGraphInfo.from_dict(connexion.request.get_json())  # noqa: E501
-    return GraphController.post_graph(initalGraphInfo=None)
+    return GraphController.post_graph(initial_graph_info=initalGraphInfo)
 
 
 def post_graphml(graph_id, file_to_upload):  # noqa: E501

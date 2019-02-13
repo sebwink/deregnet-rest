@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-API_ROOT=http://localhost:8000/deregnet
+API_ROOT=https://dereg.net/deregnet
 
-CREDENTIALS=$(echo "$@" | base64)
+CREDENTIALS="$@"
 
-curl -X GET \
-     -H "Authorization: Basic $CREDENTIALS" \
+../curl -X GET \
+     -H "Authorization: Bearer $CREDENTIALS" \
      --url $API_ROOT/scores

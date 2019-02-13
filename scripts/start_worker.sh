@@ -6,18 +6,11 @@ declare -a allvars=(\
   "MONGO_PORT" \
   "REDIS_HOST" \
   "REDIS_PORT" \
-  "PYTHON_INTERP" \
-  "HOST" \
-  "PORT" \
-  "SERVER_BACKEND" \
-  "START_RUNNERS" \
-  "NUM_RUNNERS" \
-  "DEBUG"\
 )
 
 # defaults
 # path of the server module root
-SERVER_ROOT="$( cd "$(dirname "$0")" ; pwd -P )"
+SERVER_ROOT="$( cd "$(dirname "$0")" ; pwd -P )"/../server
 # mongo host
 MONGO_HOST=localhost
 # mongo port
@@ -26,19 +19,6 @@ MONGO_PORT=27017
 REDIS_HOST=localhost
 # redis port
 REDIS_PORT=6379
-# python interpreter
-PYTHON_INTERP=python3
-# host on which to run the server
-HOST=localhost
-# port on which to run the server
-PORT=8080
-# server backend: flask, tornado or gevent
-SERVER_BACKEND=flask
-# whether to start the runner processes
-START_RUNNERS=true
-NUM_RUNNERS=2
-# whether to start the server in debug mode
-DEBUG=false
 
 # argument parsing from: https://stackoverflow.com/questions/192249
 
@@ -75,43 +55,11 @@ while [[ $# -gt 0 ]]; do
 			shift
 			shift
 			;;
-		-i|--python-interp)
-			PYTHON_INTERP="$2"
-			shift
-			shift
-			;;
-		-b|--server-backend)
-			SERVER_BACKEND="$2"
-			shift
-			shift
-			;;
-		-h|--host)
-			HOST="$2"
-			shift
-			shift
-			;;
-		-p|--port)
-			PORT="$2"
-			shift
-			shift
-			;;
-		--no-runners)
-			START_RUNNERS=false
-			shift
-			;;
-		-d|--debug)
-			DEBUG=true
-			shift
-			;;
 		-c|--config-file)
 			# global config file overwriting *anything*
 			# set here (if variable is also in config file)
 			DEREGNET_CONFIG_FILE="$2"
 			shift
-			shift
-			;;
-		--gunicorn)
-			DEPLOY=gunicorn
 			shift
 			;;
 		*)
@@ -139,18 +87,7 @@ export MONGO_PORT
 # Redis
 export REDIS_HOST
 export REDIS_PORT
-# DeRegNet Server
-export HOST
-export PORT
-export SERVER_BACKEND
-export START_RUNNERS 
-export NUM_RUNNERS
-export DEBUG
 
-if [ -z "$DEPLOY" ]; then
-  $PYTHON_INTERP -m deregnet_rest
-else
-  if [ $DEPLOY == 'gunicorn' ]; then
-    gunicorn --config config/wsgi/gunicorn.py deregnet_rest:app
-  fi
-fi
+cd $SERVER_ROOT/..
+
+celery -A server.tasks.find_subgraphs:celery worker -l info -Q runs -E

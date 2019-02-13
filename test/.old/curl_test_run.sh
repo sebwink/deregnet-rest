@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
 
-DEREGNET_API_ROOT=http://localhost:8000/deregnet
+DEREGNET_API_ROOT=https://dereg.net/deregnet
 
-CREDENTIALS=$(echo "$@" | base64)
+CREDENTIALS="$@"
 
 # Initializing the graph
 
 ./generate_test_run.py
 
-curl -X POST \
+../curl -X POST \
      --url $DEREGNET_API_ROOT/run \
-     -H "Authorization: Basic $CREDENTIALS" \
+     -H "Authorization: Bearer $CREDENTIALS" \
      -H 'Content-Type: application/json' \
      --data @test_run.json > run_info.json
 

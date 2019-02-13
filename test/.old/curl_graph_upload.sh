@@ -1,16 +1,15 @@
 #!/usr/bin/env bash
 
-DEREGNET_API_ROOT=http://localhost:8000/deregnet
+DEREGNET_API_ROOT=https://dereg.net/deregnet
 
 # Initializing the graph
 
-CREDENTIALS=$(echo "$@" | base64)
+CREDENTIALS="$@"
 
-#-H 'Magic-Token: 00000000-0000-0000-0000-000000000000' \
-curl -X POST \
+../curl -X POST \
      --url $DEREGNET_API_ROOT/graph \
      -H 'Content-Type: application/json' \
-     -H "Authorization: Basic $CREDENTIALS" \
+     -H "Authorization: Bearer $CREDENTIALS" \
      --data @initial_graph_info.json > graph_info.json
 
 cat graph_info.json
@@ -21,11 +20,11 @@ graph_id=$(python3 get_graph_id.py graph_info.json)
 
 # Uploading the graphml
 
-curl -X POST \
+../curl -X POST \
      -F "file_to_upload=@kegg_hsa.graphml.gz" \
-     -H "Authorization: Basic $CREDENTIALS" \
+     -H "Authorization: Bearer $CREDENTIALS" \
      --url $DEREGNET_API_ROOT/graph/$graph_id
 
-curl -X GET \
-     -H "Authorization: Basic $CREDENTIALS" \
+../curl -X GET \
+     -H "Authorization: Bearer $CREDENTIALS" \
      --url $DEREGNET_API_ROOT/graph/$graph_id

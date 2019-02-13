@@ -1,7 +1,15 @@
+import os
 import pymongo
 
 from deregnet_rest.database.connection import database
 from deregnet_rest.utils.redis import RedisSetDict
+
+from deregnet_rest.controllers_impl.base import Controller
+
+DEFAULT_PARAMETER_SET = os.path.join(
+    os.path.dirname(__file__),
+    '../../data/defaults/parameter_set.yaml',
+)
 
 class ParameterSets(pymongo.collection.Collection):
     '''
@@ -22,7 +30,7 @@ class ParameterSets(pymongo.collection.Collection):
                            'set_parameters': False
                          }
 
-    def __init__(self, client, default='data/defaults/parameter_set.yaml'):
+    def __init__(self, client, default=DEFAULT_PARAMETER_SET):
         super().__init__(client.deregnet_rest, name='parameter_sets')
         self._default_params = default
         self._depruns = RedisSetDict('parameters2runs')
@@ -32,7 +40,7 @@ class ParameterSets(pymongo.collection.Collection):
         return self._depruns
 
     def get_parameter_set_default_data(self):
-        default = self.read_yaml(self._default_params)
+        default = Controller.read_yaml(self._default_params)
         return default
 
 

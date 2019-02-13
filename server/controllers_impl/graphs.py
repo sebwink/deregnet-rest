@@ -6,11 +6,22 @@ from deregnet_rest import util
 
 import deregnet_rest.utils.xdata as X
 from deregnet_rest.database.collections.graphs import graphs
+from deregnet_rest.database.files import files
 from deregnet_rest.controllers_impl.base import Controller
 
-class GraphController(Controller):
-    _graphs = 'data/graphs'
+def valid_graphmlz(data):
+    tmp = '/tmp/{}.validate.graphml.gz'.format(os.getpid())
+    with open(tmp, 'wb') as tmpf:
+        tmpf.write(data)
+    valid = True
+    try:
+        ig.Graph.Read_GraphMLz(tmp)
+    except:
+        valid = False
+    os.remove(tmp)
+    return valid
 
+class GraphController(Controller):
     @classmethod
     @Controller.api_call
     def delete_graph(cls, graph_id):
@@ -19,16 +30,18 @@ class GraphController(Controller):
         '''
         if not graphs.dependent_runs.is_empty(graph_id):
             return 'Invalid graph ID: some runs depend on this graph', 400
-        graph_path = graphs.find_one_and_delete(
+        graph_data = graphs.find_one_and_delete(
             filter={
                 'id': graph_id,
                 'X-Consumer-ID': X.consumer_id(),
             },
             projection=graphs.GRAPH_DATA_PROJ
         )
-        if not graph_path:
+        if not graph_data:
             return 'Invalid graph ID: no graph with that ID', 400
-        os.remove(graph_path['graphmlz'])
+        file_id = graph_data.get('file_id')
+        if file_id:
+            files.delete(file_id)
         return 'Graph successfully deleted', 201
 
     @classmethod
@@ -77,7 +90,7 @@ class GraphController(Controller):
             'num_edges': 0,
         }
         graph_data = {
-            'graphmlz': None,
+            'file_id': None,
             'node_id_attr': initial_graph_info.node_id_attr,
         }
         x_consumer_id = X.consumer_id()
@@ -87,17 +100,13 @@ class GraphController(Controller):
             'X-Consumer-ID': x_consumer_id,
         }).inserted_id
         graph_id = cls.generate_uuid(_id)
-        graphmlz_path = os.path.join(cls._graphs, graph_id+'.graphml.gz')
         graphs.update_one(
             filter={
                 '_id': _id,
                 'X-Consumer-ID': x_consumer_id,
             },
             update={
-                '$set': {
-                    'id': graph_id,
-                    'graphmlz': graphmlz_path,
-                },
+                '$set': { 'id': graph_id },
             }
         )
         graph_info['id'] = graph_id
@@ -116,21 +125,13 @@ class GraphController(Controller):
         })
         if not graph:
             return 'Invalid graph ID', 400
-        if os.path.isfile(graph['graphmlz']):
-            return 'A graph with that ID is already uploaded', 409
-        file_to_upload.save(graph['graphmlz'])
-        try:
-            print(graph['graphmlz'])
-            print(os.getcwd())
-            print(os.listdir('data/graphs'))
-            print(ig.__version__)
-            print(ig.__file__)
-            #G = ig.Read_GraphMLz(graph['graphmlz'])
-        except:
+        if graph['file_id'] is not None:
+            return 'A graph for that ID is already uploaded', 409
+        content = file_to_upload.read()
+        if not valid_graphmlz(content):
             return 'Invalid GraphML file (igraph)', 400
-        print(graph)
-        G = ig.Graph.Read_GraphMLz(graph['graphmlz'])
-        print(len(G.vs), len(G.es))
+        file_id = files.put(content)
+        graph = graphs.ig_from_file_id(file_id)
         graphs.update_one(
             filter={
                 'id': graph_id,
@@ -138,9 +139,9 @@ class GraphController(Controller):
             },
             update={
                 '$set': {
-                    'num_nodes': len(G.vs),
-                    'num_edges': len(G.es)
+                    'file_id': file_id,
+                    'num_nodes': len(graph.vs),
+                    'num_edges': len(graph.es)
                 }
             })
-        G.write_graphmlz(graph['graphmlz'])
         return 'GraphML successfully uploaded', 201
