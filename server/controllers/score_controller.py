@@ -34,13 +34,11 @@ def get_score(score_id):  # noqa: E501
     return ScoreController.get_score(score_id)
 
 
-def get_scores(searchString=None, skip=None, limit=None):  # noqa: E501
+def get_scores(skip=0, limit=1000):  # noqa: E501
     """List available previously uploaded node scores
 
     Returns a list with all available node scores # noqa: E501
 
-    :param searchString: pass an optional search string for narrowing the list
-    :type searchString: str
     :param skip: number of records to skip for pagination
     :type skip: int
     :param limit: maximum number of records to return
@@ -48,7 +46,7 @@ def get_scores(searchString=None, skip=None, limit=None):  # noqa: E501
 
     :rtype: List[ScoreInfo]
     """
-    return ScoreController.get_scores(searchString=None, skip=None, limit=None)
+    return ScoreController.get_scores(skip, limit)
 
 
 def post_score(body):  # noqa: E501

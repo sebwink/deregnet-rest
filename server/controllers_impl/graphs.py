@@ -63,14 +63,14 @@ class GraphController(Controller):
 
     @classmethod
     @Controller.api_call
-    def get_graphs(cls, searchString, skip, limit):
+    def get_graphs(cls, skip, limit):
         '''
 
         '''
         graph_infos = graphs.find(
             filter={'X-Consumer-ID': X.consumer_id()},
             projection=graphs.GRAPH_INFO_PROJ
-        )
+        ).skip(skip).limit(limit)
         return [
             util.deserialize_model(graph_info, GraphInfo)
             for graph_info in graph_infos

@@ -48,13 +48,11 @@ def get_subgraph(subgraph_id):  # noqa: E501
     return SubgraphController.get_subgraph(subgraph_id)
 
 
-def get_subgraphs(searchString=None, skip=None, limit=None):  # noqa: E501
+def get_subgraphs(skip=0, limit=1000):  # noqa: E501
     """List available found subgraphs
 
     Returns a single pet # noqa: E501
 
-    :param searchString: pass an optional search string for narrowing the list
-    :type searchString: str
     :param skip: number of records to skip for pagination
     :type skip: int
     :param limit: maximum number of records to return
@@ -62,4 +60,4 @@ def get_subgraphs(searchString=None, skip=None, limit=None):  # noqa: E501
 
     :rtype: List[SubgraphInfo]
     """
-    return SubgraphController.get_subgraphs(searchString=None, skip=None, limit=None)
+    return SubgraphController.get_subgraphs(skip, limit)

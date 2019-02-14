@@ -47,9 +47,7 @@ class ScoreController(Controller):
 
     @classmethod
     @Controller.api_call
-    def get_scores(cls, searchString=None,
-                        skip=None,
-                        limit=None):
+    def get_scores(cls, skip, limit):
         '''
 
         '''
@@ -58,7 +56,7 @@ class ScoreController(Controller):
                 'X-Consumer-ID': X.consumer_id(),
             },
             projection=scores.SCORE_INFO_PROJ
-        )
+        ).skip(skip).limit(limit)
         return [
             util.deserialize_model(score_info, ScoreInfo)
             for score_info in score_infos

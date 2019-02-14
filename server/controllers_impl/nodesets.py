@@ -45,14 +45,14 @@ class NodesetController(Controller):
 
     @classmethod
     @Controller.api_call
-    def get_nodesets(cls, searchString, skip, limit):
+    def get_nodesets(cls, skip, limit):
         '''
 
         '''
         nodeset_infos = nodesets.find(
             filter={'X-Consumer-ID': X.consumer_id()},
             projection=nodesets.NODESET_INFO_PROJ
-        )
+        ).skip(skip).limit(limit)
         return [ util.deserialize_model(nodeset_info, NodeSetInfo)
                  for nodeset_info in nodeset_infos ]
 

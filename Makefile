@@ -1,9 +1,11 @@
-DEREGNET_CONTAINER_ID = $(shell docker images -q sebwink/deregnet)
-NDEX_GRAPHML_CONTAINER_ID = $(shell docker images -q sebwink/ndex-graphml)
+DEREGNET_CONTAINER_ID=$(shell docker images -q sebwink/deregnet)
+DEREGNET_NETWORK=$(shell docker network ls | grep deregnet) 
 
 COMPOSE=docker/compose
 NETWORK=-f $(COMPOSE)/network.yml
 DOCKER_COMPOSE=docker-compose $(NETWORK)
+KONG_BASE=-f $(COMPOSE)/kong.base.yml 
+KONG_DEV=$(KONG_BASE) -f $(COMPOSE)/kong.dev.yml
 DEREGNET_BASE=-f $(COMPOSE)/deregnet.base.yml
 DEREGNET_DEV=$(DEREGNET_BASE) -f $(COMPOSE)/deregnet.dev.yml
 POSTGRES_BASE=-f $(COMPOSE)/postgres.base.yml
@@ -12,10 +14,25 @@ MONGODB_BASE=-f $(COMPOSE)/mongodb.base.yml
 MONGODB_DEV=$(MONGODB_BASE) -f $(COMPOSE)/mongodb.dev.yml
 REDIS_BASE=-f $(COMPOSE)/redis.base.yml 
 REDIS_DEV=$(REDIS_BASE) -f $(COMPOSE)/redis.dev.yml
+ELK_BASE=-f $(COMPOSE)/elk.base.yml
+ELK_DEV=$(ELK_BASE) -f $(COMPOSE)/elk.dev.yml
 
-all: deregnet-rest kong deregnet-kong-setup
+BUILD=$(DOCKER_COMPOSE) $(KONG_BASE) $(DEREGNET_BASE) $(MONGODB_BASE) $(REDIS_BASE) $(POSTGRES_BASE) build
+DEV=$(DOCKER_COMPOSE) $(KONG_BASE) $(DEREGNET_DEV) $(POSTGRES_DEV) $(MONGODB_DEV) $(REDIS_DEV)
 
-.PHONY: deregnet
+_CONTAINERS=deregnet-rest deregnet kong kong-auth kong-ssl kong-admin-api konga-setup deregnet-docs kong-auth-setup
+CONTAINERS=$(patsubst %, sebwink/%, $(_CONTAINERS))
+
+.PHONY: deregnet deregnet-network
+
+deregnet-network:
+ifeq ($(DEREGNET_NETWORK),)
+	docker network create deregnet 
+else
+	echo "deregnet network already created."   
+endif
+
+network: deregnet-network
 
 deregnet: 
 ifeq ($(DEREGNET_CONTAINER_ID),)
@@ -25,51 +42,50 @@ else
 	echo "deregnet container already build."
 endif
 
-.PHONY: ndex-graphml
+deregnet-rest: network deregnet
+	$(BUILD) $@
 
-ndex-graphml: 
-ifeq ($(NDEX_GRAPHML_CONTAINER_ID),)
-	git submodule update --init --recursive
-	cd upstream/ndex-graphml && make
-else
-	echo "ndex-graphml container already build."
-endif
+deregnet-docs: network
+	$(BUILD) $@
 
-kong:
-	docker-compose build kong 
+deregnet-kong-setup: network
+	$(BUILD) $@
 
-deploy: deregnet-rest ndex-graphml
-	docker-compose -f docker-compose.yml -f docker-compose.deploy.yml up
+kong: network
+	$(BUILD) $@ 
 
-.PHONY: deregnet-network network
+kong-admin-api: network
+	$(BUILD) $@
 
-deregnet-network:
-	docker network create deregnet
+kong-ssl: network
+	$(BUILD) $@
 
-network: deregnet-network
+kong-auth: network 
+	$(BUILD) $@
 
-deregnet-kong-setup:
-	docker-compose -f docker/compose/deregnet.base.yml \
-                   -f docker/compose/deregnet.dev.yml \
-				   -f docker/compose/mongodb.base.yml \
-				   -f docker/compose/postgres.base.yml build deregnet-kong-setup
+kong-auth-setup: network 
+	$(BUILD) $@
 
+setup-konga: network
+	$(BUILD) $@
 
-deregnet-rest: deregnet
-	$(DOCKER_COMPOSE) $(DEREGNET_BASE) $(MONGODB_BASE) $(REDIS_BASE) $(POSTGRES_BASE) build $@
+up: network deregnet 
+	$(DEV) up
 
-dev:
-	$(DOCKER_COMPOSE) $(DEREGNET_DEV) $(POSTGRES_DEV) $(MONGODB_DEV) $(REDIS_DEV) up
-                   
+down: network 
+	$(DEV) down
 
-dev-down: 
-	$(DOCKER_COMPOSE) $(DEREGNET_DEV) $(POSTGRES_DEV) $(MONGODB_DEV) $(REDIS_DEV) down
+elk-dev: network
+	$(DOCKER_COMPOSE) $(ELK_DEV) up
 
-.PHONY: test
+elk-dev-down: network
+	$(DOCKER_COMPOSE) $(ELK_DEV) down
 
-test: 
-	docker-compose -f docker-compose.test.yml build 
-	docker run --network deregnetrest_default --link deregnetrest_kong_1:kong --rm sebwink/deregnet-rest-test 
+worker-dev:
+	scripts/start_worker.sh
+
+rmi:
+	docker rmi $(CONTAINERS)
 
 clean:
 	docker volume prune

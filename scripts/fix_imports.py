@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import os
+import shutil
 
 SCRIPT_PATH = os.path.abspath(os.path.dirname(__file__))
 ROOT_DIR = os.path.join(SCRIPT_PATH, '../server')
@@ -11,6 +12,9 @@ BLACKLIST = ['swagger.yaml']
 
 def fix_imports(old, new, root):
     for dirpath, dirnames, filenames in os.walk(root):
+        if os.path.basename(dirpath) == '__pycache__':
+            shutil.rmtree(dirpath)
+            continue
         for fname in filenames:
             if fname in BLACKLIST:
                 continue

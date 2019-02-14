@@ -34,13 +34,11 @@ def get_run(run_id):  # noqa: E501
     return RunController.get_run(run_id)
 
 
-def get_runs(searchString=None, skip=None, limit=None):  # noqa: E501
+def get_runs(skip=0, limit=1000):  # noqa: E501
     """List current and past runs
 
     Returns a single pet # noqa: E501
 
-    :param searchString: pass an optional search string for narrowing the list
-    :type searchString: str
     :param skip: number of records to skip for pagination
     :type skip: int
     :param limit: maximum number of records to return
@@ -48,7 +46,7 @@ def get_runs(searchString=None, skip=None, limit=None):  # noqa: E501
 
     :rtype: List[RunInfo]
     """
-    return RunController.get_runs(searchString=None, skip=None, limit=None)
+    return RunController.get_runs(skip, limit)
 
 
 def post_run(body):  # noqa: E501

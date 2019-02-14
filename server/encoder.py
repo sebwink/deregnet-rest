@@ -3,6 +3,7 @@ import six
 
 from deregnet_rest.models.base_model_ import Model
 
+
 class JSONEncoder(FlaskJSONEncoder):
     include_nulls = False
 

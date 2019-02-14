@@ -58,10 +58,10 @@ class SubgraphController(Controller):
 
     @classmethod
     @Controller.api_call
-    def get_subgraphs(cls, searchString, skip, limit):
+    def get_subgraphs(cls, skip, limit):
         subgraph_infos = subgraphs.find(
             filter={'X-Consumer-ID': X.consumer_id()},
             projection=subgraphs.SUBGR_INFO_PROJ
-        )
+        ).skip(skip).limit(limit)
         return [ util.deserialize_model(subgraph_info, SubgraphInfo)
                  for subgraph_info in subgraph_infos ]

@@ -42,12 +42,12 @@ class RunController(Controller):
 
     @classmethod
     @Controller.api_call
-    def get_runs(cls, searchString, skip, limit):
+    def get_runs(cls, skip, limit):
         return [
             util.deserialize_model(run_info, RunInfo)
             for run_info in runs.find(filter={
                 'X-Consumer-ID': X.consumer_id()
-            })
+            }).skip(skip).limit(limit)
         ]
 
     @classmethod

@@ -9,7 +9,7 @@ info:
   license:
     name: "BSD 3-clause"
     url: "https://opensource.org/licenses/BSD-3-Clause"
-host: "oxacillin"
+host: "dereg.net"
 basePath: "/deregnet"
 tags:
 - name: "graph"
@@ -143,16 +143,12 @@ paths:
       produces:
       - "application/json"
       parameters:
-      - name: "searchString"
-        in: "query"
-        description: "pass an optional search string for narrowing the list"
-        required: false
-        type: "string"
       - name: "skip"
         in: "query"
         description: "number of records to skip for pagination"
         required: false
         type: "integer"
+        default: 0
         minimum: 0
         format: "int32"
       - name: "limit"
@@ -160,8 +156,9 @@ paths:
         description: "maximum number of records to return"
         required: false
         type: "integer"
-        maximum: 50
-        minimum: 0
+        default: 1000
+        maximum: 1000
+        minimum: 1
         format: "int32"
       responses:
         200:
@@ -206,16 +203,12 @@ paths:
       produces:
       - "application/json"
       parameters:
-      - name: "searchString"
-        in: "query"
-        description: "pass an optional search string for narrowing the list"
-        required: false
-        type: "string"
       - name: "skip"
         in: "query"
         description: "number of records to skip for pagination"
         required: false
         type: "integer"
+        default: 0
         minimum: 0
         format: "int32"
       - name: "limit"
@@ -223,8 +216,9 @@ paths:
         description: "maximum number of records to return"
         required: false
         type: "integer"
-        maximum: 50
-        minimum: 0
+        default: 1000
+        maximum: 1000
+        minimum: 1
         format: "int32"
       responses:
         200:
@@ -315,16 +309,12 @@ paths:
       produces:
       - "application/json"
       parameters:
-      - name: "searchString"
-        in: "query"
-        description: "pass an optional search string for narrowing the list"
-        required: false
-        type: "string"
       - name: "skip"
         in: "query"
         description: "number of records to skip for pagination"
         required: false
         type: "integer"
+        default: 0
         minimum: 0
         format: "int32"
       - name: "limit"
@@ -332,8 +322,9 @@ paths:
         description: "maximum number of records to return"
         required: false
         type: "integer"
-        maximum: 50
-        minimum: 0
+        default: 1000
+        maximum: 1000
+        minimum: 1
         format: "int32"
       responses:
         200:
@@ -422,16 +413,12 @@ paths:
       produces:
       - "application/json"
       parameters:
-      - name: "searchString"
-        in: "query"
-        description: "pass an optional search string for narrowing the list"
-        required: false
-        type: "string"
       - name: "skip"
         in: "query"
         description: "number of records to skip for pagination"
         required: false
         type: "integer"
+        default: 0
         minimum: 0
         format: "int32"
       - name: "limit"
@@ -439,8 +426,9 @@ paths:
         description: "maximum number of records to return"
         required: false
         type: "integer"
-        maximum: 50
-        minimum: 0
+        default: 1000
+        maximum: 1000
+        minimum: 1
         format: "int32"
       responses:
         200:
@@ -595,16 +583,12 @@ paths:
       produces:
       - "application/json"
       parameters:
-      - name: "searchString"
-        in: "query"
-        description: "pass an optional search string for narrowing the list"
-        required: false
-        type: "string"
       - name: "skip"
         in: "query"
         description: "number of records to skip for pagination"
         required: false
         type: "integer"
+        default: 0
         minimum: 0
         format: "int32"
       - name: "limit"
@@ -612,8 +596,9 @@ paths:
         description: "maximum number of records to return"
         required: false
         type: "integer"
-        maximum: 50
-        minimum: 0
+        default: 1000
+        maximum: 1000
+        minimum: 1
         format: "int32"
       responses:
         200:
@@ -682,16 +667,12 @@ paths:
       produces:
       - "application/json"
       parameters:
-      - name: "searchString"
-        in: "query"
-        description: "pass an optional search string for narrowing the list"
-        required: false
-        type: "string"
       - name: "skip"
         in: "query"
         description: "number of records to skip for pagination"
         required: false
         type: "integer"
+        default: 0
         minimum: 0
         format: "int32"
       - name: "limit"
@@ -699,8 +680,9 @@ paths:
         description: "maximum number of records to return"
         required: false
         type: "integer"
-        maximum: 50
-        minimum: 0
+        default: 1000
+        maximum: 1000
+        minimum: 1
         format: "int32"
       responses:
         200:
@@ -1181,7 +1163,7 @@ definitions:
         type: "number"
         description: "Score of the subgraph"
     example:
-      score: 1.46581298050294517310021547018550336360931396484375
+      score: 1.45999999999999996447286321199499070644378662109375
       run_id: "run_id"
       optimal: true
       root: "root"

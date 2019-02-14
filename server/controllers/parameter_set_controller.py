@@ -69,13 +69,11 @@ def get_parameter_set_default_data():  # noqa: E501
     return ParameterSetController.get_parameter_set_default_data()
 
 
-def get_parameter_sets(searchString=None, skip=None, limit=None):  # noqa: E501
+def get_parameter_sets(skip=0, limit=1000):  # noqa: E501
     """List available previously uploaded parameter collections
 
     Returns a list with information about availabel parameter collections # noqa: E501
 
-    :param searchString: pass an optional search string for narrowing the list
-    :type searchString: str
     :param skip: number of records to skip for pagination
     :type skip: int
     :param limit: maximum number of records to return
@@ -83,7 +81,7 @@ def get_parameter_sets(searchString=None, skip=None, limit=None):  # noqa: E501
 
     :rtype: List[ParameterSetInfo]
     """
-    return ParameterSetController.get_parameter_sets(searchString=None, skip=None, limit=None)
+    return ParameterSetController.get_parameter_sets(skip, limit)
 
 
 def post_parameter_set(body):  # noqa: E501

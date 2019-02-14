@@ -13,6 +13,18 @@ def get_controller_call(func, fname):
     )
     return '{}.{}'.format(controller_name, func)
 
+def strip_default_args_from(args):
+    args = re.sub(
+        r'=[^,]*',
+        '',
+        args,
+    )
+    return re.sub(
+        r'=[^\)]*',
+        '',
+        args,
+    )
+
 def get_import(fname):
     fstem = fname.split('.')[0]
     controller_name = ''.join(
@@ -26,6 +38,8 @@ def get_import(fname):
 
 def populate_controllers(root):
     for dirpath, dirnames, filenames in os.walk(root):
+        if os.path.basename(dirpath) == '__pycache__':
+            continue
         for fname in filenames:
             if fname == '__init__.py':
                 continue
@@ -34,13 +48,14 @@ def populate_controllers(root):
                 def sub(match):
                     func = match.group(1)
                     args = match.group(2)
+                    stripped_args = strip_default_args_from(args)
                     body_and_return = match.group(3)
                     return 'def {}({}){}{}({})'.format(
                         func,
                         args,
                         body_and_return,
                         get_controller_call(func, fname),
-                        args,
+                        stripped_args,
                     )
                 content = fp.read()
                 content = re.sub(

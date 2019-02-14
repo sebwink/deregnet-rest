@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
 SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
+JWT=$(cat $HOME/.dereg.net.jwt)
+AUTH_HEADER="Authorization:Bearer $JWT"
 
-http --verify $SCRIPTPATH/../.secrets/ssl.crt "$@"
+http --verify $SCRIPTPATH/../.secrets/ssl.crt "$@" "$AUTH_HEADER" 

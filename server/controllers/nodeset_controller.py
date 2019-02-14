@@ -34,13 +34,11 @@ def get_nodeset(nodeset_id):  # noqa: E501
     return NodesetController.get_nodeset(nodeset_id)
 
 
-def get_nodesets(searchString=None, skip=None, limit=None):  # noqa: E501
+def get_nodesets(skip=0, limit=1000):  # noqa: E501
     """List available previously uploaded node sets
 
     Returns a list with information of all available node sets # noqa: E501
 
-    :param searchString: pass an optional search string for narrowing the list
-    :type searchString: str
     :param skip: number of records to skip for pagination
     :type skip: int
     :param limit: maximum number of records to return
@@ -48,7 +46,7 @@ def get_nodesets(searchString=None, skip=None, limit=None):  # noqa: E501
 
     :rtype: List[NodeSetInfo]
     """
-    return NodesetController.get_nodesets(searchString=None, skip=None, limit=None)
+    return NodesetController.get_nodesets(skip, limit)
 
 
 def post_nodeset(body):  # noqa: E501

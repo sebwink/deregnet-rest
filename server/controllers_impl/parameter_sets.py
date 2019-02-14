@@ -65,11 +65,11 @@ class ParameterSetController(Controller):
 
     @classmethod
     @Controller.api_call
-    def get_parameter_sets(cls, searchString, skip, limit):
+    def get_parameter_sets(cls, skip, limit):
         parameter_set_infos = parameter_sets.find(
             filter={'X-Consumer-ID': X.consumer_id()},
             projection=parameter_sets.PARAMSET_INFO_PROJ
-        )
+        ).skip(skip).limit(limit)
         return [ util.deserialize_model(parameter_set_info, ParameterSetInfo)
                  for parameter_set_info in parameter_set_infos ]
 

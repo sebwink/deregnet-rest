@@ -34,13 +34,11 @@ def get_graph(graph_id):  # noqa: E501
     return GraphController.get_graph(graph_id)
 
 
-def get_graphs(searchString=None, skip=None, limit=None):  # noqa: E501
+def get_graphs(skip=0, limit=1000):  # noqa: E501
     """List available previously uploaded graphs
 
     Returns a list of all available graphs # noqa: E501
 
-    :param searchString: pass an optional search string for narrowing the list
-    :type searchString: str
     :param skip: number of records to skip for pagination
     :type skip: int
     :param limit: maximum number of records to return
@@ -48,7 +46,7 @@ def get_graphs(searchString=None, skip=None, limit=None):  # noqa: E501
 
     :rtype: List[GraphInfo]
     """
-    return GraphController.get_graphs(searchString=None, skip=None, limit=None)
+    return GraphController.get_graphs(skip, limit)
 
 
 def post_graph(initalGraphInfo=None):  # noqa: E501
@@ -63,7 +61,7 @@ def post_graph(initalGraphInfo=None):  # noqa: E501
     """
     if connexion.request.is_json:
         initalGraphInfo = InitalGraphInfo.from_dict(connexion.request.get_json())  # noqa: E501
-    return GraphController.post_graph(initial_graph_info=initalGraphInfo)
+    return GraphController.post_graph(initalGraphInfo)
 
 
 def post_graphml(graph_id, file_to_upload):  # noqa: E501
