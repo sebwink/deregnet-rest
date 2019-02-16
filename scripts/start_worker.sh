@@ -90,4 +90,4 @@ export REDIS_PORT
 
 cd $SERVER_ROOT/..
 
-celery -A server.tasks.find_subgraphs:celery worker -l info -Q runs -E
+celery -A server.tasks.celery:celery worker -l info -Q runs -E

@@ -1,7 +1,10 @@
-connexion
+python-igraph
+connexion[swagger-ui]
 python_dateutil
-setuptools
 pymongo
 hashids
 redis
 shyaml
+celery
+gunicorn
+elastic-apm[flask]

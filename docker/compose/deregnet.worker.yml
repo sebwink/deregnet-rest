@@ -1,0 +1,14 @@
+version: "3"
+services:
+  deregnet-worker:
+    image: sebwink/deregnet-worker
+    build:
+      context: ../..
+      dockerfile: ./docker/worker/Dockerfile
+    networks:
+      - deregnet 
+    restart: on-failure
+
+networks:
+  deregnet:
+    external: True

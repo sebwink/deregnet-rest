@@ -42,8 +42,11 @@ else
 	echo "deregnet container already build."
 endif
 
-deregnet-rest: network deregnet
+deregnet-rest: network
 	$(BUILD) $@
+
+deregnet-worker: deregnet-rest
+	docker-compose -f docker/compose/deregnet.worker.yml build $@
 
 deregnet-docs: network
 	$(BUILD) $@
