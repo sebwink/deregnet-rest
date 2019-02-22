@@ -71,8 +71,6 @@ const stillInDatabase = async ({ email }) => {
 const verifySignupConfirmation = (signup, { username, password }) => {
   const { username: signupUsername, password: encryptedPassword } = signup;
   const signupPassword = crypto.decrypt(encryptedPassword);
-  console.log(signupPassword, password);
-  console.log(signupUsername, username);
   if (signupUsername !== username || signupPassword !== password) {
     return false;
   }

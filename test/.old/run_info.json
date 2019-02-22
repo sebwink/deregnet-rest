@@ -1,10 +1,10 @@
 {
   "done": false,
-  "id": "0e08c338-5225-5b87-9bde-ec9c165143e2",
-  "post_time": "2019-02-14-10-15-13",
+  "id": "16438580-d0dc-5f73-b444-e708f259744b",
+  "post_time": "2019-02-18-14-43-48",
   "run_input": {
     "description": "test run!",
-    "graph_id": "50a8f412-ae84-504b-aec9-cfd6c92e7416",
+    "graph_id": "e9f1dc0f-4625-5fc1-b874-ac5d5ded4922",
     "parameter_set": {
       "abs_values": false,
       "algorithm": "dta",
@@ -15,7 +15,7 @@
       "model_sense": "max",
       "num_suboptimal": 1
     },
-    "score_id": "50cadab7-cbd3-5e3a-b5f3-df3b744b3e2e"
+    "score_id": "f3bbcdc7-fea9-5cbb-a889-971dd90daac5"
   },
   "started": false,
   "subgraph_ids": []

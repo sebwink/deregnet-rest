@@ -1,4 +1,5 @@
 import pymongo
+from celery import Celery
 
 from deregnet.core import AverageDeregnetArguments
 from deregnet.core import SubgraphFinder
@@ -120,6 +121,13 @@ class Runner:
         )
 
 
-def task(run_id):
+REDIS_URI = 'redis://{}:{}/1'.format(Config.redis_host(), Config.redis_port())
+celery = Celery('main', broker=REDIS_URI)
+
+@celery.task(name='find-subgraph')
+def find_subgraphs(run_id):
     runner = Runner()
     runner.run(run_id)
+
+if __name__ == '__main__':
+    celery.start()

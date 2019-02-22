@@ -9,7 +9,7 @@ from deregnet_rest.database.collections.scores import scores
 from deregnet_rest.database.collections.nodesets import nodesets
 from deregnet_rest.database.collections.parameter_sets import parameter_sets
 from deregnet_rest.database.collections.runs import runs
-from deregnet_rest.tasks.celery import celery, find_subgraphs
+from deregnet_rest.tasks.find_subgraphs import celery, find_subgraphs
 
 class RunController(Controller):
     '''
