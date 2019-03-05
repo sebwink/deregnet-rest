@@ -9,7 +9,7 @@ from deregnet_rest.database.collections.scores import scores
 from deregnet_rest.database.collections.nodesets import nodesets
 from deregnet_rest.database.collections.parameter_sets import parameter_sets
 from deregnet_rest.database.collections.runs import runs
-from deregnet_rest.tasks.find_subgraphs import celery, find_subgraphs
+from deregnet_rest.tasks.find_subgraphs import celery
 
 class RunController(Controller):
     '''
@@ -126,7 +126,7 @@ class RunController(Controller):
         cls.update_dependent_runs(run_id, parameter_set_id, parameter_sets)
         run_info['id'] = run_id
         # push run onto the job queue
-        find_subgraphs.apply_async((run_id,), task_id=run_id, queue='runs')
+        celery.send_task('find-subgraphs', args=(run_id,), task_id=run_id, queue='runs')
         return util.deserialize_model(run_info, RunInfo)
 
     @classmethod

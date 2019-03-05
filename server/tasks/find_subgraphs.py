@@ -1,15 +1,16 @@
 import pymongo
 from celery import Celery
 
-from deregnet.core import AverageDeregnetArguments
-from deregnet.core import SubgraphFinder
-
 from deregnet_rest.config import Config
 from deregnet_rest.database.collections.graphs import Graphs
 from deregnet_rest.database.collections.scores import Scores
 from deregnet_rest.database.collections.nodesets import NodeSets
 from deregnet_rest.database.collections.runs import Runs
 from deregnet_rest.database.collections.subgraphs import Subgraphs
+
+if __name__ == '__main__':
+    from deregnet.core import AverageDeregnetArguments
+    from deregnet.core import SubgraphFinder
 
 class Runner:
     '''
