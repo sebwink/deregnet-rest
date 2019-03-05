@@ -37,7 +37,7 @@ network: deregnet-network
 deregnet: 
 ifeq ($(DEREGNET_CONTAINER_ID),)
 	git submodule update --init --recursive
-	cd upstream/deregnet && make -f docker.mak
+	cd upstream/deregnet && git pull origin master && make -f docker.mak
 else
 	echo "deregnet container already build."
 endif
