@@ -14,6 +14,6 @@ RUN apt-get update && \
 
 WORKDIR /server
 
-RUN ln -s /server /usr/local/lib/python3.5/dist-packages/deregnet_rest
+RUN ln -s /server /usr/local/lib/python3.6/site-packages/deregnet_rest
 
 ENTRYPOINT ["/start_server.sh", "--config-file", "/docker-config.yml"]
