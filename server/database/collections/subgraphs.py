@@ -35,7 +35,7 @@ class Subgraphs(pymongo.collection.Collection):
             _id = self.insert_one({
                 **subgraph_info,
                 'X-Consumer-ID': x_consumer_id,
-                'nodes': [v[node_id_attr] for v in subgraph.vs],
+                'nodes': {v[node_id_attr]: v['deregnet_score'] for v in subgraph.vs},
                 'graph_id': graph_id,
                 'node_id_attr': node_id_attr,
             }).inserted_id

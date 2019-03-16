@@ -8,9 +8,8 @@ from deregnet_rest.database.collections.nodesets import NodeSets
 from deregnet_rest.database.collections.runs import Runs
 from deregnet_rest.database.collections.subgraphs import Subgraphs
 
-if __name__ == '__main__':
-    from deregnet.core import AverageDeregnetArguments
-    from deregnet.core import SubgraphFinder
+from deregnet.core import AverageDeregnetArguments
+from deregnet.core import SubgraphFinder
 
 class Runner:
     '''
@@ -125,7 +124,7 @@ class Runner:
 REDIS_URI = 'redis://{}:{}/1'.format(Config.redis_host(), Config.redis_port())
 celery = Celery('main', broker=REDIS_URI)
 
-@celery.task(name='find-subgraph')
+@celery.task(name='find-subgraphs')
 def find_subgraphs(run_id):
     runner = Runner()
     runner.run(run_id)

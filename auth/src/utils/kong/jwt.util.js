@@ -12,6 +12,16 @@ const postJwt = async (username) => {
   return response.data;
 };
 
+const postCookieJwt = async (username) => {
+  const url = `${KONG_ADMIN_API}/consumers/${username}/cookie-jwt`;
+  const response = await axios.post(url, {
+    rsa_public_key: jwt.publicKey,
+    algorithm: jwt.algorithm,
+  });
+  return response.data;
+};
+
 module.exports = {
   post: postJwt,
+  postCookieJwt,
 };

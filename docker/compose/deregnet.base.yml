@@ -35,6 +35,15 @@ services:
       - kong
     networks:
       - deregnet
+  deregnet-ui-api-kong-setup:
+    image: sebwink/deregnet-ui-api-kong-setup
+    build:
+      context: ../deregnet-ui-api
+    depends_on:
+      - kong
+    networks:
+      - deregnet
+
 
 networks:
   deregnet:

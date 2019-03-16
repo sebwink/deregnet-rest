@@ -1,2 +1,6 @@
 version: "3"
 services:
+  kong:
+    ports:
+      - '8000:8000/tcp'
+      - '8001:8001/tcp'

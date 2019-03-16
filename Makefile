@@ -18,7 +18,7 @@ ELK_BASE=-f $(COMPOSE)/elk.base.yml
 ELK_DEV=$(ELK_BASE) -f $(COMPOSE)/elk.dev.yml
 
 BUILD=$(DOCKER_COMPOSE) $(KONG_BASE) $(DEREGNET_BASE) $(MONGODB_BASE) $(REDIS_BASE) $(POSTGRES_BASE) build
-DEV=$(DOCKER_COMPOSE) $(KONG_BASE) $(DEREGNET_DEV) $(POSTGRES_DEV) $(MONGODB_DEV) $(REDIS_DEV)
+DEV=$(DOCKER_COMPOSE) $(KONG_DEV) $(DEREGNET_DEV) $(POSTGRES_DEV) $(MONGODB_DEV) $(REDIS_DEV)
 
 _CONTAINERS=deregnet-rest deregnet kong kong-auth kong-ssl kong-admin-api konga-setup deregnet-docs kong-auth-setup
 CONTAINERS=$(patsubst %, sebwink/%, $(_CONTAINERS))
@@ -52,6 +52,9 @@ deregnet-docs: network
 	$(BUILD) $@
 
 deregnet-kong-setup: network
+	$(BUILD) $@
+
+deregnet-ui-api-kong-setup: network
 	$(BUILD) $@
 
 kong: network

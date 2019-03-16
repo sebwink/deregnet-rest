@@ -1,7 +1,7 @@
-const apm = require('elastic-apm-node').start({
+/*const apm = require('elastic-apm-node').start({
   serviceName: 'kong-auth',
   serverUrl: 'http://apm-server:8200',
-});
+});*/
 
 const express = require('express');
 const morgan = require('morgan');

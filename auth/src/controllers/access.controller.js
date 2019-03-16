@@ -9,6 +9,14 @@ const token = async (kongId) => {
   return accessToken;
 };
 
+const registerAndSignCookieToken = async (kongId) => {
+  const { username } = await Consumer.findOne({ kongId });
+  const { key } = await kongJwt.postCookieJwt(username);
+  const cookieToken = await jwt.sign({ iss: key });
+  return cookieToken;
+};
+
 module.exports = {
   token,
+  cookieToken: registerAndSignCookieToken,
 };

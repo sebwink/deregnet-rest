@@ -34,7 +34,8 @@ class SubgraphController(Controller):
         node_id_attr = subgraph_data['node_id_attr']
         graph = graphs.get_ig(graph_id)
         graph.vs['id'] = [v[node_id_attr] for v in graph.vs]
-        subgraph = graph.induced_subgraph(nodes, implementation='create_from_scratch')
+        subgraph = graph.induced_subgraph(list(nodes.keys()), implementation='create_from_scratch')
+        subgraph.vs['deregnet_score'] = [nodes[v['id']] for v in subgraph.vs]
         if filetype == 'graphml':
             content_disposition = 'attachment; filename='+subgraph_id+'.graphml'
             with tempfile.TemporaryFile() as tmpfile:

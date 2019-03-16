@@ -38,4 +38,3 @@ if [[ "$1" == "kong" ]]; then
     exec "$@"
   fi
 fi
-

@@ -36,6 +36,7 @@ const sendConfirmationLink = async (to, token, ui, tries = 3) => {
       await smtp.sendMail(mail);
       break;
     } catch (error) {
+      console.error(error);
       triesLeft--;
     }
   }
