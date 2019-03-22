@@ -42,7 +42,7 @@ else
 	echo "deregnet container already build."
 endif
 
-deregnet-rest: network
+deregnet-rest: deregnet network
 	$(BUILD) $@
 
 deregnet-worker: deregnet-rest

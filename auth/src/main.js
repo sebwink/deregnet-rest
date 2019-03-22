@@ -9,10 +9,10 @@ const bodyParser = require('body-parser');
 const helmet = require('helmet');
 const mongoose = require('mongoose');
 
-const schemaValidatorMiddleware = require('./src/middleware/schema.validation.middleware');
-const signUpRoute = require('./src/routes/signup.route');
-const consumerRoute = require('./src/routes/consumer.route');
-const accessRoute = require('./src/routes/access.route');
+const schemaValidatorMiddleware = require('./middleware/schema.validation.middleware');
+const signUpRoute = require('./routes/signup.route');
+const consumerRoute = require('./routes/consumer.route');
+const accessRoute = require('./routes/access.route');
 
 const app = express();
 

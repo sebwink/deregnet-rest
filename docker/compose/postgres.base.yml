@@ -21,8 +21,8 @@ services:
     environment:
       PGADMIN_DEFAULT_EMAIL: pgadmin@xxx.xx
       PGADMIN_DEFAULT_PASSWORD: secret
-    ports:
-      - '8111:80/tcp'
+    #ports:
+    #  - '8111:80/tcp'
     networks:
       - deregnet
 

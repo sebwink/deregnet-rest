@@ -7,10 +7,9 @@ RUN mkdir /app
 
 WORKDIR /app
 
-COPY main.js .
 COPY package.json .
 COPY src src 
 
 RUN npm install
 
-ENTRYPOINT ["nodemon", "main.js"]
+CMD ["node", "src/main.js"]

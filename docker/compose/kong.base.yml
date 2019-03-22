@@ -36,7 +36,7 @@ services:
     networks:
       - deregnet
     ports:
-      - '443:8443/tcp'
+      - '8443:8443/tcp'
     restart: on-failure 
   kong-ssl:
     image: sebwink/kong-ssl 
@@ -65,10 +65,12 @@ services:
     image: sebwink/kong-auth 
     build: 
       context: ../../auth
+    command: nodemon ./src/main.js
     env_file:
       - '../../.secrets/kong.auth.env'
     volumes:
-      - '../../auth:/app'
+      - '../../auth/src:/app/src'
+      - '../../auth/.keys:/app/.keys'
     depends_on:
       - kong                  
       - mongodb
