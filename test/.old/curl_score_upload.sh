@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-API_ROOT=https://dereg.net/deregnet
+API_ROOT=${DEREGNET_API_ROOT:-https://dereg.net/deregnet}
 
 CREDENTIALS="$@"
 

@@ -129,5 +129,7 @@ def find_subgraphs(run_id):
     runner = Runner()
     runner.run(run_id)
 
+print(Config.mongo_host())
+
 if __name__ == '__main__':
     celery.start()

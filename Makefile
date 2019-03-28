@@ -1,9 +1,8 @@
 DEREGNET_CONTAINER_ID=$(shell docker images -q sebwink/deregnet)
-DEREGNET_NETWORK=$(shell docker network ls | grep deregnet) 
+DEREGNET_NETWORK=$(shell docker  ls | grep deregnet) 
 
 COMPOSE=docker/compose
-NETWORK=-f $(COMPOSE)/network.yml
-DOCKER_COMPOSE=docker-compose $(NETWORK)
+DOCKER_COMPOSE=docker-compose
 KONG_BASE=-f $(COMPOSE)/kong.base.yml 
 KONG_DEV=$(KONG_BASE) -f $(COMPOSE)/kong.dev.yml
 DEREGNET_BASE=-f $(COMPOSE)/deregnet.base.yml
@@ -23,16 +22,7 @@ DEV=$(DOCKER_COMPOSE) $(KONG_DEV) $(DEREGNET_DEV) $(POSTGRES_DEV) $(MONGODB_DEV)
 _CONTAINERS=deregnet-rest deregnet kong kong-auth kong-ssl kong-admin-api konga-setup deregnet-docs kong-auth-setup
 CONTAINERS=$(patsubst %, sebwink/%, $(_CONTAINERS))
 
-.PHONY: deregnet deregnet-network
-
-deregnet-network:
-ifeq ($(DEREGNET_NETWORK),)
-	docker network create deregnet 
-else
-	echo "deregnet network already created."   
-endif
-
-network: deregnet-network
+.PHONY: deregnet deregnet-
 
 deregnet: 
 ifeq ($(DEREGNET_CONTAINER_ID),)
@@ -42,52 +32,52 @@ else
 	echo "deregnet container already build."
 endif
 
-deregnet-rest: deregnet network
+deregnet-rest: deregnet
 	$(BUILD) $@
 
-deregnet-worker: deregnet-rest
+deregnet-worker: 
 	docker-compose -f docker/compose/deregnet.worker.yml build $@
 
-deregnet-docs: network
+deregnet-docs: 
 	$(BUILD) $@
 
-deregnet-kong-setup: network
+deregnet-kong-setup: 
 	$(BUILD) $@
 
-deregnet-ui-api-kong-setup: network
+deregnet-ui-api-kong-setup: 
 	$(BUILD) $@
 
-kong: network
+kong: 
 	$(BUILD) $@ 
 
-kong-admin-api: network
+kong-admin-api: 
 	$(BUILD) $@
 
-kong-ssl: network
+kong-ssl: 
 	$(BUILD) $@
 
-kong-auth: network 
+kong-auth:  
 	$(BUILD) $@
 
-kong-auth-setup: network 
+kong-auth-setup:  
 	$(BUILD) $@
 
-setup-konga: network
+setup-konga: 
 	$(BUILD) $@
 
-up: network deregnet 
+up:  deregnet 
 	$(DEV) up
 
-down: network 
+down:  
 	$(DEV) down
 
-elk-dev: network
-	$(DOCKER_COMPOSE) $(ELK_DEV) up
+elk-dev: 
+	$(DOCKER_COMPOSE) --project-directory $(COMPOSE) $(ELK_DEV) up
 
-elk-dev-down: network
-	$(DOCKER_COMPOSE) $(ELK_DEV) down
+elk-dev-down: 
+	$(DOCKER_COMPOSE) --project-directory $(COMPOSE) $(ELK_DEV) down
 
-worker-dev:
+worker:
 	scripts/start_worker.sh
 
 rmi:

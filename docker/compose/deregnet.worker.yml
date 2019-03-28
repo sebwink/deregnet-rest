@@ -5,10 +5,5 @@ services:
     build:
       context: ../..
       dockerfile: ./docker/worker/Dockerfile
-    networks:
-      - deregnet 
-    restart: on-failure
-
-networks:
-  deregnet:
-    external: True
+    restart: on-failure 
+    command: /start_worker.sh --mongo-host mongodb --redis-host redis

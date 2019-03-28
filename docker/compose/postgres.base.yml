@@ -14,18 +14,10 @@ services:
     restart: on-failure
     stdin_open: true
     tty: true
-    networks:
-      - deregnet 
   pg-admin:
     image: dpage/pgadmin4
     environment:
       PGADMIN_DEFAULT_EMAIL: pgadmin@xxx.xx
       PGADMIN_DEFAULT_PASSWORD: secret
-    #ports:
-    #  - '8111:80/tcp'
-    networks:
-      - deregnet
-
-networks:
-  deregnet:
-    external: True
+    ports:
+      - '8111:80/tcp'

@@ -9,8 +9,6 @@ services:
       HOST: 0.0.0.0
       PORT: 8080
     restart: on-failure
-    networks:
-      - deregnet 
     depends_on:
       - redis 
       - mongodb
@@ -25,26 +23,15 @@ services:
       SWAGGER_DOCS_AUTH: basic
     volumes:
       - '../../server/deregnet_rest/swagger:/app/specs'
-    networks:
-      - deregnet
   deregnet-kong-setup:
     image: sebwink/deregnet-kong-setup
     build:
       context: ../deregnet-kong-setup
     depends_on:
       - kong
-    networks:
-      - deregnet
   deregnet-ui-api-kong-setup:
     image: sebwink/deregnet-ui-api-kong-setup
     build:
       context: ../deregnet-ui-api
     depends_on:
       - kong
-    networks:
-      - deregnet
-
-
-networks:
-  deregnet:
-    external: True

@@ -13,8 +13,6 @@ services:
       KONG_PG_HOST: postgres
       KONG_PG_PASSWORD: ${KONG_PG_PASSWORD:-kong}
       KONG_PG_USER: ${KONG_PG_USER:-kong}
-    networks:
-      - deregnet 
   kong:
     image: sebwink/kong
     build:
@@ -33,10 +31,8 @@ services:
       KONG_PG_USER: ${KONG_PG_USER:-kong}
       KONG_PROXY_ACCESS_LOG: /dev/stdout
       KONG_PROXY_ERROR_LOG: /dev/stderr
-    networks:
-      - deregnet
     ports:
-      - '8443:8443/tcp'
+      - '443:8443/tcp'
     restart: on-failure 
   kong-ssl:
     image: sebwink/kong-ssl 
@@ -49,8 +45,6 @@ services:
       - '../../.secrets:/.secrets'
     depends_on:
       - kong
-    networks:
-      - deregnet
   kong-admin-api:
     image: sebwink/kong-admin-api
     build:
@@ -59,8 +53,6 @@ services:
       KONG_ADMIN_USER: deregnet
     depends_on:
       - kong
-    networks:
-      - deregnet
   kong-auth:
     image: sebwink/kong-auth 
     build: 
@@ -74,16 +66,12 @@ services:
     depends_on:
       - kong                  
       - mongodb
-    networks:
-      - deregnet
   kong-auth-setup:
     image: sebwink/kong-auth-setup 
     build:
       context: ../../auth/docker/setup 
     depends_on:
       - kong
-    networks:
-      - deregnet
   konga:
     image: pantsel/konga:next
     depends_on:
@@ -96,17 +84,9 @@ services:
       KONGA_SEED_USER_DATA_SOURCE_FILE: /.secrets/konga.user.seed 
     volumes:
       - '../../.secrets:/.secrets'
-    networks:
-      - deregnet
   konga-setup:
     image: sebwink/konga-setup
     build:
       context: ../setup-konga
     depends_on:
       - kong
-    networks:
-      - deregnet
-
-networks:
-  deregnet:
-    external: True
