@@ -5,4 +5,3 @@ services:
       DEPLOY: gunicorn
     volumes:
       - './wsgi:/server/config/wsgi'
-

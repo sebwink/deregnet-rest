@@ -25,6 +25,7 @@ def registerDeregnetServiceRoute():
     return $(
         curl --silent -X POST \
              --url http://kong:8001/services/deregnet/routes \
+			 --data 'name=deregnet' \
              --data 'paths[]=/deregnet' \
              --data 'methods[]=GET' \
              --data 'methods[]=POST' \
@@ -63,5 +64,5 @@ if __name__ == '__main__':
     registerDeregnetServiceRoute()
     enableJwtForDeregnetService()
     # DeRegNet documentation
-    registerDeregnetDocumentation()
-    registerDeregnetDocumentationRoute()
+    #registerDeregnetDocumentation()
+    #registerDeregnetDocumentationRoute()

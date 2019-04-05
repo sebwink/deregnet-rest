@@ -1,8 +1,0 @@
-version: "3"
-services:
-  kibana:
-    ports:
-      - '5601:5601/tcp'
-  apm-server:
-    ports:
-      - '8200:8200/tcp'
