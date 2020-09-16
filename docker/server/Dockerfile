@@ -1,4 +1,4 @@
-FROM sebwink/deregnet
+FROM sebwink/deregnet:0.99.999
 
 WORKDIR /
 

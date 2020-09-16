@@ -29,7 +29,7 @@ deregnet-kong-setup:
 deregnet-kong-teardown:
 	$(DOCKER_COMPOSE) $(DEREGNET_KONG_TEARDOWN) build
 
-deregnet-rest: deregnet 
+deregnet-rest:  
 	$(DOCKER_COMPOSE) $(DEREGNET_BASE) build 
 
 deregnet-worker: 

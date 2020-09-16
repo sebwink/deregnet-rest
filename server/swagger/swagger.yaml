@@ -9,8 +9,8 @@ info:
   license:
     name: "BSD 3-clause"
     url: "https://opensource.org/licenses/BSD-3-Clause"
-host: "dereg.net"
-basePath: "/deregnet"
+host: "api.dereg.net"
+basePath: "/"
 tags:
 - name: "graph"
   description: "Uploading and retrieving networks for use with DeRegNet algorithms"
