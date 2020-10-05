@@ -1,5 +1,7 @@
 # DeRegNet REST API
 
+[Pages](https://sebwink.github.io/deregnet-rest)
+
 ## Local development 
 
 After running
