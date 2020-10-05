@@ -4,6 +4,8 @@ declare -a allvars=(\
   "SERVER_ROOT" \
   "MONGO_HOST" \
   "MONGO_PORT" \
+  "MONGO_USER" \
+  "MONGO_PASSWORD" \
   "REDIS_HOST" \
   "REDIS_PORT" \
   "PYTHON_INTERP" \
@@ -22,6 +24,10 @@ SERVER_ROOT="$( cd "$(dirname "$0")" ; pwd -P )"/../server
 MONGO_HOST=localhost
 # mongo port
 MONGO_PORT=27017
+# mongo user
+MONGO_USER=$DEREGNET_MONGO_USER
+# mongo password
+MONGO_PASSWORD=$DEREGNET_MONGO_PASSWORD
 # redis host
 REDIS_HOST=localhost
 # redis port
@@ -136,6 +142,8 @@ fi
 # MongoDB
 export MONGO_HOST
 export MONGO_PORT
+export MONGO_USER
+export MONGO_PASSWORD
 # Redis
 export REDIS_HOST
 export REDIS_PORT

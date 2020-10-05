@@ -1,69 +1,40 @@
-DEREGNET_CONTAINER_ID=$(shell docker images -q sebwink/deregnet)
-
-_IMAGES=deregnet-rest deregnet-worker deregnet-kong-setup deregnet-kong-teardown
-IMAGES=$(patsubst %, sebwink/%, $(_IMAGES))
-
 COMPOSE=docker/compose
 DOCKER_COMPOSE=docker-compose --project-directory $(COMPOSE)
-DEREGNET_BASE=-f $(COMPOSE)/deregnet.base.yml
-DEREGNET_DEV=$(DEREGNET_BASE) -f $(COMPOSE)/deregnet.dev.yml
-DEREGNET_WORKER_BASE=-f $(COMPOSE)/deregnet-worker.base.yml 
-DEREGNET_WORKER_DEV=$(DEREGNET_WORKER_BASE) -f $(COMPOSE)/deregnet-worker.dev.yml
-DEREGNET_KONG_SETUP=-f $(COMPOSE)/deregnet.kong-setup.yml
-DEREGNET_KONG_TEARDOWN=-f $(COMPOSE)/deregnet.kong-teardown.yml
+# MONGODB (for development purposes)
+MONGODB_BASE=-f $(COMPOSE)/mongodb/base.yml
+MONGODB_DEV=$(MONGODB_BASE) -f $(COMPOSE)/mongodb/dev.yml
+# REDIS (for development purposes)
+REDIS_BASE=-f $(COMPOSE)/redis/base.yml
+REDIS_DEV=$(REDIS_BASE) -f $(COMPOSE)/redis/dev.yml
+# DEREGNET SERVER
+DEREGNET_SERVER_BASE=-f $(COMPOSE)/deregnet/server.base.yml
+DEREGNET_SERVER_DEV=$(DEREGNET_SERVER_BASE) -f $(COMPOSE)/deregnet/server.dev.yml
 
-.PHONY: deregnet
+ALL_DEV=$(MONGODB_DEV) $(REDIS_DEV) $(DEREGNET_SERVER_DEV)
 
-all: $(_IMAGES)
+up: up@dev
+	@#
 
-deregnet:
-	echo "deregnet"
-ifeq ($(DEREGNET_CONTAINER_ID),)
-	git submodule update --init --recursive
-	cd upstream/deregnet && git pull origin master && make -f docker.mak
-endif
+up@dev: server@dev
+	@#
 
-deregnet-kong-setup:
-	$(DOCKER_COMPOSE) $(DEREGNET_KONG_SETUP) build
+down: down@dev
+	@#
 
-deregnet-kong-teardown:
-	$(DOCKER_COMPOSE) $(DEREGNET_KONG_TEARDOWN) build
+down@dev: 
+	@$(DOCKER_COMPOSE) $(ALL_DEV) down
 
-deregnet-rest:  
-	$(DOCKER_COMPOSE) $(DEREGNET_BASE) build 
+mongo@dev:
+	@$(DOCKER_COMPOSE) $(MONGODB_DEV) up -d
 
-deregnet-worker: 
-	docker-compose -f docker/compose/deregnet-worker.base.yml build $@
+redis@dev:
+	@$(DOCKER_COMPOSE) $(REDIS_DEV) up -d
 
-% : 
-	$(BUILD) $@
+server-image:
+	@$(DOCKER_COMPOSE) $(DEREGNET_SERVER_BASE) build
 
-up: deregnet 
-	$(DOCKER_COMPOSE) $(DEREGNET_DEV) up
+server: server@dev
+	@#
 
-down:  
-	$(DOCKER_COMPOSE) $(DEREGNET_DEV) rm --stop --force
-
-kong-setup: deregnet
-	$(DOCKER_COMPOSE) $(DEREGNET_KONG_SETUP) up
-	$(DOCKER_COMPOSE) $(DEREGNET_KONG_SETUP) rm --stop --force
-
-kong-teardown:
-	$(DOCKER_COMPOSE) $(DEREGNET_KONG_TEARDOWN) up
-	$(DOCKER_COMPOSE) $(DEREGNET_KONG_TEARDOWN) rm --stop --force
-
-kong-up: kong-setup up 
-	echo "Started service and executed KONG setup."
-
-kong-down: kong-teardown down
-	echo "Stopped service and executed KONG teardown."
-
-worker:
-	docker run --rm sebwink/deregnet-worker 
-	# scripts/start_worker.sh 
-	
-worker-down:
-	echo "worker-down"
-
-rmi:
-	docker rmi $(IMAGES)
+server@dev: server-image mongo@dev redis@dev
+	@$(DOCKER_COMPOSE) $(DEREGNET_SERVER_DEV) up -d

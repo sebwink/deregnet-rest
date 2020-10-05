@@ -1,5 +1,5 @@
 REDIS_HOST: redis
-MONGO_HOST: mongodb
+MONGO_HOST: mongo
 HOST: 0.0.0.0
 PORT: 8080
 PYTHONINTERP: python3 

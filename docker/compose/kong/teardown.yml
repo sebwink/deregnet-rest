@@ -3,4 +3,4 @@ services:
   deregnet-kong-teardown:
     image: sebwink/deregnet-kong-teardown
     build:
-      context: ../deregnet-kong-teardown 
+      context: ../../deregnet-kong-teardown 

@@ -3,4 +3,4 @@ services:
   deregnet-kong-setup:
     image: sebwink/deregnet-kong-setup
     build:
-      context: ../deregnet-kong-setup
+      context: ../../deregnet-kong-setup

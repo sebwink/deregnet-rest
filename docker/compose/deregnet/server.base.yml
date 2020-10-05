@@ -1,7 +1,7 @@
 version: '3'
 services:
-  deregnet-rest:
-    image: sebwink/deregnet-rest
+  deregnet-api:
+    image: sebwink/deregnet-api:dev
     build: 
       context: ../..
       dockerfile: ./docker/server/Dockerfile

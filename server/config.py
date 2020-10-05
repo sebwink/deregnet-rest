@@ -15,6 +15,14 @@ class Config:
         return int(cls.get('MONGO_PORT'))
 
     @classmethod
+    def mongo_user(cls):
+        return str(cls.get('MONGO_USER'))
+
+    @classmethod
+    def mongo_password(cls):
+        return str(cls.get('MONGO_PASSWORD'))
+
+    @classmethod
     def redis_host(cls):
         return str(cls.get('REDIS_HOST'))
 

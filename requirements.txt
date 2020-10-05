@@ -7,4 +7,3 @@ redis
 shyaml
 celery
 gunicorn
-elastic-apm[flask]
