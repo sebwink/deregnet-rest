@@ -1,0 +1,9 @@
+python-igraph
+connexion[swagger-ui]
+python_dateutil
+pymongo
+hashids
+redis
+shyaml
+celery
+gunicorn

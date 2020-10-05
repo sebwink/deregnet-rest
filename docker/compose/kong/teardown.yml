@@ -1,0 +1,6 @@
+version: '3'
+services:
+  deregnet-kong-teardown:
+    image: sebwink/deregnet-kong-teardown
+    build:
+      context: ../../deregnet-kong-teardown 

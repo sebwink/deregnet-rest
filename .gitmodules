@@ -1,0 +1,3 @@
+[submodule "upstream/deregnet"]
+	path = upstream/deregnet
+	url = https://github.com/sebwink/deregnet

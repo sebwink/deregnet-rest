@@ -1,0 +1,9 @@
+version: "3"
+services:
+  redis:
+    ports:
+      - ${REDIS_PORT:-6379}:6379/tcp
+  redisinsight:
+    image: redislabs/redisinsight:latest
+    ports:
+      - ${REDISINSIGHTS_PORT:-8001}:8001/tcp

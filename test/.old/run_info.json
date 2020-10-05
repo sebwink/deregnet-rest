@@ -1,0 +1,22 @@
+{
+  "done": false,
+  "id": "63c2659b-a111-599d-804c-a75f246936f6",
+  "post_time": "2019-03-28-07-20-06",
+  "run_input": {
+    "description": "test run!",
+    "graph_id": "d7027691-f7b0-5ebe-ab25-8c958f3d8e56",
+    "parameter_set": {
+      "abs_values": false,
+      "algorithm": "dta",
+      "default_score": 0.0,
+      "max_overlap": 0.0,
+      "max_size": 30,
+      "min_size": 10,
+      "model_sense": "max",
+      "num_suboptimal": 1
+    },
+    "score_id": "d9b98f95-b70a-5a73-b65a-bf25cf26c18e"
+  },
+  "started": false,
+  "subgraph_ids": []
+}
